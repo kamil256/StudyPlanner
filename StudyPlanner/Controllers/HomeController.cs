@@ -292,7 +292,7 @@ namespace StudyPlanner.Controllers
                 //model.Books = books;
                 //model.Authors = (from ab in db.AuthorOfBooks where ab.BookId == BookId orderby ab.Priority select ab.Author.Name).ToArray();
                 //model.Publisher = currentBook.Publisher.Name;
-                //model.Released = currentBook.Released;
+                //model.Released = currentBook.Released; 
                 //model.Pages = currentBook.Pages;
                 //model.Cover = currentBook.Cover;
                 model.Sections = new List<SectionsModel.Section>();
