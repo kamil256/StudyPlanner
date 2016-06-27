@@ -1,0 +1,170 @@
+﻿@model StudyPlanner.Models.BooksModel
+<h1>@ViewBag.s</h1>
+<h1 style="border-bottom: 1px solid #ddd; border-bottom-left-radius: 100px 1px; border-bottom-right-radius: 100px 1px; padding-bottom: 10px; margin-bottom: 10px;">Books @Html.ActionLink("Add new", "AddBook", null, new { @class = "btn btn-default btn-xs" })</h1>
+<div class="row">
+    <div class="col-sm-3" style="border-right: 1px solid #ddd; margin-bottom: 20px; border-top-right-radius: 1px 100px; border-bottom-right-radius: 1px 100px;">
+        @using (Html.BeginForm("Books", "Home", FormMethod.Post, new { id = "FilteringForm" }))
+        {
+            <div class="form-group">
+                @Html.LabelFor(x => x.FilterSearchString, "Search titles and authors:")
+                @Html.TextBoxFor(x => x.FilterSearchString, new { @class = "form-control", style = "max-width: 100%", autocomplete = "off" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.FilterReleasedFrom, "Released from:")
+                @Html.TextBoxFor(x => x.FilterReleasedFrom, new { @class = "form-control", type = "date", style = "max-width: 100%" })
+            </div>
+            <div class="form-group">
+                    @Html.LabelFor(x => x.FilterReleasedTo, "Released to:")
+                    @Html.TextBoxFor(x => x.FilterReleasedTo, new { @class = "form-control", type = "date", style = "max-width: 100%" })
+            </div>
+            <div class="form-group">
+                @Html.Label("Pages:")
+                <table style="width: 100%;">
+                    <tr>
+                        <td>@Html.TextBoxFor(x => x.FilterPagesFrom, new { @class = "form-control", type = "number", style = "max-width: 100%" })</td>
+                        <td style="width: 20px; text-align: center;">-</td>
+                        <td>@Html.TextBoxFor(x => x.FilterPagesTo, new { @class = "form-control", type = "number", style = "max-width: 100%" })</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="form-group">
+                <b>Authors:</b>
+                @for (int i = 0; i < Model.Authors.Count; i++)
+                {
+                    <div class="checkbox">
+                        @Html.Label(Model.Authors[i].Name)
+                        @*<input type="checkbox" name="FilterAuthors" value="@a.AuthorId" />*@
+                        @Html.CheckBox($"FilterAuthors[{i}]", Model.FilterAuthors[i] == "true", new { id = "Author_" + Model.Authors[i].AuthorId })
+                    </div>
+                }
+                
+            </div>
+            <div class="form-group">
+                <b>Publishers:</b>
+                @for (int i = 0; i < Model.Publishers.Count; i++)
+                {
+                    <div class="checkbox">
+                        @Html.Label(Model.Publishers[i].Name)                        
+                        @Html.CheckBox($"FilterPublishers[{i}]", Model.FilterPublishers[i] == "true", new { id = "Publisher_" + Model.Publishers[i].PublisherId })
+                    </div>
+                }
+
+            </div>
+            @Html.ActionLink("Clear filtering and sorting", "Books", null, new { @class = "btn btn-default btn-sm" })
+        }
+    </div>
+
+    <div class="col-sm-9">
+        @if (Model.TotalBooksInDatabase == 0)
+                {
+            <div class="alert alert-danger">No books in database!</div>
+        }
+        else
+        {
+            if (Model.Books.Count() == 0)
+            {
+            <div class="alert alert-danger">No books were found!</div>
+            }
+            else
+            {
+                using (Html.BeginForm("Books", "Home", FormMethod.Get, new { id = "SortingForm" }))
+                {
+                    <div class="form-group" style="text-align: right">
+                        <b>Sort by: </b>
+                        @Html.DropDownListFor(x => x.SortBy, new SelectList(Model.SortByItems, Model.SortBy), new { @class = "form-control", form = "FilteringForm", style = "display: inline-block; width: 130px;" })
+                        @Html.DropDownListFor(x => x.SortingOrder, new SelectList(Model.SortingOrderItems, Model.SortingOrder), new { @class = "form-control", form = "FilteringForm", style = "display: inline-block; width: 130px;" })
+                    </div>
+                }
+
+                foreach (var x in Model.Books)
+                { 
+                    <div class="well" style="position: relative; overflow: auto; padding-bottom: 0; margin-bottom: 10px;">
+                        <b style="display: block; font-size: 1.4em; margin-bottom: 19px;">@Html.MarkSearchedString(x.Title, Model.FilterSearchString)</b>
+                        @Html.ActionLink(HttpUtility.HtmlDecode("&times;"), "RemoveBook", new { BookId = x.BookId }, new { style = "position: absolute; right: 10px; top: 8px; text-decoration: none; font: bold 1.6em Arial; color: #808080;" })
+                        @*<a href="#" style="position: absolute; right: 10px; top: 8px; text-decoration: none; font: bold 1.6em Arial; color: #808080;">&times;</a>*@
+                        <div>
+                            <img src="/Covers/@x.Cover" width="120" style="float: left; margin: 0 19px 19px 0" />
+                            <div style="float: left; margin-bottom: 19px;">
+                                @switch (x.Authors.Count)
+                                {
+                                    case 0:
+                                        @:Author: unknown
+                                        break;
+                                    case 1:
+                                        @:Author:
+                                        break;
+                                    default:
+                                        @:Authors:
+                                        break;
+                                }
+                                @for (int i = 0; i < x.Authors.Count; i++)
+                                {
+                                    if (i < x.Authors.Count - 1)
+                                    {
+                                        @Html.ActionLink(@Html.MarkSearchedString(x.Authors[i].Name, Model.FilterSearchString).ToString(), "Books", new { selectAuthor = x.Authors[i].AuthorId })<span>,</span>
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink(@Html.MarkSearchedString(x.Authors[i].Name, Model.FilterSearchString).ToString(), "Books", new { selectAuthor = x.Authors[i].AuthorId })
+                                    }
+                                }
+                                <br />
+                                Publisher: @Html.ActionLink(x.Publisher, "Books", new { selectPublisher = x.PublisherId })
+                                <br />
+                                Released: @x.Released.ToLongDateString()
+                                <br />
+                                Pages: @x.Pages
+                                <div class="btn-group" style="display: block; margin-top: 19px">
+                                    @Html.ActionLink("Sections", "Sections", "Home", null, new { @class = "btn btn-sm btn-default" })
+                                    @Html.ActionLink("Trainings", "Trainings", "Home", null, new { @class = "btn btn-sm btn-default" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @Html.Pagination(1, 21, 10)
+            }
+        }
+    </div>
+</div>
+
+<script>
+    window.onload = function ()
+    {
+        FilteringForm = document.forms["FilteringForm"];
+        SearchBookString = document.getElementById("SearchBookString");
+        FilterReleasedFrom = document.getElementById("FilterReleasedFrom");
+        FilterReleasedTo = document.getElementById("FilterReleasedTo");
+        FilterPagesFrom = document.getElementById("FilterPagesFrom");
+        FilterPagesTo = document.getElementById("FilterPagesTo");
+        $("#FilteringForm input").on("change", function () { $("#FilteringForm").submit(); });
+        $("select[form='FilteringForm'").on("change", function () { $("#FilteringForm").submit(); });
+    }
+    var FilteringForm;
+    var SearchBookString;
+    var FilterReleasedFrom;
+    var FilterReleasedTo;
+    var FilterPagesFrom;
+    var FilterPagesTo;
+
+    
+
+    function confirmRemove(bookId)
+    {
+        if (confirm("Do you want to remove this book?"))
+            window.location.href = "/Home/RemoveBook?BookId=" + bookId;
+    }
+
+    function SelectAuthor(AuthorId)
+    {
+        SearchBookString.value = "";
+        FilterReleasedFrom.value = "";
+        FilterReleasedTo.value = "";
+        FilterPagesFrom.value = "";
+        FilterPagesTo.value = "";
+        $("[id*='Author_']").prop("checked", false);
+        $("#Author_" + AuthorId.toString()).prop("checked", true);
+        $("[id*='publisher_']").prop("checked", true);
+        FilteringForm.submit();
+    }
+</script>

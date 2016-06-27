@@ -1,0 +1,177 @@
+﻿@model StudyPlanner.Models.TrainingsModel
+
+<h1 style="border-bottom: 1px solid #ddd; border-bottom-left-radius: 100px 1px; border-bottom-right-radius: 100px 1px; padding-bottom: 10px; margin-bottom: 10px;">Trainings</h1>
+
+
+
+        <div class="row">
+            <div class="col-sm-3" style="border-right: 1px solid #ddd; margin-bottom: 20px; border-top-right-radius: 1px 100px; border-bottom-right-radius: 1px 100px;">
+                @using (Html.BeginForm("Trainings", "Home", FormMethod.Get, new { id = "FilteringForm" }))
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.FilterBookId, "Book:")
+                        @Html.DropDownListFor(x => x.FilterBookId, new SelectList(Model.Books, "BookId", "Title", Model.FilterBookId), new { @class = "form-control", style = "max-width: 100%" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.FilterSectionId, "Section:")
+                        @Html.DropDownListFor(x => x.FilterSectionId, new SelectList(Model.Sections, "SectionId", "Name", Model.FilterSectionId), new { @class = "form-control", style = "max-width: 100%" })
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Days since last activity:")
+                        <table style="width: 100%;">
+                            <tr>
+                                <td>@Html.TextBoxFor(x => x.FilterDaysSinceLastActivityFrom, new { @class = "form-control", type = "number", style = "max-width: 100%" })</td>
+                                <td style="width: 20px; text-align: center;">-</td>
+                                <td>@Html.TextBoxFor(x => x.FilterDaysSinceLastActivityTo, new { @class = "form-control", type = "number", style = "max-width: 100%" })</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="form-group">
+                        <strong>Progress:</strong>
+                        <div class="checkbox">
+                            @Html.LabelFor(x => x.Filter1LessonLeft, "1 lesson left")
+                            @Html.CheckBoxFor(x => x.Filter1LessonLeft)
+                        </div>
+                        <div class="checkbox">
+                            @Html.LabelFor(x => x.Filter2LessonsLeft, "2 lessons left")
+                            @Html.CheckBoxFor(x => x.Filter2LessonsLeft)
+                        </div>
+                        <div class="checkbox">
+                            @Html.LabelFor(x => x.Filter3LessonsLeft, "3 lessons left")
+                            @Html.CheckBoxFor(x => x.Filter3LessonsLeft)
+                        </div>
+                        <div class="checkbox">
+                            @Html.LabelFor(x => x.FilterTrainingCompleted, "Training completed")
+                            @Html.CheckBoxFor(x => x.FilterTrainingCompleted)
+                        </div>
+                    </div>
+                    <input type="reset" id="ResetFilteringFormBtn" value="Clear" />
+                }
+            </div>
+            <div class="col-sm-9">
+                @using (Html.BeginForm("Trainings", "Home", FormMethod.Get, new { id = "SortingForm" }))
+                {
+                    <div class="form-group" style="inline-block; text-align: right">
+                        <strong>Sort by: </strong>
+                        @Html.DropDownListFor(x => x.SortBy, new SelectList(Model.SortByItems, Model.SortBy), new { @class = "form-control", form = "FilteringForm", onchange = "document.forms['FilteringForm'].submit()", style = "display: inline-block; width: 130px;" })
+                        @Html.DropDownListFor(x => x.SortingOrder, new SelectList(Model.SortingOrderItems, Model.SortingOrder), new { @class = "form-control", form = "FilteringForm", onchange = "document.forms['FilteringForm'].submit()", style = "display: inline-block; width: 130px;" })
+                    </div>
+                }
+                <div class="panel-group">
+                    @foreach (var x in @Model.Trainings)
+                    {
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <b>@x.BookTitle</b><br />
+                                @x.SectionName
+                                <span style="float: right; font-weight: bold;" class="text-danger">
+                                    @switch (x.LessonsLeft)
+                                    {
+                                        case 0:
+                                            @:Training completed
+                                break;
+                                        case 1:
+                                            @x.LessonsLeft @: lesson left
+                                break;
+                                        case 2:
+                                            @x.LessonsLeft @: lessons left
+                                break;
+                                        case 3:
+                                            @x.LessonsLeft @: lessons left
+                                break;
+                                    }
+                                </span>
+                            </div>
+                            <div class="panel-body">
+                                @for (int i = 0; i < x.Authors.Count; i++)
+                                {
+                                    if (i < x.Authors.Count - 1)
+                                    {
+                                        <a href="#">@x.Authors[i].Name</a><span>,</span>
+                                    }
+                                    else
+                                    {
+                                        <a href="#">@x.Authors[i].Name</a>
+                                    }
+                                }
+                                <br />
+                                Last activity:
+                                @switch (x.DaysSinceLastActivity)
+                                {
+                                    case 0:
+                                        @:today
+                            break;
+                                    case 1:
+                                        @: yesterday
+                            break;
+                                    default:
+                                        @x.DaysSinceLastActivity @: days ago
+                            break;
+                                }
+                                <br />
+                                <br />
+
+                                @if (x.LessonsLeft != 0)
+                                {
+                                    if (x.DaysSinceLastActivity == 0)
+                                    {
+                                        <div style="display: inline-block" title="Wait until tomorrow" data-toggle="tooltip">
+                                            <span disabled="disabled" class="btn btn-default btn-xs">Complete next lesson</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink("Complete next lesson", "AddProgress", new { id = @x.TrainingId }, new { @class = "btn btn-default btn-xs" })
+                                    }
+                                    <span></span>
+                                    @Html.ActionLink("Give up", "RemoveTraining", new { id = @x.TrainingId }, new { @class = "btn btn-default btn-xs" })
+                                }
+
+                            </div>
+
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+
+            var FilterBookId = document.getElementById("FilterBookId");
+            var FilterSectionId = document.getElementById("FilterSectionId");
+            var FilterDaysSinceLastActivityFrom = document.getElementById("FilterDaysSinceLastActivityFrom");
+            var FilterDaysSinceLastActivityTo = document.getElementById("FilterDaysSinceLastActivityTo");
+            var FilterTrainingCompleted = document.getElementById("FilterTrainingCompleted");
+            var Filter1LessonLeft = document.getElementById("Filter1LessonLeft");
+            var Filter2LessonsLeft = document.getElementById("Filter2LessonsLeft");
+            var Filter3LessonsLeft = document.getElementById("Filter3LessonsLeft");
+            var FilteringForm = document.forms["FilteringForm"];
+            var ResetFilteringFormBtn = document.getElementById("ResetFilteringFormBtn");
+
+            FilterBookId.onchange = SubmitFilteringForm;
+            FilterSectionId.onchange = SubmitFilteringForm;
+            FilterDaysSinceLastActivityFrom.onchange = SubmitFilteringForm;
+            FilterDaysSinceLastActivityTo.onchange = SubmitFilteringForm;
+            FilterTrainingCompleted.onchange = SubmitFilteringForm;
+            Filter1LessonLeft.onchange = SubmitFilteringForm;
+            Filter2LessonsLeft.onchange = SubmitFilteringForm;
+            Filter3LessonsLeft.onchange = SubmitFilteringForm;
+            FilteringForm.onreset = ResetFilteringForm;
+
+            function SubmitFilteringForm() {
+                FilteringForm.submit();
+            }
+
+            function ResetFilteringForm() {
+                FilterBookId.value = 0;
+                FilterSectionId.value = 0;
+                FilterDaysSinceLastActivityFrom.value = "";
+                FilterDaysSinceLastActivityTo.value = "";
+                FilterTrainingCompleted.value = true;
+                Filter1LessonLeft.value = true;
+                Filter2LessonsLeft.value = true;
+                Filter3LessonsLeft.value = true;
+                SubmitFilteringForm();
+            }
+        </script>

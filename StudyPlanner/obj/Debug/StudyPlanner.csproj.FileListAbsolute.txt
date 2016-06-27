@@ -32,6 +32,6 @@ D:\visual studio 2015\Projects\StudyPlanner\StudyPlanner\bin\System.Web.Webpages
 D:\visual studio 2015\Projects\StudyPlanner\StudyPlanner\bin\System.Web.Webpages.Razor.xml
 D:\visual studio 2015\Projects\StudyPlanner\StudyPlanner\bin\System.Web.Helpers.xml
 D:\visual studio 2015\Projects\StudyPlanner\StudyPlanner\bin\System.Web.Mvc.xml
-D:\visual studio 2015\Projects\StudyPlanner\StudyPlanner\obj\Debug\StudyPlanner.csprojResolveAssemblyReference.cache
 D:\visual studio 2015\Projects\StudyPlanner\StudyPlanner\obj\Debug\StudyPlanner.dll
 D:\visual studio 2015\Projects\StudyPlanner\StudyPlanner\obj\Debug\StudyPlanner.pdb
+D:\visual studio 2015\Projects\StudyPlanner\StudyPlanner\obj\Debug\StudyPlanner.csprojResolveAssemblyReference.cache

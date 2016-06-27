@@ -1,4 +1,4 @@
-namespace StudyPlanner.Models
+namespace StudyPlanner.EF
 {
     using System;
     using System.Collections.Generic;
@@ -12,23 +12,24 @@ namespace StudyPlanner.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Section()
         {
-            Progresses = new HashSet<Progress>();
+            Trainings = new HashSet<Training>();
         }
 
         public int SectionId { get; set; }
 
-        public int? BookId { get; set; }
-
+        [Required]
         [StringLength(100)]
         public string Name { get; set; }
 
-        public int? StartPageNumber { get; set; }
+        public int BookId { get; set; }
 
-        public int? EndPageNumber { get; set; }
+        public int StartPageNumber { get; set; }
+
+        public int EndPageNumber { get; set; }
 
         public virtual Book Book { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Progress> Progresses { get; set; }
+        public virtual ICollection<Training> Trainings { get; set; }
     }
 }

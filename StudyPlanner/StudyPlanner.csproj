@@ -112,19 +112,27 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Web.config" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\Books.cshtml" />
+    <Content Include="Views\Home\AddBook.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="EF\Author.cs" />
+    <Compile Include="EF\AuthorOfBook.cs" />
+    <Compile Include="EF\Book.cs" />
+    <Compile Include="EF\Publisher.cs" />
+    <Compile Include="EF\Section.cs" />
+    <Compile Include="EF\StudyPlannerDB.cs" />
+    <Compile Include="EF\Training.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Author.cs" />
-    <Compile Include="Models\Book.cs" />
-    <Compile Include="Models\Progress.cs" />
-    <Compile Include="Models\Publisher.cs" />
-    <Compile Include="Models\Section.cs" />
-    <Compile Include="Models\StudyPlannerDB.cs" />
+    <Compile Include="HtmlHelperMethods.cs" />
+    <Compile Include="Models\AddBookModel.cs" />
+    <Compile Include="Models\BooksModel.cs" />
+    <Compile Include="Models\SectionsModel.cs" />
+    <Compile Include="Models\TrainingsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +144,10 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Views\Home\Sections.cshtml" />
+    <Content Include="Views\Home\Trainings.cshtml" />
+    <Content Include="Views\Home\AddSection.cshtml" />
+    <Content Include="Views\Home\AddBook - Copy.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

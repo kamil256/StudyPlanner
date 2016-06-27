@@ -1,6 +1,4 @@
-﻿@model IEnumerable<StudyPlanner.Models.Author>
-
-@{
+﻿@{
     Layout = null;
 }
 
@@ -13,10 +11,10 @@
 </head>
 <body>
     <div> 
-        @foreach (var x in Model)
-        {
-            <p>@x.Name</p>
-        }
+        <p>@Html.ActionLink("Books", "Books")</p>
+        <p>@Html.ActionLink("Authors", "Authors")</p>
+        <p>@Html.ActionLink("Publishers", "Publishers")</p>
+
     </div>
 </body>
 </html>

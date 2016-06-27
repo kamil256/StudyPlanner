@@ -1,0 +1,21 @@
+﻿@model StudyPlanner.EF.Section
+
+<h1 style="border-bottom: 1px solid #ddd; border-bottom-left-radius: 100px 1px; border-bottom-right-radius: 100px 1px; padding-bottom: 10px; margin-bottom: 10px;">Add new section for @ViewBag.Book.Title</h1>
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary()
+    <div class="form-group">
+        @Html.LabelFor(x => x.Name, "Title")
+        @Html.TextBoxFor(x => x.Name, new { @class = "form-control", style="max-width: 500px; width: 100%", required = "required" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.StartPageNumber, "Start page number:")
+        @Html.TextBoxFor(x => x.StartPageNumber, new { @class = "form-control", type = "number", style = "max-width: 500px; width: 100%", required = "required" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.EndPageNumber, "End page number:")
+        @Html.TextBoxFor(x => x.EndPageNumber, new { @class = "form-control", type = "number", style = "max-width: 500px; width: 100%", required = "required" })
+    </div>
+    <input type="submit" value="Add" class="btn btn-default" />
+    @Html.ActionLink("Cancel", "Sections", new { BookId = ViewBag.Book.BookId }, new { @class = "btn btn-default" })
+}
