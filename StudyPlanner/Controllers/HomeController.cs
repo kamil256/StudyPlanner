@@ -245,68 +245,64 @@ namespace StudyPlanner.Controllers
             return RedirectToAction("Books");
         }
 
+        [HttpGet]
         public ActionResult Sections(int BookId = 0)
         {
             ViewBag.Title = "Sections";
-
-            if (BookId == 0 && db.Books.Count() > 0)
-                BookId = (from b in db.Books orderby b.Title select b.BookId).First();
-
-            List<Book> books = (from b in db.Books orderby b.Title select b).ToList();
-            
-            SectionsModel model = new SectionsModel { BookId = BookId, Books = new List<Book>() };
-
-            if (BookId != 0)
+            SectionsModel model = new SectionsModel();
+            model.Books = (from b in db.Books
+                           orderby b.Title
+                           select new SectionsModel.Book
+                           {
+                               BookId = b.BookId,
+                               Title = b.Title
+                           }).ToArray<SectionsModel.Book>();
+            if (BookId == 0)
+                model.SelectedBook = (from b in db.Books orderby b.Title select b).FirstOrDefault();
+            else
+                model.SelectedBook = (from b in db.Books where b.BookId == BookId orderby b.Title select b).FirstOrDefault();
+            if (model.SelectedBook != null)
             {
-                var currentBook = (from b in books where b.BookId == BookId select b).First();
-                model.BookId = BookId;
-                model.Books = books;
-                model.Authors = (from ab in db.AuthorOfBooks where ab.BookId == BookId orderby ab.Priority select ab.Author.Name).ToArray();
-                model.Publisher = currentBook.Publisher.Name;
-                model.Released = currentBook.Released;
-                model.Pages = currentBook.Pages;
-                model.Cover = currentBook.Cover;
-                model.Sections = new List<SectionsModel.Section>();
-
-                var sections = from x in db.Sections where x.BookId == BookId orderby x.StartPageNumber select x;
-                foreach (var x in sections)
-                {
-                    var section = (Models.SectionsModel.Section)x;
-                    section.TrainingsCompleted = (from t in db.Trainings where t.SectionId == x.SectionId && t.LessonsLeft == 0 select t).Count();
-                    section.TrainingInProgress = (from t in db.Trainings where t.SectionId == x.SectionId && t.LessonsLeft > 0 select t).Count() == 0 ? false : true;
-                    model.Sections.Add(section);
-                }
+                model.SelectedBookAuthors = (from ab in db.AuthorOfBooks
+                                             where ab.BookId == model.SelectedBook.BookId
+                                             orderby ab.Priority
+                                             select ab.Author.Name).ToArray();
+                model.Sections = (from s in db.Sections
+                                  where s.BookId == model.SelectedBook.BookId
+                                  orderby s.StartPageNumber
+                                  select new Models.SectionsModel.Section
+                                  {
+                                      SectionId = s.SectionId,
+                                      Name = s.Name,
+                                      StartPageNumber = s.StartPageNumber,
+                                      EndPageNumber = s.EndPageNumber,
+                                      NumberOfPages = s.EndPageNumber - s.StartPageNumber + 1,
+                                      TrainingsCompleted = (from t in db.Trainings
+                                                            where s.SectionId == t.SectionId && t.LessonsLeft == 0
+                                                            select t).Count(),
+                                      IsTrainingInProgress = (from t in db.Trainings
+                                                              where s.SectionId == t.SectionId && t.LessonsLeft > 0
+                                                              select t).Count() == 0 ? false : true
+                                  }).ToArray();
             }
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult Sections(SectionsModel model)
+        public ActionResult Sections(int BookId, SectionsModel model)
         {
             ViewBag.Title = "Sections";
 
-            List<Book> books = (from b in db.Books orderby b.Title select b).ToList();
+            db.Sections.Add(new Section
+            {
+                BookId = BookId,
+                StartPageNumber = model.AddSectionStartPageNumber,
+                EndPageNumber = model.AddSectionEndPageNumber,
+                Name = model.AddSectionName
+            });
+            db.SaveChanges();
 
-            
-                //model.BookId = BookId;
-                //model.Books = books;
-                //model.Authors = (from ab in db.AuthorOfBooks where ab.BookId == BookId orderby ab.Priority select ab.Author.Name).ToArray();
-                //model.Publisher = currentBook.Publisher.Name;
-                //model.Released = currentBook.Released; 
-                //model.Pages = currentBook.Pages;
-                //model.Cover = currentBook.Cover;
-                model.Sections = new List<SectionsModel.Section>();
-
-                var sections = from x in db.Sections where x.BookId == model.BookId orderby x.StartPageNumber select x;
-                foreach (var x in sections)
-                {
-                    var section = (Models.SectionsModel.Section)x;
-                    section.TrainingsCompleted = (from t in db.Trainings where t.SectionId == x.SectionId && t.LessonsLeft == 0 select t).Count();
-                    section.TrainingInProgress = (from t in db.Trainings where t.SectionId == x.SectionId && t.LessonsLeft > 0 select t).Count() == 0 ? false : true;
-                    model.Sections.Add(section);
-                }
-            
-            return View(model);
+            return RedirectToAction("Sections", new { BookId = BookId });//View(model);
         }
 
         public ActionResult AddSection(int BookId)

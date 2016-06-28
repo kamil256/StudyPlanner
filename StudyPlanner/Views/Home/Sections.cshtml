@@ -1,17 +1,17 @@
 ﻿@model StudyPlanner.Models.SectionsModel
 
 <h1 style="border-bottom: 1px solid #ddd; border-bottom-left-radius: 100px 1px; border-bottom-right-radius: 100px 1px; padding-bottom: 10px; margin-bottom: 10px;">Sections 
-    @if (Model.Books.Count == 0)
+    @if (Model.Books.Length == 0)
     {
         @Html.ActionLink("Add new", "AddSection", null, new { @class = "btn btn-default btn-xs", disabled = "disabled" })
     }
     else
     {
-        @Html.ActionLink("Add new", "AddSection", new { BookId = Model.BookId }, new { @class = "btn btn-default btn-xs" })
+        @Html.ActionLink("Add new", "AddSection", new { BookId = Model.SelectedBook.BookId }, new { @class = "btn btn-default btn-xs" })
     }
 </h1>
 
-@if (Model.Books.Count == 0)
+@if (Model.Books.Length == 0)
 {
     <div class="alert alert-danger">No books were added!</div>
 }
@@ -19,17 +19,17 @@ else
 {
     <div class="form-group">
         @Html.Label("Book", "Select a book to see its sections: ")
-        @Html.DropDownList("Book", new SelectList(Model.Books, "BookId", "Title", Model.BookId), new { @class = "form-control", style = "max-width: 500px; width: 100%;", onchange = "changeValue(this.value)" })
+        @Html.DropDownList("Book", new SelectList(Model.Books, "BookId", "Title", Model.SelectedBook.BookId), new { @class = "form-control", style = "max-width: 500px; width: 100%;", onchange = "changeValue(this.value)" })
     </div>
-    if (Model.BookId != 0)
+    if (Model.SelectedBook.BookId != 0)
     {
         <div class="well well-sm" style="overflow: auto; padding: 15px">
 
-            <img src="/Covers/@Model.Cover" width="100" style="margin: 0 15px 15px 0; display: block; float: left;padding: 0; amargin: 0 15px 15px 0; aoutline: 1px solid red;" />
+            <img src="/Covers/@Model.SelectedBook.Cover" width="100" style="margin: 0 15px 15px 0; display: block; float: left;padding: 0; amargin: 0 15px 15px 0; aoutline: 1px solid red;" />
             <div style="display: block; float: left; amargin-bottom: 30px; aoutline: 1px solid red;">
-                @switch (Model.Authors.Length)
-                    {
-                        case 0:
+                @switch (Model.SelectedBookAuthors.Length)
+                {
+                    case 0:
                         @:Author: unknown
                             break;
                         case 1:
@@ -39,22 +39,22 @@ else
                         @:Authors:
                             break;
                     }
-                @for (int i = 0; i < Model.Authors.Length; i++)
+                @for (int i = 0; i < Model.SelectedBookAuthors.Length; i++)
+                {
+                    if (i < Model.SelectedBookAuthors.Length - 1)
                     {
-                        if (i < Model.Authors.Length - 1)
-                        {
 
-                        @Model.Authors[i]<span>,</span>
+                        @Model.SelectedBookAuthors[i]<span>,</span>
                     }
                     else
                     {
-                        @Model.Authors[i]
+                        @Model.SelectedBookAuthors[i]
                     }
                 }
                 <br />
-                Publisher: @Model.Publisher<br />
-                Released: @Model.Released.ToLongDateString()<br />
-                Pages: @Model.Pages
+                Publisher: @Model.SelectedBook.Publisher.Name<br />
+                Released: @Model.SelectedBook.Released.ToLongDateString()<br />
+                Pages: @Model.SelectedBook.Pages
             </div>
         </div>
     }
@@ -96,18 +96,20 @@ else
                         <td>@x.Name</td>
                         <td style="text-align: center">@x.TrainingsCompleted</td>
                         <td>
-                            @if (x.TrainingInProgress)
+                            @if (x.IsTrainingInProgress)
                             {
-                                @Html.ActionLink("Go to training", "Trainings", new { FilterBookId = Model.BookId, FilterSectionId = x.SectionId, FilterTrainingCompleted = false }, new { @class = "btn btn-default btn-xs" })
+                                @Html.ActionLink("Go to training", "Trainings", new { FilterBookId = Model.SelectedBook.BookId, FilterSectionId = x.SectionId, FilterTrainingCompleted = false }, new { @class = "btn btn-default btn-xs" })
                                 @*<button class="btn btn-default btn-xs">Go to training</button>*@
                             }
                             else
                             {
-                                @Html.ActionLink("Start new training", "AddTraining", new { BookId = Model.BookId, SectionId = x.SectionId }, new { @class = "btn btn-default btn-xs" })
+                                @Html.ActionLink("Start new training", "AddTraining", new { BookId = Model.SelectedBook.BookId, SectionId = x.SectionId }, new { @class = "btn btn-default btn-xs" })
                             }
                         </td>
                     </tr>
                 }
+                @using (Html.BeginForm("Sections", "Home", FormMethod.Post))
+                {
                 <tr>
                     <td style="text-align: center; aoutline: 1px solid green;">
                         <div style="display: table; aoutline: 1px solid red; margin: 0 auto; width: 120px;">
@@ -115,7 +117,7 @@ else
                                 
                                 <div style="display: table-cell; text-align: center; width: 45%">
                                     @*<input style="width: 100%; display: inline" class="form-control" />*@
-                                    @Html.TextBoxFor(x => x.AddStartPageNumber, new { style = "width: 100%; display: inline", @class = "form-control" })
+                                    @Html.TextBoxFor(x => x.AddSectionStartPageNumber, new { style = "width: 100%; display: inline", @class = "form-control" })
                                 </div>
                                 
                                 <div style="display: table-cell; width: 10%;text-align: center">
@@ -124,7 +126,7 @@ else
                                 
                                 <div style="display: table-cell;text-align: center; width: 45%">
                                     @*<input  style="width: 100%; display: inline" class="form-control" />*@
-                                    @Html.TextBoxFor(x => x.AddStartPageNumber, new { style = "width: 100%; display: inline", @class = "form-control" })
+                                    @Html.TextBoxFor(x => x.AddSectionEndPageNumber, new { style = "width: 100%; display: inline", @class = "form-control" })
                                 </div>
 
                             </div>
@@ -133,14 +135,16 @@ else
                     <td style="text-align: center; vertical-align: middle">-</td>
                     <td>
                         @*<input class="form-control" style="display: inline; width: 100%; max-width: 100%;" />*@
-                        @Html.TextBoxFor(x => x.AddName, new { style = "width: 100%; display: inline; max-width: 100%", @class = "form-control" })
+                        @Html.TextBoxFor(x => x.AddSectionName, new { style = "width: 100%; display: inline; max-width: 100%", @class = "form-control" })
                     </td>
                     <td style="text-align: center; vertical-align: middle">0</td>
                     <td style="vertical-align: middle">
-                        @Html.ActionLink("Add", "AddSection", new { FilterBookId = Model.BookId, FilterTrainingCompleted = false }, new { @class = "btn btn-default btn-xs" })
+                        <input type="hidden" name="BookId" value="@Model.SelectedBook.BookId" />
+                        <input type="submit" value="Add" class="btn btn-default btn-xs" />
+                        @*@Html.ActionLink("Add", "AddSection", new { FilterBookId = Model.SelectedBook.BookId, FilterTrainingCompleted = false }, new { @class = "btn btn-default btn-xs" })*@
                     </td>
                 </tr>
-
+                }
             </tbody>
         </table>
         }
