@@ -1,6 +1,6 @@
 ﻿@model StudyPlanner.Models.SectionsModel
 
-<h1>Sections</h1>
+<h1 class="heading">Sections</h1>
 
 @if (Model.Books.Length == 0)
 {
@@ -8,11 +8,14 @@
 }
 else
 {
-    <div class="form-group">
-        @Html.Label("Book", "Select a book to see its sections: ")
-        @Html.DropDownList("Book", new SelectList(Model.Books, "BookId", "Title", Model.SelectedBook.BookId), new { @class = "form-control", style = "max-width: 500px; width: 100%;", onchange = "changeValue(this.value)" })
-    </div>
-    if (Model.SelectedBook.BookId != 0)
+    using (Html.BeginForm("Sections", "Home", FormMethod.Get, new { id = "SelectBookForm" }))
+    {
+        <div class="form-group">
+            @Html.Label("BookId", "Select a book to see its sections: ")
+            @Html.DropDownList("BookId", new SelectList(Model.Books, "BookId", "Title", Model.SelectedBook.BookId), new { @class = "form-control", style = "max-width: 500px; width: 100%;" })
+        </div>
+    }
+    if (Model.SelectedBook != null)
     {
         <div class="well well-sm" style="overflow: auto; padding: 15px">
 
@@ -23,13 +26,13 @@ else
                     case 0:
                         @:Author: unknown
                             break;
-                        case 1:
+                    case 1:
                         @:Author:
                             break;
-                        default:
+                    default:
                         @:Authors:
                             break;
-                    }
+                }
                 @for (int i = 0; i < Model.SelectedBookAuthors.Length; i++)
                 {
                     if (i < Model.SelectedBookAuthors.Length - 1)
@@ -56,8 +59,8 @@ else
     }
     else
     {
-        
-        
+
+
         <table class="table">
             <thead>
                 <tr>
@@ -138,17 +141,11 @@ else
                 }
             </tbody>
         </table>
-        }
-        }
+    }
+}
 
-
-        <script>
-            function changeValue(v) {
-                window.location.href = '/Home/Sections?BookId=' + v;
-            }
-            //function confirmRemove(bookId)
-            //{
-            //    if (confirm("Do you want to remove this book?"))
-            //        window.location.href = "/Home/RemoveBook?BookId=" + bookId;
-            //}
-        </script>
+<script type="text/javascript">
+    $(function () {
+        $("#BookId").on("change", function () { $("#SelectBookForm").submit() });
+    });
+</script>
