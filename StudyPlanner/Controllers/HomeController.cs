@@ -313,35 +313,6 @@ namespace StudyPlanner.Controllers
             return RedirectToAction("Sections", new { BookId = BookId });
         }
 
-        public ActionResult AddSection(int BookId)
-        {
-            ViewBag.Title = "Add new section";
-            var book = (from x in db.Books where x.BookId == BookId select x).First();
-            if (book == null)
-                return RedirectToAction("Sections");
-            else
-            {
-                ViewBag.Book = book;
-                return View();
-            }
-        }
-
-        [HttpPost]
-        public ActionResult AddSection(Section model)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Sections.Add(model);
-                db.SaveChanges();
-                return RedirectToAction("Sections", new { BookId = model.BookId });
-            }
-            else
-            {
-                ViewBag.Title = "Add new book";
-                return View(model);
-            }
-        }
-
         public ActionResult Trainings(TrainingsModel model)
         {
             ViewBag.Title = "Trainings";
