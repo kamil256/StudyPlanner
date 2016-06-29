@@ -14,63 +14,52 @@ else
             @Html.Label("BookId", "Select a book to see its sections: ")
             @Html.DropDownList("BookId", new SelectList(Model.Books, "BookId", "Title", Model.SelectedBook.BookId), new { @class = "form-control", style = "max-width: 500px; width: 100%;" })
         </div>
-    }
-    if (Model.SelectedBook != null)
-    {
-        <div class="well well-sm" style="overflow: auto; padding: 15px">
-
-            <img src="/Covers/@Model.SelectedBook.Cover" width="100" style="margin: 0 15px 15px 0; display: block; float: left;padding: 0; amargin: 0 15px 15px 0; aoutline: 1px solid red;" />
-            <div style="display: block; float: left; amargin-bottom: 30px; aoutline: 1px solid red;">
-                @switch (Model.SelectedBookAuthors.Length)
+    }       
+              
+    <div class="well" style="position: relative; overflow: auto; padding-bottom: 0; margin-bottom: 10px;">
+        <b style="display: block; font-size: 1.4em; margin-bottom: 19px;">@Model.SelectedBook.Title</b>
+        <img src="/Covers/@Model.SelectedBook.Cover" width="120" style="float: left; margin: 0 19px 19px 0" />
+        <div style="float: left; margin-bottom: 19px;">
+            @switch (Model.SelectedBookAuthors.Length)
+            {
+                case 0:
+                    @:Author: unknown
+                    break;
+                case 1:
+                    @:Author:
+                    break;
+                default:
+                    @:Authors:
+                    break;
+            }  
+            @for (int i = 0; i < Model.SelectedBookAuthors.Length; i++)
+            {
+                if (i < Model.SelectedBookAuthors.Length - 1)
                 {
-                    case 0:
-                        @:Author: unknown
-                            break;
-                    case 1:
-                        @:Author:
-                            break;
-                    default:
-                        @:Authors:
-                            break;
+                    @Model.SelectedBookAuthors[i]<span>,</span>
                 }
-                @for (int i = 0; i < Model.SelectedBookAuthors.Length; i++)
+                else
                 {
-                    if (i < Model.SelectedBookAuthors.Length - 1)
-                    {
-
-                        @Model.SelectedBookAuthors[i]<span>,</span>
-                    }
-                    else
-                    {
-                        @Model.SelectedBookAuthors[i]
-                    }
+                    @Model.SelectedBookAuthors[i]
                 }
-                <br />
-                Publisher: @Model.SelectedBook.Publisher.Name<br />
-                Released: @Model.SelectedBook.Released.ToLongDateString()<br />
-                Pages: @Model.SelectedBook.Pages
-            </div>
+            }
+            <br />
+            Publisher: @Model.SelectedBook.Publisher.Name<br />
+            Released: @Model.SelectedBook.Released.ToLongDateString()<br />
+            Pages: @Model.SelectedBook.Pages
         </div>
-    }
+    </div>
 
-    if (Model.Sections.Count() == 0)
-    {
-        <div class="alert alert-danger">No sections were added!</div>
-    }
-    else
-    {
-
-
-        <table class="table">
-            <thead>
-                <tr>
-                    <th style="text-align: center; width: 100px;">Pages</th>
-                    @*<th style="text-align: center">End page</th>*@
-                    <th style="text-align: center">Total</th>
-                    <th style="width: 45%">Section name</th>
-                    <th style="text-align: center">Trainings completed</th>
-                    <th></th>
-                </tr>
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="text-align: center; width: 100px;">Pages</th>
+                @*<th style="text-align: center">End page</th>*@
+                <th style="text-align: center">Total</th>
+                <th style="width: 45%">Section name</th>
+                <th style="text-align: center">Trainings completed</th>
+                <th></th>
+            </tr>
             </thead>
             <tbody>
                 @foreach (var x in Model.Sections)
@@ -85,7 +74,7 @@ else
                                 </div>
                             </div>
                         </td>
-                       @* <td style="text-align: center">@x.EndPageNumber</td>*@
+                        @* <td style="text-align: center">@x.EndPageNumber</td>*@
                         <td style="text-align: center">@x.NumberOfPages</td>
                         <td>@x.Name</td>
                         <td style="text-align: center">@x.NumberOfTrainingsCompleted</td>
@@ -104,48 +93,48 @@ else
                 }
                 @using (Html.BeginForm("Sections", "Home", FormMethod.Post))
                 {
-                <tr>
-                    <td style="text-align: center; aoutline: 1px solid green;">
-                        <div style="display: table; aoutline: 1px solid red; margin: 0 auto; width: 120px;">
-                            <div style="display: table-row">
-                                
-                                <div style="display: table-cell; text-align: center; width: 45%">
-                                    @*<input style="width: 100%; display: inline" class="form-control" />*@
-                                    @Html.TextBoxFor(x => x.NewSectionStartPageNumber, new { style = "width: 100%; display: inline", @class = "form-control" })
-                                </div>
-                                
-                                <div style="display: table-cell; width: 10%;text-align: center">
-                                    -
-                                </div>
-                                
-                                <div style="display: table-cell;text-align: center; width: 45%">
-                                    @*<input  style="width: 100%; display: inline" class="form-control" />*@
-                                    @Html.TextBoxFor(x => x.NewSectionEndPageNumber, new { style = "width: 100%; display: inline", @class = "form-control" })
-                                </div>
+                    <tr>
+                        <td style="text-align: center; aoutline: 1px solid green;">
+                            <div style="display: table; aoutline: 1px solid red; margin: 0 auto; width: 120px;">
+                                <div style="display: table-row">
 
+                                    <div style="display: table-cell; text-align: center; width: 45%">
+                                        @*<input style="width: 100%; display: inline" class="form-control" />*@
+                                        @Html.TextBoxFor(x => x.NewSectionStartPageNumber, new { style = "width: 100%; display: inline", @class = "form-control" })
+                                    </div>
+
+                                    <div style="display: table-cell; width: 10%;text-align: center">
+                                        -
+                                    </div>
+
+                                    <div style="display: table-cell;text-align: center; width: 45%">
+                                        @*<input  style="width: 100%; display: inline" class="form-control" />*@
+                                        @Html.TextBoxFor(x => x.NewSectionEndPageNumber, new { style = "width: 100%; display: inline", @class = "form-control" })
+                                    </div>
+
+                                </div>
                             </div>
-                        </div>
-                    </td>
-                    <td style="text-align: center; vertical-align: middle">-</td>
-                    <td>
-                        @*<input class="form-control" style="display: inline; width: 100%; max-width: 100%;" />*@
-                        @Html.TextBoxFor(x => x.NewSectionName, new { style = "width: 100%; display: inline; max-width: 100%", @class = "form-control" })
-                    </td>
-                    <td style="text-align: center; vertical-align: middle">0</td>
-                    <td style="vertical-align: middle">
-                        <input type="hidden" name="BookId" value="@Model.SelectedBook.BookId" />
-                        <input type="submit" value="Add" class="btn btn-default btn-xs" />
-                        @*@Html.ActionLink("Add", "AddSection", new { FilterBookId = Model.SelectedBook.BookId, FilterTrainingCompleted = false }, new { @class = "btn btn-default btn-xs" })*@
-                    </td>
-                </tr>
+                        </td>
+                        <td style="text-align: center; vertical-align: middle">-</td>
+                        <td>
+                            @*<input class="form-control" style="display: inline; width: 100%; max-width: 100%;" />*@
+                            @Html.TextBoxFor(x => x.NewSectionName, new { style = "width: 100%; display: inline; max-width: 100%", @class = "form-control" })
+                        </td>
+                        <td style="text-align: center; vertical-align: middle">0</td>
+                        <td style="vertical-align: middle">
+                            <input type="hidden" name="BookId" value="@Model.SelectedBook.BookId" />
+                            <input type="submit" value="Add" class="btn btn-default btn-xs" />
+                            @*@Html.ActionLink("Add", "AddSection", new { FilterBookId = Model.SelectedBook.BookId, FilterTrainingCompleted = false }, new { @class = "btn btn-default btn-xs" })*@
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>
-    }
+        
 }
 
-<script type="text/javascript">
-    $(function () {
-        $("#BookId").on("change", function () { $("#SelectBookForm").submit() });
-    });
-</script>
+        <script type="text/javascript">
+            $(function () {
+                $("#BookId").on("change", function () { $("#SelectBookForm").submit() });
+            });
+        </script>
