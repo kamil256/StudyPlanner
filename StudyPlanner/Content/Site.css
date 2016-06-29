@@ -28,17 +28,41 @@ textarea {
     padding-bottom: 10px; 
     margin-bottom: 10px;
 }
-
 .side-panel {
     border-right: 1px solid #ddd;
     border-top-right-radius: 1px 100px;
     border-bottom-right-radius: 1px 100px;
     margin-bottom: 20px;
 }
-
+.side-panel input[type="text"], .side-panel input[type="date"], .side-panel input[type="number"] {
+    max-width: 100%;
+}
+.form-control-range {
+    font-size: 0;
+}
+.form-control-range > input {
+    width: calc(50% - 10px);
+    display: inline-block;
+}
+.form-control-range > div {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: initial;
+    width: 20px;
+    text-align: center;
+}
 #SelectBookForm > div >  select {
     max-width: 500px;
     width: 100%;
+}
+.sorting-group {
+    text-align: right;
+    margin-bottom: 0;
+}
+.sorting-group > select {
+    display: inline-block;
+    width: 130px;
+    margin-bottom: 10px;
 }
 .book-details {
     position: relative;
@@ -59,7 +83,18 @@ textarea {
     font-size: 1.4em;
     margin-bottom: 10px;
 }
-
+.book-details > a {
+    position: absolute; 
+    right: 10px; 
+    top: 8px; 
+    text-decoration: none; 
+    font: bold 1.6em Arial; 
+    color: #808080;
+}
+.book-details > div > .btn-group {
+    display: block; 
+    margin-top: 10px;
+}
 .sections-table > thead > tr > th, .sections-table > tbody > tr > td {
     text-align: center;
     vertical-align: middle;
