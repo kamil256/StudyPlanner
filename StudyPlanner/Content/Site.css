@@ -29,6 +29,13 @@ textarea {
     margin-bottom: 10px;
 }
 
+.side-panel {
+    border-right: 1px solid #ddd;
+    border-top-right-radius: 1px 100px;
+    border-bottom-right-radius: 1px 100px;
+    margin-bottom: 20px;
+}
+
 #SelectBookForm > div >  select {
     max-width: 500px;
     width: 100%;
