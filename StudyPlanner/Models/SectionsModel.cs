@@ -14,9 +14,9 @@ namespace StudyPlanner.Models
         public EF.Book SelectedBook { get; set; }
         public string[] SelectedBookAuthors { get; set; }
 
-        public int AddSectionStartPageNumber { get; set; }
-        public int AddSectionEndPageNumber { get; set; }
-        public string AddSectionName { get; set; }
+        public int NewSectionStartPageNumber { get; set; }
+        public int NewSectionEndPageNumber { get; set; }
+        public string NewSectionName { get; set; }
 
         public class Book
         {

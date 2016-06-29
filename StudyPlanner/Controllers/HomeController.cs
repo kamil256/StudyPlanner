@@ -296,13 +296,13 @@ namespace StudyPlanner.Controllers
             db.Sections.Add(new Section
             {
                 BookId = BookId,
-                StartPageNumber = model.AddSectionStartPageNumber,
-                EndPageNumber = model.AddSectionEndPageNumber,
-                Name = model.AddSectionName
+                StartPageNumber = model.NewSectionStartPageNumber,
+                EndPageNumber = model.NewSectionEndPageNumber,
+                Name = model.NewSectionName
             });
             db.SaveChanges();
 
-            return RedirectToAction("Sections", new { BookId = BookId });//View(model);
+            return RedirectToAction("Sections", new { BookId = BookId });
         }
 
         public ActionResult AddSection(int BookId)
