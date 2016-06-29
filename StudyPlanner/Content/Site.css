@@ -29,6 +29,53 @@ textarea {
     margin-bottom: 10px;
 }
 
+#SelectBookForm > div >  select {
+    max-width: 500px;
+    width: 100%;
+}
+.book-details {
+    position: relative;
+    overflow: auto;
+    padding-bottom: 0;
+    margin-bottom: 10px;
+}
+.book-details > img {
+    float: left; 
+    margin: 0 19px 19px 0
+}
+.book-details > img + div {
+    float: left;
+    margin-bottom: 19px;
+}
+.book-details >img + div > b {
+    display: block;
+    font-size: 1.4em;
+    margin-bottom: 10px;
+}
+
+.sections-table > thead > tr > th, .sections-table > tbody > tr > td {
+    text-align: center;
+    vertical-align: middle;
+}
+.sections-table > tbody > tr > td:nth-child(2) {
+    padding-left: 0;
+    padding-right: 0;
+}
+.sections-table > thead > tr > th:nth-child(3), .sections-table > tbody > tr > td:nth-child(5) {
+    text-align: left;
+    width: 60%;
+}
+.sections-table > tbody > tr > td:nth-child(7) > .btn {
+    width: 110px;
+}
+.sections-table > tbody > tr > td:nth-child(1) > input, .sections-table > tbody > tr > td:nth-child(3) > input {
+    width: 75px;
+    text-align: center;
+}
+.sections-table > tbody > tr > td:nth-child(5) > input {
+    max-width: 100%;
+}
+
 .pagination {
     width: 100%;
     text-align: center;

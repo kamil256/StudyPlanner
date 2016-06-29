@@ -304,8 +304,8 @@ namespace StudyPlanner.Controllers
                 db.Sections.Add(new Section
                 {
                     BookId = BookId,
-                    StartPageNumber = model.NewSectionStartPageNumber,
-                    EndPageNumber = model.NewSectionEndPageNumber,
+                    StartPageNumber = model.NewSectionStartPageNumber ?? 0,
+                    EndPageNumber = model.NewSectionEndPageNumber ?? 0,
                     Name = model.NewSectionName
                 });
                 db.SaveChanges();

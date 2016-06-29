@@ -14,8 +14,8 @@ namespace StudyPlanner.Models
         public StudyPlanner.EF.Book SelectedBook { get; set; }
         public string[] SelectedBookAuthors { get; set; }
 
-        public int NewSectionStartPageNumber { get; set; }
-        public int NewSectionEndPageNumber { get; set; }
+        public int? NewSectionStartPageNumber { get; set; }
+        public int? NewSectionEndPageNumber { get; set; }
         public string NewSectionName { get; set; }
 
         public class Book
