@@ -11,7 +11,7 @@ namespace StudyPlanner.Models
         public Book[] Books { get; set; }
         public Section[] Sections { get; set; }
 
-        public EF.Book SelectedBook { get; set; }
+        public StudyPlanner.EF.Book SelectedBook { get; set; }
         public string[] SelectedBookAuthors { get; set; }
 
         public int NewSectionStartPageNumber { get; set; }
@@ -31,7 +31,7 @@ namespace StudyPlanner.Models
             public int StartPageNumber { get; set; }
             public int EndPageNumber { get; set; }
             public int NumberOfPages { get; set; }
-            public int TrainingsCompleted { get; set; }
+            public int NumberOfTrainingsCompleted { get; set; }
             public bool IsTrainingInProgress { get; set; }
         }
     }

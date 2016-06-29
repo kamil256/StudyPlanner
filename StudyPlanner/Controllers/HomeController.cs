@@ -277,7 +277,7 @@ namespace StudyPlanner.Controllers
                                       StartPageNumber = s.StartPageNumber,
                                       EndPageNumber = s.EndPageNumber,
                                       NumberOfPages = s.EndPageNumber - s.StartPageNumber + 1,
-                                      TrainingsCompleted = (from t in db.Trainings
+                                      NumberOfTrainingsCompleted = (from t in db.Trainings
                                                             where s.SectionId == t.SectionId && t.LessonsLeft == 0
                                                             select t).Count(),
                                       IsTrainingInProgress = (from t in db.Trainings
