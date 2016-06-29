@@ -1,15 +1,6 @@
 ﻿@model StudyPlanner.Models.SectionsModel
 
-<h1 style="border-bottom: 1px solid #ddd; border-bottom-left-radius: 100px 1px; border-bottom-right-radius: 100px 1px; padding-bottom: 10px; margin-bottom: 10px;">Sections 
-    @if (Model.Books.Length == 0)
-    {
-        @Html.ActionLink("Add new", "AddSection", null, new { @class = "btn btn-default btn-xs", disabled = "disabled" })
-    }
-    else
-    {
-        @Html.ActionLink("Add new", "AddSection", new { BookId = Model.SelectedBook.BookId }, new { @class = "btn btn-default btn-xs" })
-    }
-</h1>
+<h1>Sections</h1>
 
 @if (Model.Books.Length == 0)
 {

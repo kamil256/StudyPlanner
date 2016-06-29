@@ -21,6 +21,14 @@ textarea {
   src: url('../fonts/glyphicons-halflings-regular.eot');
 }
 
+.container > h1:first-child {
+    border-bottom: 1px solid #ddd; 
+    border-bottom-left-radius: 100px 1px; 
+    border-bottom-right-radius: 100px 1px; 
+    padding-bottom: 10px; 
+    margin-bottom: 10px;
+}
+
 .pagination {
     width: 100%;
     text-align: center;

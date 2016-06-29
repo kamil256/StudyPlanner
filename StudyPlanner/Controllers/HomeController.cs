@@ -256,7 +256,7 @@ namespace StudyPlanner.Controllers
                            {
                                BookId = b.BookId,
                                Title = b.Title
-                           }).ToArray<SectionsModel.Book>();
+                           }).ToArray();
             if (BookId == 0)
                 model.SelectedBook = (from b in db.Books orderby b.Title select b).FirstOrDefault();
             else
@@ -278,8 +278,8 @@ namespace StudyPlanner.Controllers
                                       EndPageNumber = s.EndPageNumber,
                                       NumberOfPages = s.EndPageNumber - s.StartPageNumber + 1,
                                       NumberOfTrainingsCompleted = (from t in db.Trainings
-                                                            where s.SectionId == t.SectionId && t.LessonsLeft == 0
-                                                            select t).Count(),
+                                                                    where s.SectionId == t.SectionId && t.LessonsLeft == 0
+                                                                    select t).Count(),
                                       IsTrainingInProgress = (from t in db.Trainings
                                                               where s.SectionId == t.SectionId && t.LessonsLeft > 0
                                                               select t).Count() == 0 ? false : true
@@ -292,16 +292,24 @@ namespace StudyPlanner.Controllers
         public ActionResult Sections(int BookId, SectionsModel model)
         {
             ViewBag.Title = "Sections";
-
-            db.Sections.Add(new Section
+            Book book = (from b in db.Books
+                         where b.BookId == BookId
+                         select b).FirstOrDefault();
+            if (book != null &&
+                model.NewSectionStartPageNumber >= 1 &&
+                model.NewSectionEndPageNumber <= book.Pages &&
+                model.NewSectionStartPageNumber <= model.NewSectionEndPageNumber &&
+                !String.IsNullOrWhiteSpace(model.NewSectionName))
             {
-                BookId = BookId,
-                StartPageNumber = model.NewSectionStartPageNumber,
-                EndPageNumber = model.NewSectionEndPageNumber,
-                Name = model.NewSectionName
-            });
-            db.SaveChanges();
-
+                db.Sections.Add(new Section
+                {
+                    BookId = BookId,
+                    StartPageNumber = model.NewSectionStartPageNumber,
+                    EndPageNumber = model.NewSectionEndPageNumber,
+                    Name = model.NewSectionName
+                });
+                db.SaveChanges();
+            }
             return RedirectToAction("Sections", new { BookId = BookId });
         }
 
