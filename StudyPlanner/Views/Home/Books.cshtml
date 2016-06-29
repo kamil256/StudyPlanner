@@ -1,6 +1,6 @@
 ﻿@model StudyPlanner.Models.BooksModel
 <h1>@ViewBag.s</h1>
-<h1 style="border-bottom: 1px solid #ddd; border-bottom-left-radius: 100px 1px; border-bottom-right-radius: 100px 1px; padding-bottom: 10px; margin-bottom: 10px;">Books @Html.ActionLink("Add new", "AddBook", null, new { @class = "btn btn-default btn-xs" })</h1>
+<h1 class="heading">Books @Html.ActionLink("Add new", "AddBook", null, new { @class = "btn btn-default btn-xs" })</h1>
 <div class="row">
     <div class="col-sm-3" style="border-right: 1px solid #ddd; margin-bottom: 20px; border-top-right-radius: 1px 100px; border-bottom-right-radius: 1px 100px;">
         @using (Html.BeginForm("Books", "Home", FormMethod.Post, new { id = "FilteringForm" }))
