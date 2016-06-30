@@ -33,7 +33,7 @@ namespace StudyPlanner.Models
             public string BookTitle { get; set; }
             public string SectionName { get; set; }
             public List<Author> Authors { get; set; }
-            public int DaysSinceLastActivity { get; set; }
+            public DateTime Deadline { get; set; }
             public int LessonsLeft { get; set; }
             
             public static explicit operator TrainingsModel.Training(EF.Training t)
@@ -45,7 +45,7 @@ namespace StudyPlanner.Models
                     BookTitle = t.Section.Book.Title,
                     SectionName = t.Section.Name,
                     Authors = (from x in t.Section.Book.AuthorOfBooks orderby x.Priority select x.Author).ToList(),
-                    DaysSinceLastActivity = (DateTime.Now - t.CompletionDate).Days,
+                    Deadline = t.CompletionDate.AddDays(1),
                     LessonsLeft = t.LessonsLeft
                 };
             }

@@ -98,7 +98,7 @@
                                     }
                                 }
                                 <br />
-                                Last activity:
+                                @*Last activity:
                                 @switch (x.DaysSinceLastActivity)
                                 {
                                     case 0:
@@ -111,29 +111,34 @@
                                         @x.DaysSinceLastActivity @: days ago
                             break;
                                 }
-                                <br />
+                                <br />*@
                                 <br />
 
                                 @if (x.LessonsLeft != 0)
                                 {
-                                    if (x.DaysSinceLastActivity == 0)
+                                    if ((DateTime.Now - x.Deadline.AddDays(-1 @*1 dzień to okres do deadline'u*@)).Days == 0)
                                     {
-                                        <div style="display: inline-block" title="Wait until tomorrow" data-toggle="tooltip">
+                                        <div style="display: inline-block" title="You must wait at least 24 hours since last training" data-toggle="tooltip">
                                             <span disabled="disabled" class="btn btn-default btn-xs">Complete next lesson</span>
                                         </div>
                                     }
                                     else
                                     {
-                                        @Html.ActionLink("Complete next lesson", "AddProgress", new { id = @x.TrainingId }, new { @class = "btn btn-default btn-xs" })
+                                        @Html.ActionLink("Complete next lesson", "AddProgress", new { TrainingId = @x.TrainingId }, new { @class = "btn btn-default btn-xs" })
                                     }
                                     <span></span>
                                     @Html.ActionLink("Give up", "RemoveTraining", new { id = @x.TrainingId }, new { @class = "btn btn-default btn-xs" })
                                 }
+                                <br /><br />
+                                Deadline: @x.Deadline.ToString()
+                            </div>
+                            <div class='panel-footer @if (x.LessonsLeft > 0)
+                            {
+                                @:TimeToDeadline
+                            } ' data-days="@x.Deadline.ToString()"></div>
 
-                            </div>
-                            <div class="panel-footer TimeToDeadline" data-days="@x.DaysSinceLastActivity">
-                            </div>
-                        </div>
+
+</div>
                     }
                 </div>
             </div>
@@ -147,29 +152,45 @@
         setInterval(UpdateTime, 1000);
     }
 
+    function GetTimeSpan(deadline)
+    {
+        return deadline.getTime() - new Date().getTime();
+    }
+
     var h, m, s, pH;
     function UpdateTime()
     {
-        var time = new Date();
-        pH = h;
+        //var time = new Date();
+        //pH = h;
         
-        h = time.getHours();
-        m = time.getMinutes();
-        s = time.getSeconds();
+        //h = time.getHours();
+        //m = time.getMinutes();
+        //s = time.getSeconds();
 
-        if (pH == 23 && h == 0)
-            for (var i = 0; i < TimeToDeadlineElements.length; i++) {
-                TimeToDeadlineElements[i].setAttribute("data-days", Number(TimeToDeadlineElements[i].getAttribute("data-days")) + 1);
-            }
+        //if (pH == 23 && h == 0)
+        //    for (var i = 0; i < TimeToDeadlineElements.length; i++) {
+        //        TimeToDeadlineElements[i].setAttribute("data-days", Number(TimeToDeadlineElements[i].getAttribute("data-days")) + 1);
+        //    }
 
         for (var i = 0; i < TimeToDeadlineElements.length; i++)
         {
-            var DaysSinceLastActivity = TimeToDeadlineElements[i].getAttribute("data-days");
-            var daysLeft = 1 - DaysSinceLastActivity;
-            if (daysLeft >= 0)
-                TimeToDeadlineElements[i].innerHTML = "<span style='color: green'>" + daysLeft + " days " + (23 - h) + " hours " + (59 - m) + " minutes " + (59 - s) + " seconds</span>";
+            
+            var deadline = GetTimeSpan(new Date(TimeToDeadlineElements[i].getAttribute("data-days")));
+            var tooLate = deadline < 0;
+            if (tooLate)
+                deadline = -1 * deadline;
+            deadline /= 1000;
+            var s = Math.floor(deadline % 60);
+            deadline = deadline / 60;
+            var m = Math.floor(deadline % 60);
+            deadline = deadline / 60;
+            var h = Math.floor(deadline % 24);
+            deadline = deadline / 24;
+            var daysLeft = Math.floor(deadline);
+            if (!tooLate)
+                TimeToDeadlineElements[i].innerHTML = "<span style='color: green'>" + daysLeft + " days " + h + " hours " + m + " minutes " + s + " seconds</span>";
             else 
-                TimeToDeadlineElements[i].innerHTML = "<span style='color: red'>" + (-1 - daysLeft) + " days " + (h) + " hours " + (m) + " minutes " + (s) + " seconds</span>";
+                TimeToDeadlineElements[i].innerHTML = "<span style='color: red'>" + daysLeft + " days " + h + " hours " + m + " minutes " + s + " seconds</span>";
         }
     }
 

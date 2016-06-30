@@ -341,10 +341,10 @@ namespace StudyPlanner.Controllers
             model.Trainings = new List<TrainingsModel.Training>();
             foreach (EF.Training x in trainings)
                 model.Trainings.Add((TrainingsModel.Training)x);
-            if (model.FilterDaysSinceLastActivityFrom != null)
-                model.Trainings = (from x in model.Trainings where x.DaysSinceLastActivity >= model.FilterDaysSinceLastActivityFrom select x).ToList();
-            if (model.FilterDaysSinceLastActivityTo != null)
-                model.Trainings = (from x in model.Trainings where x.DaysSinceLastActivity <= model.FilterDaysSinceLastActivityTo select x).ToList();
+            //if (model.FilterDaysSinceLastActivityFrom != null)
+            //    model.Trainings = (from x in model.Trainings where x.TimeSinceLastActivity >= model.FilterDaysSinceLastActivityFrom select x).ToList();
+            //if (model.FilterDaysSinceLastActivityTo != null)
+            //    model.Trainings = (from x in model.Trainings where x.TimeSinceLastActivity <= model.FilterDaysSinceLastActivityTo select x).ToList();
             if (!model.FilterTrainingCompleted)
                 model.Trainings = (from x in model.Trainings where x.LessonsLeft != 0 select x).ToList();
             if (!model.Filter1LessonLeft)
@@ -365,6 +365,15 @@ namespace StudyPlanner.Controllers
                 db.SaveChanges();
             }
             return RedirectToAction("Sections", new { BookId = BookId });
+        }
+
+        public ActionResult AddProgress(int TrainingId)
+        {
+            var training = (from t in db.Trainings where t.TrainingId == TrainingId select t).FirstOrDefault();
+            if (training.LessonsLeft > 0)
+                training.LessonsLeft--;
+            db.SaveChanges();
+            return RedirectToAction("Trainings");
         }
     }
 }
