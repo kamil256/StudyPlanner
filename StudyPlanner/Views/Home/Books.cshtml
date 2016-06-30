@@ -63,9 +63,6 @@
             }
             else
             {
-                <style>
-                    
-                </style>
                 <div class="form-group sorting-group">
                     <b>Sort by: </b>
                     @Html.DropDownListFor(x => x.SortBy, new SelectList(Model.SortByItems, Model.SortBy), new { @class = "form-control", form = "FilteringForm" })

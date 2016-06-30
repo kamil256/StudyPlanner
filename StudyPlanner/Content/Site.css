@@ -57,12 +57,15 @@ textarea {
 }
 .sorting-group {
     text-align: right;
-    margin-bottom: 0;
+    margin-bottom: 10px;
+}
+.sorting-group > b {
+    vertical-align:  middle;
 }
 .sorting-group > select {
     display: inline-block;
+    vertical-align: middle;
     width: 130px;
-    margin-bottom: 10px;
 }
 .book-details {
     position: relative;
