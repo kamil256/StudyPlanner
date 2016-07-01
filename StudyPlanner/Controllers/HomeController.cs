@@ -49,7 +49,7 @@ namespace StudyPlanner.Controllers
                 }
                 else
                     model.FilterPublishers.Add("true");
-            }
+            }            
             return Books(model);
         }
 
@@ -118,6 +118,12 @@ namespace StudyPlanner.Controllers
                         model.Books = (from b in model.Books orderby b.Pages descending select b).ToList();
                     break;
             }
+
+            model.ItemsPerPage = 1;
+            model.TotalPages = (int)Math.Ceiling((double)model.Books.Count() / model.ItemsPerPage);
+            if (model.PageNumber == 0)
+                model.PageNumber = 1;
+            model.Books = (from b in model.Books select b).Skip((model.PageNumber - 1) * model.ItemsPerPage).Take(model.ItemsPerPage).ToList();
 
             return View(model);
         }

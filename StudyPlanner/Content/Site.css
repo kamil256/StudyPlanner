@@ -126,7 +126,7 @@ textarea {
     text-align: center;
 }
 
-.pagination ul
+.pagination > ul
 {
     list-style-type: none;
     
@@ -134,14 +134,15 @@ textarea {
     margin: 0;
 }
 
-.pagination li
+.pagination ul > li
 {
     display: inline;
-    
     margin: 0 3px;
+
+
 }
 
-.pagination a
+.pagination > ul > li > div
 {
     text-decoration: none;
     color: #444;
@@ -155,6 +156,6 @@ textarea {
     text-align: center;
 }
 
-.pagination a:hover {
+.pagination > ul > li > div:hover, .pagination > ul > li > div[data-selected="selected"] {
     background-color: #ccc;
 }

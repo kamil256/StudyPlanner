@@ -41,9 +41,25 @@ namespace StudyPlanner
             return MvcHtmlString.Create(result);
         }
 
-        public static MvcHtmlString Pagination(this HtmlHelper helper, int currentPage, int totalItems, int itemsPerPage)
+        public static MvcHtmlString Pagination(this HtmlHelper helper, int PageNumber, int TotalPages)
         {
-            return new MvcHtmlString("<div class='pagination'><ul><li><a href='#'>1</a></li><li><a href='#' style='text-decoration: none'>2</a></li><li><a href='#'>3</a></li></ul></div>");
+            TagBuilder ul = new TagBuilder("ul");
+            for (int i = 1; i <= TotalPages; i++)
+            {
+                TagBuilder innerDiv = new TagBuilder("div");
+                innerDiv.Attributes["onclick"] = $"ChangePage({i})";
+                if (i == PageNumber)
+                    innerDiv.Attributes["data-selected"] = "selected";
+                innerDiv.SetInnerText(i.ToString());
+                TagBuilder li = new TagBuilder("li");
+                li.InnerHtml = innerDiv.ToString();
+                ul.InnerHtml += li.ToString();
+            }
+            TagBuilder outerDiv = new TagBuilder("div");
+            outerDiv.AddCssClass("pagination");
+            outerDiv.InnerHtml = ul.ToString();
+            return new MvcHtmlString(outerDiv.ToString());
+                //MvcHtmlString("<ul><li><div onclick='ChangePage(1)'>1</div></li><li><div onclick='ChangePage(2)'>2</div></li><li><div onclick='ChangePage(3)'>3</div></li></ul>");
         }
     }
 }

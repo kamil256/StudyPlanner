@@ -26,6 +26,10 @@ namespace StudyPlanner.Models
         public string SortingOrder { get; set; } = "Ascending";
         public string[] SortingOrderItems { get; } = new[] { "Ascending", "Descending" };
 
+        public int PageNumber { get; set; }
+        public int TotalPages { get; set; }
+        public int ItemsPerPage { get; set; }
+
         public class Book
         {
             public int BookId { get; set; }

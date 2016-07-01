@@ -111,13 +111,20 @@
                         
                     </div>
                 }
-                @Html.Pagination(1, 21, 10)
+                <input type="hidden" name="PageNumber" id="PageNumber" form="FilteringForm" />
+                @Html.Pagination(Model.PageNumber, Model.TotalPages)//(1, 21, 10)
             }
         }
     </div>
 </div>
 
 <script>
+    function ChangePage(x)
+    {
+        document.getElementById("PageNumber").value = x;
+        $("#FilteringForm").submit();
+    }
+
     $("#FilteringForm input").on("change", function () { $("#FilteringForm").submit(); });
     $("select[form='FilteringForm'").on("change", function () { $("#FilteringForm").submit(); });
 </script>
