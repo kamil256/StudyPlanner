@@ -13,7 +13,6 @@ namespace StudyPlanner.EF
 
         public int SectionId { get; set; }
 
-        [Column(TypeName = "date")]
         public DateTime CompletionDate { get; set; }
 
         public int LessonsLeft { get; set; }
