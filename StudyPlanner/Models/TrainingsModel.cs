@@ -45,7 +45,7 @@ namespace StudyPlanner.Models
                     BookTitle = t.Section.Book.Title,
                     SectionName = t.Section.Name,
                     Authors = (from x in t.Section.Book.AuthorOfBooks orderby x.Priority select x.Author).ToList(),
-                    Deadline = t.CompletionDate.AddDays(1),
+                    Deadline = t.CompletionDate.AddDays(14),
                     LessonsLeft = t.LessonsLeft
                 };
             }

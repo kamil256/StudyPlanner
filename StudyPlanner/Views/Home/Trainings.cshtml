@@ -116,7 +116,7 @@
 
                                 @if (x.LessonsLeft != 0)
                                 {
-                                    if ((DateTime.Now - x.Deadline.AddDays(-1 @*1 dzień to okres do deadline'u*@)).Days == 0)
+                                    if (x.LessonsLeft < 3 && (DateTime.Now - x.Deadline.AddDays(-14 @*14 dni to okres do deadline'u*@)).Days == 0)
                                     {
                                         <div style="display: inline-block" title="You must wait at least 24 hours since last training" data-toggle="tooltip">
                                             <span disabled="disabled" class="btn btn-default btn-xs">Complete next lesson</span>
@@ -194,18 +194,18 @@
         }
     }
 
-    function DisplayTimeToDeadline(DaysSinceLastActivity)
-    {
-        var daysLeft = 1 - DaysSinceLastActivity;
-        if (daysLeft > 0)
-        {
-            return "<span style='color: green'>" + daysLeft + " days " + Pad(23 - h) + " hours " + Pad(59 - m) + " minutes " + Pad(59 - s) + " seconds</span>";
-        }
-        else
-        {
-            return "<span style='color: red'>" + (-daysLeft) + " days " + Pad(h) + " hours " + Pad(m) + " minutes " + Pad(s) + " seconds</span>";
-        }
-    }
+    //function DisplayTimeToDeadline(DaysSinceLastActivity)
+    //{
+    //    var daysLeft = 1 - DaysSinceLastActivity;
+    //    if (daysLeft > 0)
+    //    {
+    //        return "<span style='color: green'>" + daysLeft + " days " + Pad(23 - h) + " hours " + Pad(59 - m) + " minutes " + Pad(59 - s) + " seconds</span>";
+    //    }
+    //    else
+    //    {
+    //        return "<span style='color: red'>" + (-daysLeft) + " days " + Pad(h) + " hours " + Pad(m) + " minutes " + Pad(s) + " seconds</span>";
+    //    }
+    //}
 </script>
 
 
