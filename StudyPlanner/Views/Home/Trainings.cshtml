@@ -1,5 +1,7 @@
 ﻿@model StudyPlanner.Models.TrainingsModel
 
+
+
 <h1 style="border-bottom: 1px solid #ddd; border-bottom-left-radius: 100px 1px; border-bottom-right-radius: 100px 1px; padding-bottom: 10px; margin-bottom: 10px;">Trainings</h1>
 
 
@@ -81,6 +83,7 @@
                                 break;
                                     }
                                 </span>
+                                
                             </div>
                             <div class="panel-body">
                                 @for (int i = 0; i < x.Authors.Count; i++)
@@ -128,12 +131,62 @@
                                 }
 
                             </div>
-
+                            <div class="panel-footer TimeToDeadline" data-days="@x.DaysSinceLastActivity">
+                            </div>
                         </div>
                     }
                 </div>
             </div>
         </div>
+
+<script>
+    var TimeToDeadlineElements;
+    window.onload = function()
+    {
+        TimeToDeadlineElements = document.getElementsByClassName("TimeToDeadline");
+        setInterval(UpdateTime, 1000);
+    }
+
+    var h, m, s, pH;
+    function UpdateTime()
+    {
+        var time = new Date();
+        pH = h;
+        
+        h = time.getHours();
+        m = time.getMinutes();
+        s = time.getSeconds();
+
+        if (pH == 23 && h == 0)
+            for (var i = 0; i < TimeToDeadlineElements.length; i++) {
+                TimeToDeadlineElements[i].setAttribute("data-days", Number(TimeToDeadlineElements[i].getAttribute("data-days")) + 1);
+            }
+
+        for (var i = 0; i < TimeToDeadlineElements.length; i++)
+        {
+            var DaysSinceLastActivity = TimeToDeadlineElements[i].getAttribute("data-days");
+            var daysLeft = 1 - DaysSinceLastActivity;
+            if (daysLeft >= 0)
+                TimeToDeadlineElements[i].innerHTML = "<span style='color: green'>" + daysLeft + " days " + (23 - h) + " hours " + (59 - m) + " minutes " + (59 - s) + " seconds</span>";
+            else 
+                TimeToDeadlineElements[i].innerHTML = "<span style='color: red'>" + (-1 - daysLeft) + " days " + (h) + " hours " + (m) + " minutes " + (s) + " seconds</span>";
+        }
+    }
+
+    function DisplayTimeToDeadline(DaysSinceLastActivity)
+    {
+        var daysLeft = 1 - DaysSinceLastActivity;
+        if (daysLeft > 0)
+        {
+            return "<span style='color: green'>" + daysLeft + " days " + Pad(23 - h) + " hours " + Pad(59 - m) + " minutes " + Pad(59 - s) + " seconds</span>";
+        }
+        else
+        {
+            return "<span style='color: red'>" + (-daysLeft) + " days " + Pad(h) + " hours " + Pad(m) + " minutes " + Pad(s) + " seconds</span>";
+        }
+    }
+</script>
+
 
         <script>
 
