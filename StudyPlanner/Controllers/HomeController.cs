@@ -372,6 +372,7 @@ namespace StudyPlanner.Controllers
             var training = (from t in db.Trainings where t.TrainingId == TrainingId select t).FirstOrDefault();
             if (training.LessonsLeft > 0)
                 training.LessonsLeft--;
+            training.CompletionDate = DateTime.Now;
             db.SaveChanges();
             return RedirectToAction("Trainings");
         }
