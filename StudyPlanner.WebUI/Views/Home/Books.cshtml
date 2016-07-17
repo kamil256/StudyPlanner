@@ -1,0 +1,130 @@
+﻿@model StudyPlanner.WebUI.Models.BooksModel
+<p>@ViewBag.Password</p>
+<h1 class="heading">Books @Html.ActionLink("Add new", "AddBook", null, new { @class = "btn btn-default btn-xs" })</h1>
+
+<div class="row">
+    <div class="col-sm-3 side-panel">
+        @using (Html.BeginForm("Books", "Home", FormMethod.Post, new { id = "FilteringForm", autocomplete = "off" }))
+        {
+            <div class="form-group">
+                @Html.LabelFor(x => x.FilterSearchString, "Search titles and authors:")
+                @Html.TextBoxFor(x => x.FilterSearchString, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.FilterReleasedFrom, "Released from:")
+                @Html.TextBoxFor(x => x.FilterReleasedFrom, new { @class = "form-control", type = "date" })
+            </div>
+            <div class="form-group">
+                    @Html.LabelFor(x => x.FilterReleasedTo, "Released to:")
+                    @Html.TextBoxFor(x => x.FilterReleasedTo, new { @class = "form-control", type = "date" })
+            </div>
+            <div class="form-group">
+                @Html.Label("Pages:")
+                <div class="form-control-range">
+                    @Html.TextBoxFor(x => x.FilterPagesFrom, new { @class = "form-control", type = "number" })
+                    <div>-</div>
+                    @Html.TextBoxFor(x => x.FilterPagesTo, new { @class = "form-control", type = "number" })
+                </div>
+            </div>
+            <div class="form-group">
+                <b>Authors:</b>
+                @for (int i = 0; i < Model.Authors.Count; i++)
+                {
+                    <div class="checkbox">
+                        @Html.Label(Model.Authors[i].Name)
+                        @Html.CheckBox($"FilterAuthors[{i}]", Model.FilterAuthors[i] == "true", new { id = "Author_" + Model.Authors[i].AuthorId })
+                    </div>
+                }
+            </div>
+            <div class="form-group">
+                <b>Publishers:</b>
+                @for (int i = 0; i < Model.Publishers.Count; i++)
+                {
+                    <div class="checkbox">
+                        @Html.Label(Model.Publishers[i].Name)                        
+                        @Html.CheckBox($"FilterPublishers[{i}]", Model.FilterPublishers[i] == "true", new { id = "Publisher_" + Model.Publishers[i].PublisherId })
+                    </div>
+                }
+            </div>
+            @Html.ActionLink("Clear filtering and sorting", "Books", null, new { @class = "btn btn-default btn-sm" })
+        }
+    </div>
+
+    <div class="col-sm-9">
+        @if (Model.TotalBooksInDatabase == 0)
+        {
+            <div class="alert alert-danger">No books were added!</div>
+        }
+        else
+        {
+            if (Model.Books.Count() == 0)
+            {
+                <div class="alert alert-danger">No books were found!</div>
+            }
+            else
+            {
+                <div class="form-group sorting-group">
+                    <b>Sort by: </b>
+                    @Html.DropDownListFor(x => x.SortBy, new SelectList(Model.SortByItems, Model.SortBy), new { @class = "form-control", form = "FilteringForm" })
+                    @Html.DropDownListFor(x => x.SortingOrder, new SelectList(Model.SortingOrderItems, Model.SortingOrder), new { @class = "form-control", form = "FilteringForm" })
+                </div>
+
+                foreach (var x in Model.Books)
+                { 
+                    <div class="well book-details">
+                        @Html.ActionLink(HttpUtility.HtmlDecode("&times;"), "RemoveBook", new { BookId = x.BookId })
+                        <img src="/Covers/@x.Cover" width="120" />
+                        <div>
+                            <b>@Html.MarkSearchedString(x.Title, Model.FilterSearchString)</b>
+                            @switch (x.Authors.Count)
+                            {
+                                case 0:
+                                    @:Author: unknown
+                                    break;
+                                case 1:
+                                    @:Author:
+                                    break;
+                                default:
+                                    @:Authors:
+                                    break;
+                            }
+                            @for (int i = 0; i < x.Authors.Count; i++)
+                            {
+                                if (i < x.Authors.Count - 1)
+                                {
+                                    <a href="@Url.Action("Books", new { selectAuthor = @x.Authors[i].AuthorId })">@Html.MarkSearchedString(x.Authors[i].Name, Model.FilterSearchString)</a><span>,</span>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("Books", new { selectAuthor = @x.Authors[i].AuthorId })">@Html.MarkSearchedString(x.Authors[i].Name, Model.FilterSearchString)</a>
+                                }
+                            }
+                            <br />
+                            Publisher: @Html.ActionLink(x.Publisher, "Books", new { selectPublisher = x.PublisherId })<br />
+                            Released: @x.Released.ToLongDateString()<br />
+                            Pages: @x.Pages
+                            <div class="btn-group">
+                                @Html.ActionLink("Sections", "Sections", "Home", new { BookId = x.BookId }, new { @class = "btn btn-sm btn-default" })
+                                @Html.ActionLink("Trainings", "Trainings", "Home", new { FilterBookId = x.BookId }, new { @class = "btn btn-sm btn-default" })
+                            </div>
+                        </div>
+                        
+                    </div>
+                }
+                <input type="hidden" name="PageNumber" id="PageNumber" form="FilteringForm" />
+                @Html.Pagination(Model.PageNumber, Model.TotalPages)//(1, 21, 10)
+            }
+        }
+    </div>
+</div>
+
+<script>
+    function ChangePage(x)
+    {
+        document.getElementById("PageNumber").value = x;
+        $("#FilteringForm").submit();
+    }
+
+    $("#FilteringForm input").on("change", function () { $("#FilteringForm").submit(); });
+    $("select[form='FilteringForm'").on("change", function () { $("#FilteringForm").submit(); });
+</script>

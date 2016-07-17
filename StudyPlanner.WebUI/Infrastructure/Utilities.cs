@@ -1,0 +1,21 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Web;
+
+namespace StudyPlanner.WebUI.Infrastructure
+{
+    public static class Utilities
+    {
+        public static string HashPassword(string password)
+        {
+            byte[] buffer = Encoding.UTF8.GetBytes(password);
+            byte[] hash = System.Security.Cryptography.SHA256.Create().ComputeHash(buffer);
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in hash)
+                sb.Append(b.ToString("X2"));
+            return sb.ToString();
+        }
+    }
+}
