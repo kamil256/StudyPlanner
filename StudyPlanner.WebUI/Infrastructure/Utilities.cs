@@ -8,9 +8,9 @@ namespace StudyPlanner.WebUI.Infrastructure
 {
     public static class Utilities
     {
-        public static string HashPassword(string password)
+        public static string HashPassword(string password, string salt)
         {
-            byte[] buffer = Encoding.UTF8.GetBytes(password);
+            byte[] buffer = Encoding.UTF8.GetBytes(password + salt);
             byte[] hash = System.Security.Cryptography.SHA256.Create().ComputeHash(buffer);
             StringBuilder sb = new StringBuilder();
             foreach (byte b in hash)

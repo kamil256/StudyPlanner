@@ -16,5 +16,6 @@ namespace StudyPlanner.Domain.Abstract
         IEnumerable<Training> Trainings { get; }
         IEnumerable<AuthorOfBook> AuthorsOfBooks { get; }
         IEnumerable<User> Users { get; }
+        void AddUser(string username, string email, string password, string salt);
     }
 }

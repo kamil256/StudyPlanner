@@ -4,7 +4,14 @@
 
 <div class="MainImageContainer">
     <img src="~/Content/Images/MainTheme.jpg" />
-    @Html.Partial("LogInPartial")
+    @if (ViewBag.Register)
+    {
+        @Html.Partial("RegisterPartial")
+    }
+    else
+    {
+        @Html.Partial("LogInPartial")
+    }
 </div>
 
 <div class="SectionsDescription row">

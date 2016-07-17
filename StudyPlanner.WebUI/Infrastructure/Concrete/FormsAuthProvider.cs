@@ -22,7 +22,7 @@ namespace StudyPlanner.Infrastructure.Concrete
         public bool Authenticate(string username, string password)
         {
             User user = repository.Users.FirstOrDefault(u => u.UserName.ToLower() == username.ToLower());
-            if (user != null && HashPassword(password + user.Salt) == user.Password)
+            if (user != null && HashPassword(password, user.Salt) == user.Password)
             {
                 FormsAuthentication.SetAuthCookie(username, false);
                 return true;

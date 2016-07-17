@@ -46,5 +46,11 @@ namespace StudyPlanner.Domain.Concrete
         {
             get { return dbContext.Users; }
         }
+
+        public void AddUser(string username, string email, string hashedPassword, string salt)
+        {
+            dbContext.Users.Add(new User() { UserName = username, Password = hashedPassword, Salt = salt });
+            dbContext.SaveChanges();
+        }
     }
 }
