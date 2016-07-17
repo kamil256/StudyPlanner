@@ -1,4 +1,5 @@
 ﻿<div>
+    <p>@TempData["Message"]</p>
     @using (@Html.BeginForm("LogIn", "Home", new { ReturnUrl = ViewBag.ReturnUrl }))
     {
         <div class="form-group">

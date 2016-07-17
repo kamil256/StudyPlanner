@@ -34,7 +34,10 @@ namespace StudyPlanner.WebUI.Controllers
             if (authProvider.Authenticate(username, password))
                 return Redirect(string.IsNullOrEmpty(returnUrl) ? Url.Action("Index", "Home") : returnUrl);
             else
+            {
+                TempData["Message"] = "Incorrect login or password!";
                 return Redirect(Url.Action("Index", "Home", new { ReturnUrl = returnUrl }));
+            }
         }
 
         public RedirectToRouteResult LogOut()
