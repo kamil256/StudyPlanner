@@ -5,9 +5,84 @@
     <meta name="viewport" content="width=device-width" />
     <title>StudyPlanner - @ViewBag.Title</title>
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+    <style type="text/css">
+        /*body {
+            padding-top: 50px;
+        }*/
+
+        .navbar {
+            border-color: #922710;
+            border-width: 0;
+            border-radius: 0;
+            margin-bottom: 0;
+        }
+        .navbar-default {
+            background-color: #C53515;
+        }
+        .navbar-default .navbar-nav > li > a, .navbar-default .navbar-nav > li {
+            color: #eee;
+            font-weight: bold;
+        }
+        .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:focus, .navbar-default .navbar-nav > .active > a:hover {
+            background-color: #922710;
+            color: white;
+        }
+        .navbar-default .navbar-nav > li:last-child {
+            padding: 15px;
+        }
+        .navbar-default .navbar-nav > li > a:hover {
+            color: white;
+        }
+        .MainImageContainer {
+            position: relative;
+        }
+        .MainImageContainer > img {
+            width: 100%;
+        }
+        .MainImageContainer > div {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: white 0 0 3px;
+        }
+        .MainImageContainer > div input.form-control {
+            width: 300px;
+        }
+    </style>
 </head>
 <body>
-    <div>
+    <nav class="navbar navbar-default @*navbar-fixed-top*@">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">StudyPlanner</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="active">@Html.ActionLink("Books", "Books", "Home")</li>
+                    <li>@Html.ActionLink("Sections", "Sections", "Home")</li>
+                    <li>@Html.ActionLink("Trainings", "Trainings", "Home")</li>
+                    <li><span class="glyphicon glyphicon-user"></span> You are not logged in</li>
+                </ul>
+                @*<ul class="nav navbar-nav navbar-right">
+                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                    <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                </ul>*@
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
         @RenderBody()
     </div>
 </body>
