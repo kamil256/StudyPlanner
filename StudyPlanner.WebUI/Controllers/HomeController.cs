@@ -23,13 +23,27 @@ namespace StudyPlanner.WebUI.Controllers
             this.authProvider = authProvider;
         }
 
-        public ActionResult Index()
+        public ActionResult Index(string returnUrl)
         {
+            ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
-        
+        public RedirectResult LogIn(string username, string password, string returnUrl)
+        {
+            if (authProvider.Authenticate(username, password))
+                return Redirect(string.IsNullOrEmpty(returnUrl) ? Url.Action("Index", "Home") : returnUrl);
+            else
+                return Redirect(Url.Action("Index", "Home", new { ReturnUrl = returnUrl }));
+        }
 
+        public RedirectToRouteResult LogOut()
+        {
+            authProvider.SignOut();
+            return RedirectToAction("Index");
+        }
+
+        [Authorize]
         public ActionResult Books(int selectAuthor = 0, int selectPublisher = 0)
         {
             BooksModel model = new BooksModel();
@@ -139,17 +153,17 @@ namespace StudyPlanner.WebUI.Controllers
             return View(model);
         }
 
-        //[HttpGet]
-        //public ActionResult AddBook()
-        //{
-        //    ViewBag.Title = "Add new book";
-        //    AddBookModel model = new AddBookModel();
-        //    model.AuthorsList = (from a in repository.Authors orderby a.Name select a.Name).ToArray();
-        //    model.PublishersList = (from p in repository.Publishers orderby p.Name select p.Name).ToArray();
-        //    //model.Authors = new List<string>();
-        //    //model.Authors.Add("empty");
-        //    return View(model);
-        //}
+        [HttpGet]
+        public ActionResult AddBook()
+        {
+            ViewBag.Title = "Add new book";
+            AddBookModel model = new AddBookModel();
+            model.AuthorsList = (from a in repository.Authors orderby a.Name select a.Name).ToArray();
+            model.PublishersList = (from p in repository.Publishers orderby p.Name select p.Name).ToArray();
+            //model.Authors = new List<string>();
+            //model.Authors.Add("empty");
+            return View(model);
+        }
 
         //[HttpPost]
         //public ActionResult AddBook(AddBookModel model)
@@ -185,7 +199,7 @@ namespace StudyPlanner.WebUI.Controllers
         //    {
         //        if (model.Authors != null)
         //        {
-                    
+
         //            model.Authors.Remove(model.RemoveAuthor);                    
         //        }
         //    }
@@ -333,7 +347,7 @@ namespace StudyPlanner.WebUI.Controllers
         //public ActionResult Trainings(TrainingsModel model)
         //{
         //    ViewBag.Title = "Trainings";
-            
+
         //    model.Books = new List<Book>();
         //    model.Books.Add(new Book { BookId = 0, Title = "All" });
         //    model.Books.AddRange(repository.Books.ToList());
@@ -342,7 +356,7 @@ namespace StudyPlanner.WebUI.Controllers
         //    model.Sections.Add(new Section { SectionId = 0, Name = "All" });
         //    if (model.FilterBookId != 0)
         //        model.Sections.AddRange((from x in repository.Sections where x.BookId == model.FilterBookId select x).ToList());
-            
+
         //    List<EF.Training> trainings = repository.Trainings.ToList();
         //    if (model.FilterBookId != 0)
         //        trainings = (from x in trainings where x.Section.BookId == model.FilterBookId select x).ToList();
@@ -364,7 +378,7 @@ namespace StudyPlanner.WebUI.Controllers
         //        model.Trainings = (from x in model.Trainings where x.LessonsLeft != 2 select x).ToList();
         //    if (!model.Filter3LessonsLeft)
         //        model.Trainings = (from x in model.Trainings where x.LessonsLeft != 3 select x).ToList();
-            
+
         //    return View(model);
         //}
 

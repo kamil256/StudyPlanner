@@ -4,7 +4,7 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>StudyPlanner - @ViewBag.Title</title>
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/CSS/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
 
@@ -30,8 +30,8 @@
             background-color: #922710;
             color: white;
         }
-        .navbar-default .navbar-nav > li:last-child {
-            padding: 15px;
+        .navbar-default .navbar-nav > li > span {
+            padding: 18px;
         }
         .navbar-default .navbar-nav > li > a:hover {
             color: white;
@@ -55,6 +55,34 @@
         .MainImageContainer > div input.form-control {
             width: 300px;
         }
+        .SectionsDescription {
+            margin: 0 !important;
+            background-color: #C7B299;
+        }
+        .SectionsDescription > div {
+            padding: 70px;
+            font: 1em Verdana;
+            text-align: justify;
+        }
+        .SectionsDescription > div > img, .SectionsDescription > div > b, .SectionsDescription > div > a {
+            display: block;
+        }
+        .SectionsDescription > div > b {
+            margin-top: 10px; 
+            margin-bottom: 10px;
+        }
+        .SectionsDescription > div > a {
+            text-decoration: none;
+            font-weight: bold;
+            color: #333;
+            margin-top: 5px;
+        }
+        footer {
+            background-color: #C53515;
+            padding: 15px;
+            color: #eee;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -70,10 +98,19 @@
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="active">@Html.ActionLink("Books", "Books", "Home")</li>
-                    <li>@Html.ActionLink("Sections", "Sections", "Home")</li>
-                    <li>@Html.ActionLink("Trainings", "Trainings", "Home")</li>
-                    <li><span class="glyphicon glyphicon-user"></span> You are not logged in</li>
+                    <li class="active">@Html.ActionLink("BOOKS", "Books", "Home")</li>
+                    <li>@Html.ActionLink("SECTIONS", "Sections", "Home")</li>
+                    <li>@Html.ActionLink("TRAININGS", "Trainings", "Home")</li>
+                    <li><span class="glyphicon glyphicon-user"></span>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @: LOGGED IN AS @User.Identity.Name.ToUpper() </li><li><a href="@Url.Action("LogOut")">LOG OUT</a></li>
+                        }
+                        else
+                        {
+                            @: You are not logged in
+                        }
+                    </li>
                 </ul>
                 @*<ul class="nav navbar-nav navbar-right">
                     <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>

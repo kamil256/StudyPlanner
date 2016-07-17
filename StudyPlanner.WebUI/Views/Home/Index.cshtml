@@ -5,18 +5,43 @@
 <div class="MainImageContainer">
     <img src="~/Content/Images/MainTheme.jpg" />
     <div>
-        @using (@Html.BeginForm())
+        @using (@Html.BeginForm("LogIn", "Home", new { ReturnUrl = ViewBag.ReturnUrl }))
         {
             <div class="form-group">
                 <label>Username</label>
-                <input class="form-control" />
+                <input class="form-control" name="username" />
             </div>
             <div class="form-group">
                 <label>Password</label>
-                <input class="form-control" />
+                <input type="password" class="form-control" name="password" />
             </div>
             <input type="submit" class="btn btn-default" value="Log in" />
             <input type="submit" class="btn btn-default" value="Register" />
         }
     </div>
 </div>
+
+<div class="SectionsDescription row">
+    <div class="col-sm-4">
+        <img src="~/Content/Images/Books2.png" width="100" />@*~/Content/Images/Books.png*@
+        <b>Books</b>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
+        <a>More</a>
+    </div>
+    <div class="col-sm-4">
+        <img src="~/Content/Images/Books2.png" width="100" />@*~/Content/Images/Books.png*@
+        <b>Books</b>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
+        <a>More</a>
+    </div>
+    <div class="col-sm-4">
+        <img src="~/Content/Images/Books2.png" width="100" />@*~/Content/Images/Books.png*@
+        <b>Books</b>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
+        <a>More</a>
+    </div>
+</div>
+
+<footer>
+    Copyright © 2016 Kamil Dzierlęga (mail)
+</footer>
