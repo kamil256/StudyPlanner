@@ -44,7 +44,7 @@ namespace StudyPlanner.WebUI.Controllers
 
         public RedirectResult Register(string returnUrl, string username, string email, string password)
         {
-            User user = repository.Users.FirstOrDefault(u => u.UserName.ToLower() == username.ToLower());
+            User user = repository.Users.FirstOrDefault(u => u.Name.ToLower() == username.ToLower());
             if (user == null)
             {
                 string salt = Guid.NewGuid().ToString();

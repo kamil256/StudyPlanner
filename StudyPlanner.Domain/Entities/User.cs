@@ -24,7 +24,7 @@ namespace StudyPlanner.Domain.Entities
 
         [Required]
         [StringLength(50)]
-        public string UserName { get; set; }
+        public string Name { get; set; }
 
         [Required]
         [StringLength(50)]

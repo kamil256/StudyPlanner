@@ -49,7 +49,7 @@ namespace StudyPlanner.Domain.Concrete
 
         public void AddUser(string username, string email, string hashedPassword, string salt)
         {
-            dbContext.Users.Add(new User() { UserName = username, Password = hashedPassword, Salt = salt });
+            dbContext.Users.Add(new User() { Name = username, Password = hashedPassword, Salt = salt });
             dbContext.SaveChanges();
         }
     }
