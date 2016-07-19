@@ -52,12 +52,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\IRepository.cs" />
+    <Compile Include="Concrete\Repository.cs" />
     <Compile Include="Entities\Author.cs" />
     <Compile Include="Entities\AuthorOfBook.cs" />
     <Compile Include="Entities\Book.cs" />
     <Compile Include="Concrete\EFDbContext.cs" />
     <Compile Include="Entities\Publisher.cs" />
-    <Compile Include="Concrete\Repository.cs" />
     <Compile Include="Entities\Section.cs" />
     <Compile Include="Entities\Training.cs" />
     <Compile Include="Entities\User.cs" />
