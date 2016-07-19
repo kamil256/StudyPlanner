@@ -31,18 +31,18 @@ namespace StudyPlanner.WebUI.Controllers
             return View();
         }
 
-        public RedirectResult LogIn(string username, string password, string returnUrl)
+        public RedirectResult LogIn(string returnUrl, string username, string password)
         {
             if (authProvider.Authenticate(username, password))
-                return Redirect(string.IsNullOrEmpty(returnUrl) ? Url.Action("Index", "Home"/*, new { Register = false }*/) : returnUrl);
+                return Redirect(string.IsNullOrEmpty(returnUrl) ? Url.Action("Index", "Home") : returnUrl);
             else
             {
                 TempData["Message"] = "Incorrect login or password!";
-                return Redirect(Url.Action("Index", "Home", new { ReturnUrl = returnUrl/*, Register = false*/ }));
+                return Redirect(Url.Action("Index", "Home", new { ReturnUrl = returnUrl }));
             }
         }
 
-        public RedirectResult Register(string username, string email, string password, string returnUrl)
+        public RedirectResult Register(string returnUrl, string username, string email, string password)
         {
             User user = repository.Users.FirstOrDefault(u => u.UserName.ToLower() == username.ToLower());
             if (user == null)
@@ -51,7 +51,7 @@ namespace StudyPlanner.WebUI.Controllers
                 string hashedPassword = HashPassword(password, salt);
                 repository.AddUser(username, email, hashedPassword, salt);
                 TempData["Message"] = "Account successfully added.";
-                return Redirect(string.IsNullOrEmpty(returnUrl) ? Url.Action("Index", "Home"/*, new { Register = false }*/) : returnUrl);
+                return Redirect(string.IsNullOrEmpty(returnUrl) ? Url.Action("Index", "Home") : returnUrl);
             }
             else
             {
