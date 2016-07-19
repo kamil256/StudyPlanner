@@ -12,7 +12,7 @@ namespace StudyPlanner.Domain.Entities.MetaData
         [Display(Name = "Your name")]
         public string Name { get; set; }
 
-        [Display(Name = "E-mail")]
+        [Display(Name = "E-mail address")]
         public string Email { get; set; }
     }
 }

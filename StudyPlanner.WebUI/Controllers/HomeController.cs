@@ -24,9 +24,10 @@ namespace StudyPlanner.WebUI.Controllers
             this.authProvider = authProvider;
         }
 
-        public ActionResult Index(string returnUrl, User user, bool register = false)
+        public ActionResult Index(string returnUrl, User user, bool register = false, bool recover = false)
         {
             ViewBag.Register = register;
+            ViewBag.Recover = recover;
             ViewBag.ReturnUrl = returnUrl;
             return View(user);
         }
