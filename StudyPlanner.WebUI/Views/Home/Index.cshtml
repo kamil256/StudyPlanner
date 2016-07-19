@@ -1,4 +1,6 @@
-﻿@{
+﻿@model StudyPlanner.Domain.Entities.User
+
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -10,7 +12,7 @@
     }
     else
     {
-        @Html.Partial("LogInPartial")
+        @Html.Partial("LogInPartial", Model)
     }
 </div>
 

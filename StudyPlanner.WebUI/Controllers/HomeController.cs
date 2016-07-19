@@ -24,24 +24,27 @@ namespace StudyPlanner.WebUI.Controllers
             this.authProvider = authProvider;
         }
 
-        public ActionResult Index(string returnUrl, bool register = false)
+        public ActionResult Index(string returnUrl, User user, bool register = false)
         {
             ViewBag.Register = register;
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            return View(user);
         }
 
-        public RedirectResult LogIn(string returnUrl, User user)
+        // Should be Ajax
+        [HttpPost]
+        public RedirectResult LogIn( string returnUrl, User user)
         {
-            if (authProvider.Authenticate(user.Email, user.Password))
+            if (!String.IsNullOrEmpty(user.Email) && !String.IsNullOrEmpty(user.Password) && authProvider.Authenticate(user.Email, user.Password))
                 return Redirect(string.IsNullOrEmpty(returnUrl) ? Url.Action("Index", "Home") : returnUrl);
             else
             {
                 TempData["Message"] = "Incorrect e-mail or password";
-                return Redirect(Url.Action("Index", "Home", new { ReturnUrl = returnUrl }));
+                return Redirect(Url.Action("Index", "Home", new { returnUrl = returnUrl, email = user.Email }));
             }
         }
 
+        [HttpPost]
         public RedirectResult Register(string returnUrl, User user)
         {
             User existingUser = repository.Users.FirstOrDefault(u => u.Email.ToLower() == user.Email.ToLower());
@@ -56,7 +59,7 @@ namespace StudyPlanner.WebUI.Controllers
             else
             {
                 TempData["Message"] = "Incorrect data";
-                return Redirect(Url.Action("Index", "Home", new { Register = true, ReturnUrl = returnUrl }));
+                return Redirect(Url.Action("Index", "Home", new { returnUrl = returnUrl, register = true  }));
             }
         }
 
