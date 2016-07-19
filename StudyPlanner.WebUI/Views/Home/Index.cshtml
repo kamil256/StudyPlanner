@@ -6,14 +6,18 @@
 
 <div class="MainImageContainer">
     <img src="~/Content/Images/MainTheme.jpg" />
-    @if (ViewBag.Register)
-    {
-        @Html.Partial("RegisterPartial", Model)
-    }
-    else
-    {
-        @Html.Partial("LogInPartial", Model)
-    }
+    <div>
+        <p class="SuccessMessage">@TempData["SuccessMessage"]</p>
+        <p class="ErrorMessage">@TempData["ErrorMessage"]</p>
+        @if (ViewBag.Register)
+        {
+            @Html.Partial("RegisterPartial", Model)
+        }
+        else
+        {
+            @Html.Partial("LogInPartial", Model)
+        }
+    </div>
 </div>
 
 <div class="SectionsDescription row">

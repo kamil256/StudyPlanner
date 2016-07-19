@@ -39,7 +39,7 @@ namespace StudyPlanner.WebUI.Controllers
                 return Redirect(string.IsNullOrEmpty(returnUrl) ? Url.Action("Index", "Home") : returnUrl);
             else
             {
-                TempData["Message"] = "Incorrect e-mail or password";
+                TempData["ErrorMessage"] = "Incorrect e-mail or password";
                 return Redirect(Url.Action("Index", "Home", new { returnUrl = returnUrl, email = user.Email }));
             }
         }
@@ -55,18 +55,18 @@ namespace StudyPlanner.WebUI.Controllers
                     user.Salt = Guid.NewGuid().ToString();
                     user.Password = HashPassword(user.Password, user.Salt);
                     repository.AddUser(user);
-                    TempData["Message"] = "New account registered successfully";
+                    TempData["SuccessMessage"] = "New account registered successfully";
                     return Redirect(Url.Action("Index", "Home", new { returnUrl = returnUrl }));
                 }
                 else
                 {
-                    TempData["Message"] = "Choose different e-mail address";
+                    TempData["ErrorMessage"] = "Choose different e-mail address";
                     return Redirect(Url.Action("Index", "Home", new { returnUrl = returnUrl, register = true, name = user.Name, email = user.Email }));
                 }
             }
             else
             {
-                TempData["Message"] = "Incorrect data";
+                TempData["ErrorMessage"] = "Incorrect data";
                 return Redirect(Url.Action("Index", "Home", new { returnUrl = returnUrl, register = true, name = user.Name, email = user.Email }));
             }
         }
