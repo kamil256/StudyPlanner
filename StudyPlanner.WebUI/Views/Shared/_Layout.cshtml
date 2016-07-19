@@ -31,7 +31,7 @@
             color: white;
         }
         .navbar-default .navbar-nav > li > span {
-            padding: 18px;
+            padding: 15px;
         }
         .navbar-default .navbar-nav > li > a:hover {
             color: white;
@@ -107,24 +107,15 @@
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="active">@Html.ActionLink("BOOKS", "Books", "Home")</li>
-                    <li>@Html.ActionLink("SECTIONS", "Sections", "Home")</li>
-                    <li>@Html.ActionLink("TRAININGS", "Trainings", "Home")</li>
-                    <li><span class="glyphicon glyphicon-user"></span>
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            @: LOGGED IN AS @User.Identity.Name.ToUpper() </li><li><a href="@Url.Action("LogOut")">LOG OUT</a></li>
-                        }
-                        else
-                        {
-                            @: You are not logged in
-                        }
-                    </li>
+                    <li class='@(ViewBag.Title == "Home" ? "active" : "")'>@Html.ActionLink("HOME", "Index", "Home")</li>
+                    <li class='@(ViewBag.Title == "Books" ? "active" : "")'>@Html.ActionLink("BOOKS", "Books", "Home")</li>
+                    <li class='@(ViewBag.Title == "Sections" ? "active" : "")'>@Html.ActionLink("SECTIONS", "Sections", "Home")</li>
+                    <li class='@(ViewBag.Title == "Trainings" ? "active" : "")'>@Html.ActionLink("TRAININGS", "Trainings", "Home")</li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li><a href="@Url.Action("LogOut")"><span class="glyphicon glyphicon-user"></span> LOG OUT (@User.Identity.Name)</a></li>
+                    }
                 </ul>
-                @*<ul class="nav navbar-nav navbar-right">
-                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                    <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-                </ul>*@
             </div>
         </div>
     </nav>

@@ -24,7 +24,7 @@ namespace StudyPlanner.Infrastructure.Concrete
             User user = repository.Users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
             if (user != null && HashPassword(password, user.Salt) == user.Password)
             {
-                FormsAuthentication.SetAuthCookie(email, false);
+                FormsAuthentication.SetAuthCookie(user.Name, false);
                 return true;
             }
             return false;
