@@ -1,6 +1,7 @@
 ﻿@model StudyPlanner.Domain.Entities.User
 
 @{
+    ViewBag.Title = "Home";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -12,6 +13,15 @@
         @if (ViewBag.Register)
         {
             @Html.Partial("RegisterPartial", Model)
+        }
+        @if (ViewBag.Recover)
+        {
+            @Html.Partial("RecoverPartial", Model)
+        }
+        else if (User.Identity.IsAuthenticated)
+        {
+            // Panel for authenticated user
+            @*@Html.Partial("LogInPartial", Model)*@
         }
         else
         {
