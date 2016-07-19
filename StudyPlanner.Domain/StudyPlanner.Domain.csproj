@@ -57,6 +57,7 @@
     <Compile Include="Entities\AuthorOfBook.cs" />
     <Compile Include="Entities\Book.cs" />
     <Compile Include="Concrete\EFDbContext.cs" />
+    <Compile Include="Entities\MetaData\UserMetaData.cs" />
     <Compile Include="Entities\Publisher.cs" />
     <Compile Include="Entities\Section.cs" />
     <Compile Include="Entities\Training.cs" />

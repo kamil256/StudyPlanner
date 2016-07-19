@@ -44,6 +44,7 @@ namespace StudyPlanner.WebUI.Controllers
             }
         }
 
+        // Should be Ajax
         [HttpPost]
         public RedirectResult Register(string returnUrl, User user)
         {
