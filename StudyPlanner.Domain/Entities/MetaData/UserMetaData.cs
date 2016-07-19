@@ -9,6 +9,9 @@ namespace StudyPlanner.Domain.Entities.MetaData
 {
     public partial class UserMetaData
     {
+        [Display(Name = "Your name")]
+        public string Name { get; set; }
+
         [Display(Name = "E-mail")]
         public string Email { get; set; }
     }

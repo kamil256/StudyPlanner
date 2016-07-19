@@ -48,19 +48,26 @@ namespace StudyPlanner.WebUI.Controllers
         [HttpPost]
         public RedirectResult Register(string returnUrl, User user)
         {
-            User existingUser = repository.Users.FirstOrDefault(u => u.Email.ToLower() == user.Email.ToLower());
-            if (existingUser == null)
+            if (user.Name != null && user.Email != null && user.Password != null)
             {
-                user.Salt = Guid.NewGuid().ToString();
-                user.Password = HashPassword(user.Password, user.Salt);
-                repository.AddUser(user);
-                TempData["Message"] = "Account successfully added";
-                return Redirect(string.IsNullOrEmpty(returnUrl) ? Url.Action("Index", "Home") : returnUrl);
+                if (repository.Users.FirstOrDefault(u => u.Email.ToLower() == user.Email.ToLower()) == null)
+                {
+                    user.Salt = Guid.NewGuid().ToString();
+                    user.Password = HashPassword(user.Password, user.Salt);
+                    repository.AddUser(user);
+                    TempData["Message"] = "New account registered successfully";
+                    return Redirect(Url.Action("Index", "Home", new { returnUrl = returnUrl }));
+                }
+                else
+                {
+                    TempData["Message"] = "Choose different e-mail address";
+                    return Redirect(Url.Action("Index", "Home", new { returnUrl = returnUrl, register = true, name = user.Name, email = user.Email }));
+                }
             }
             else
             {
                 TempData["Message"] = "Incorrect data";
-                return Redirect(Url.Action("Index", "Home", new { returnUrl = returnUrl, register = true  }));
+                return Redirect(Url.Action("Index", "Home", new { returnUrl = returnUrl, register = true, name = user.Name, email = user.Email }));
             }
         }
 

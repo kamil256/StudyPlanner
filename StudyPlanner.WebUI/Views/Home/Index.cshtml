@@ -8,7 +8,7 @@
     <img src="~/Content/Images/MainTheme.jpg" />
     @if (ViewBag.Register)
     {
-        @Html.Partial("RegisterPartial")
+        @Html.Partial("RegisterPartial", Model)
     }
     else
     {
