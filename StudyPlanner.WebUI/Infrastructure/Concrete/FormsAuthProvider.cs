@@ -19,12 +19,12 @@ namespace StudyPlanner.Infrastructure.Concrete
             this.repository = repository;
         }
 
-        public bool Authenticate(string username, string password)
+        public bool Authenticate(string email, string password)
         {
-            User user = repository.Users.FirstOrDefault(u => u.Name.ToLower() == username.ToLower());
+            User user = repository.Users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
             if (user != null && HashPassword(password, user.Salt) == user.Password)
             {
-                FormsAuthentication.SetAuthCookie(username, false);
+                FormsAuthentication.SetAuthCookie(email, false);
                 return true;
             }
             return false;

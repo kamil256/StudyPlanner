@@ -31,31 +31,31 @@ namespace StudyPlanner.WebUI.Controllers
             return View();
         }
 
-        public RedirectResult LogIn(string returnUrl, string username, string password)
+        public RedirectResult LogIn(string returnUrl, User user)
         {
-            if (authProvider.Authenticate(username, password))
+            if (authProvider.Authenticate(user.Email, user.Password))
                 return Redirect(string.IsNullOrEmpty(returnUrl) ? Url.Action("Index", "Home") : returnUrl);
             else
             {
-                TempData["Message"] = "Incorrect login or password!";
+                TempData["Message"] = "Incorrect e-mail or password";
                 return Redirect(Url.Action("Index", "Home", new { ReturnUrl = returnUrl }));
             }
         }
 
-        public RedirectResult Register(string returnUrl, string username, string email, string password)
+        public RedirectResult Register(string returnUrl, User user)
         {
-            User user = repository.Users.FirstOrDefault(u => u.Name.ToLower() == username.ToLower());
-            if (user == null)
+            User existingUser = repository.Users.FirstOrDefault(u => u.Email.ToLower() == user.Email.ToLower());
+            if (existingUser == null)
             {
-                string salt = Guid.NewGuid().ToString();
-                string hashedPassword = HashPassword(password, salt);
-                repository.AddUser(username, email, hashedPassword, salt);
-                TempData["Message"] = "Account successfully added.";
+                user.Salt = Guid.NewGuid().ToString();
+                user.Password = HashPassword(user.Password, user.Salt);
+                repository.AddUser(user);
+                TempData["Message"] = "Account successfully added";
                 return Redirect(string.IsNullOrEmpty(returnUrl) ? Url.Action("Index", "Home") : returnUrl);
             }
             else
             {
-                TempData["Message"] = "Incorrect data!";
+                TempData["Message"] = "Incorrect data";
                 return Redirect(Url.Action("Index", "Home", new { Register = true, ReturnUrl = returnUrl }));
             }
         }
