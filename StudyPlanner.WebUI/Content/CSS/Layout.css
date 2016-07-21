@@ -8,7 +8,7 @@
     background-color: #C53515;
 }
 .navbar-default .navbar-brand {
-    margin-left: 5px;
+    margin-left: 20px;
     color: #eee;
 }
 .navbar-default .navbar-brand:hover {
@@ -18,8 +18,8 @@
     color: #eee;
     font-weight: bold;
 }
-.navbar-default .navbar-nav > li > a:last-child {
-    margin-right: 5px;
+.navbar-default .navbar-nav > li:last-child > a {
+    margin-right: 20px;
 }
 .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:focus, .navbar-default .navbar-nav > .active > a:hover {
     background-color: #922710;
@@ -36,5 +36,5 @@ footer {
     padding: 15px;
     color: #eee;
     font-weight: bold;
-    padding-left: 20px;
+    padding-left: 35px;
 }

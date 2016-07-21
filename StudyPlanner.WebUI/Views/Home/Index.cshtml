@@ -2,7 +2,6 @@
 
 @{
     ViewBag.Title = "Home";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <link href="~/Content/CSS/Home.css" rel="stylesheet" />
@@ -14,7 +13,7 @@
         <p class="ErrorMessage">@TempData["ErrorMessage"]</p>
         @if (User.Identity.IsAuthenticated)
         {
-            @Html.Partial("SummaryPartial", Model)
+            @*@Html.Partial("SummaryPartial", Model)*@
         }
         else if (ViewBag.Register)
         {
@@ -22,7 +21,7 @@
         }
         else if (ViewBag.Recover)
         {
-            @Html.Partial("RecoverPartial", Model)
+            @*@Html.Partial("RecoverPartial", Model)*@
         }
         else
         {

@@ -1,5 +1,11 @@
 ﻿@model StudyPlanner.WebUI.Models.BooksModel
-<p>@ViewBag.Password</p>
+
+@{ 
+    ViewBag.Title = "Books";
+}
+
+<link href="~/Content/CSS/Site.css" rel="stylesheet" />
+
 <h1 class="heading">Books @Html.ActionLink("Add new", "AddBook", null, new { @class = "btn btn-default btn-xs" })</h1>
 
 <div class="row">
