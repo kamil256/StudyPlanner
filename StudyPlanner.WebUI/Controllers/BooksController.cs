@@ -49,11 +49,11 @@ namespace StudyPlanner.WebUI.Controllers
                 else
                     model.FilterPublishers.Add("true");
             }
-            return Books(model);
+            return List(model);
         }
 
         [HttpPost]
-        public ActionResult Books(BooksModel model)
+        public ActionResult List(BooksModel model)
         {
             ViewBag.Title = "Books";
             model.TotalBooksInDatabase = repository.Books.Count();
@@ -72,51 +72,51 @@ namespace StudyPlanner.WebUI.Controllers
                     filteredPublishers.Add(model.Publishers[i]);
 
             // Create list of books depending on filter values
-            model.Books = new List<BooksModel.Book>();
-            foreach (var x in repository.Books.ToList())
-            {
-                var book = (BooksModel.Book)x;
-                if ((from a in book.Authors join fa in filteredAuthors on a.AuthorId equals fa.AuthorId select a).Count() == 0)
-                    if ((from ab in repository.AuthorsOfBooks where ab.Book.BookId == book.BookId select ab).Count() != 0) // Jeśli książka nie ma autorów, to jej nie odrzucaj w tym kroku
-                        continue;
+            model.Books = repository.Books;
+            //foreach (var x in repository.Books.ToList())
+            //{
+            //    var book = (BooksModel.Book)x;
+            //    if ((from a in book.Authors join fa in filteredAuthors on a.AuthorId equals fa.AuthorId select a).Count() == 0)
+            //        if ((from ab in repository.AuthorsOfBooks where ab.Book.BookId == book.BookId select ab).Count() != 0) // Jeśli książka nie ma autorów, to jej nie odrzucaj w tym kroku
+            //            continue;
 
-                if ((from fb in filteredPublishers where book.PublisherId == fb.PublisherId select fb).Count() == 0)
-                    continue;
+            //    if ((from fb in filteredPublishers where book.PublisherId == fb.PublisherId select fb).Count() == 0)
+            //        continue;
 
-                if (!String.IsNullOrEmpty(model.FilterSearchString))
-                    if (!book.Title.ToLower().Contains(model.FilterSearchString.ToLower()) && (from a in book.Authors where a.Name.ToLower().Contains(model.FilterSearchString.ToLower()) select a).Count() == 0)
-                        continue;
+            //    if (!String.IsNullOrEmpty(model.FilterSearchString))
+            //        if (!book.Title.ToLower().Contains(model.FilterSearchString.ToLower()) && (from a in book.Authors where a.Name.ToLower().Contains(model.FilterSearchString.ToLower()) select a).Count() == 0)
+            //            continue;
 
-                if (book.Released < model.FilterReleasedFrom || book.Released > model.FilterReleasedTo)
-                    continue;
+            //    if (book.Released < model.FilterReleasedFrom || book.Released > model.FilterReleasedTo)
+            //        continue;
 
-                if (book.Pages < model.FilterPagesFrom || book.Pages > model.FilterPagesTo)
-                    continue;
+            //    if (book.Pages < model.FilterPagesFrom || book.Pages > model.FilterPagesTo)
+            //        continue;
 
-                model.Books.Add(book);
-            }
+            //    model.Books.Add(book);
+            //}
 
-            switch (model.SortBy)
-            {
-                case "Title":
-                    if (model.SortingOrder == "Ascending")
-                        model.Books = (from b in model.Books orderby b.Title select b).ToList();
-                    if (model.SortingOrder == "Descending")
-                        model.Books = (from b in model.Books orderby b.Title descending select b).ToList();
-                    break;
-                case "Released":
-                    if (model.SortingOrder == "Ascending")
-                        model.Books = (from b in model.Books orderby b.Released select b).ToList();
-                    if (model.SortingOrder == "Descending")
-                        model.Books = (from b in model.Books orderby b.Released descending select b).ToList();
-                    break;
-                case "Pages":
-                    if (model.SortingOrder == "Ascending")
-                        model.Books = (from b in model.Books orderby b.Pages select b).ToList();
-                    if (model.SortingOrder == "Descending")
-                        model.Books = (from b in model.Books orderby b.Pages descending select b).ToList();
-                    break;
-            }
+            //switch (model.SortBy)
+            //{
+            //    case "Title":
+            //        if (model.SortingOrder == "Ascending")
+            //            model.Books = (from b in model.Books orderby b.Title select b).ToList();
+            //        if (model.SortingOrder == "Descending")
+            //            model.Books = (from b in model.Books orderby b.Title descending select b).ToList();
+            //        break;
+            //    case "Released":
+            //        if (model.SortingOrder == "Ascending")
+            //            model.Books = (from b in model.Books orderby b.Released select b).ToList();
+            //        if (model.SortingOrder == "Descending")
+            //            model.Books = (from b in model.Books orderby b.Released descending select b).ToList();
+            //        break;
+            //    case "Pages":
+            //        if (model.SortingOrder == "Ascending")
+            //            model.Books = (from b in model.Books orderby b.Pages select b).ToList();
+            //        if (model.SortingOrder == "Descending")
+            //            model.Books = (from b in model.Books orderby b.Pages descending select b).ToList();
+            //        break;
+            //}
 
             model.ItemsPerPage = 1;
             model.TotalPages = (int)Math.Ceiling((double)model.Books.Count() / model.ItemsPerPage);
