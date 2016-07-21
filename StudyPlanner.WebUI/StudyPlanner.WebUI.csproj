@@ -117,6 +117,8 @@
   <ItemGroup>
     <Content Include="Content\CSS\bootstrap.css" />
     <Content Include="Content\CSS\bootstrap.min.css" />
+    <Content Include="Content\CSS\Home.css" />
+    <Content Include="Content\CSS\Layout.css" />
     <Content Include="Content\CSS\Site.css" />
     <Content Include="Content\Images\Books.png" />
     <Content Include="Content\Images\Books2.png" />

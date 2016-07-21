@@ -5,23 +5,24 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="MainImageContainer">
+<link href="~/Content/CSS/Home.css" rel="stylesheet" />
+
+<div class="main-section">
     <img src="~/Content/Images/MainTheme.jpg" />
     <div>
         <p class="SuccessMessage">@TempData["SuccessMessage"]</p>
         <p class="ErrorMessage">@TempData["ErrorMessage"]</p>
-        @if (ViewBag.Register)
+        @if (User.Identity.IsAuthenticated)
+        {
+            @Html.Partial("SummaryPartial", Model)
+        }
+        else if (ViewBag.Register)
         {
             @Html.Partial("RegisterPartial", Model)
         }
-        @if (ViewBag.Recover)
+        else if (ViewBag.Recover)
         {
             @Html.Partial("RecoverPartial", Model)
-        }
-        else if (User.Identity.IsAuthenticated)
-        {
-            // Panel for authenticated user
-            @*@Html.Partial("LogInPartial", Model)*@
         }
         else
         {
@@ -30,27 +31,23 @@
     </div>
 </div>
 
-<div class="SectionsDescription row">
+<div class="info-section row">
     <div class="col-sm-4">
-        <img src="~/Content/Images/Books2.png" width="100" />@*~/Content/Images/Books.png*@
+        <img src="~/Content/Images/Books2.png" width="100" />
         <b>Books</b>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
-        <a>More</a>
+        <a href="#">More</a>
     </div>
     <div class="col-sm-4">
-        <img src="~/Content/Images/Books2.png" width="100" />@*~/Content/Images/Books.png*@
+        <img src="~/Content/Images/Books2.png" width="100" />
         <b>Books</b>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
-        <a>More</a>
+        <a href="#">More</a>
     </div>
     <div class="col-sm-4">
-        <img src="~/Content/Images/Books2.png" width="100" />@*~/Content/Images/Books.png*@
+        <img src="~/Content/Images/Books2.png" width="100" />
         <b>Books</b>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
-        <a>More</a>
+        <a href="#">More</a>
     </div>
 </div>
-
-<footer>
-    Copyright © 2016 Kamil Dzierlęga (mail)
-</footer>

@@ -1,0 +1,40 @@
+﻿.navbar {
+    border-color: #922710;
+    border-width: 0;
+    border-radius: 0;
+    margin-bottom: 0;
+}
+.navbar-default {
+    background-color: #C53515;
+}
+.navbar-default .navbar-brand {
+    margin-left: 5px;
+    color: #eee;
+}
+.navbar-default .navbar-brand:hover {
+    color: white;
+}
+.navbar-default .navbar-nav > li > a {
+    color: #eee;
+    font-weight: bold;
+}
+.navbar-default .navbar-nav > li > a:last-child {
+    margin-right: 5px;
+}
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:focus, .navbar-default .navbar-nav > .active > a:hover {
+    background-color: #922710;
+    color: white;
+}
+.navbar-default .navbar-nav > li > span {
+    padding: 15px;
+}
+.navbar-default .navbar-nav > li > a:hover {
+    color: white;
+}
+footer {
+    background-color: #C53515;
+    padding: 15px;
+    color: #eee;
+    font-weight: bold;
+    padding-left: 20px;
+}

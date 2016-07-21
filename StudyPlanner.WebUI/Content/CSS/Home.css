@@ -1,0 +1,49 @@
+﻿.main-section {
+    position: relative;
+}
+.main-section > img {
+    width: 100%;
+}
+.main-section > div {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: white 0 0 3px;
+}
+.main-section > div input.form-control {
+    width: 300px;
+}
+.main-section > div input[type="submit"] {
+    margin-bottom: 7px;
+}
+.info-section {
+    margin: 0 !important;
+    background-color: #C7B299;
+}
+.info-section > div {
+    padding: 40px 20px;
+    font: 1em Verdana;
+    text-align: justify;
+}
+.info-section > div > img, .info-section > div > b, .info-section > div > a {
+    display: block;
+}
+.info-section > div > b {
+    margin-top: 10px; 
+    margin-bottom: 10px;
+}
+.info-section > div > a {
+    font-weight: bold;
+    color: #333;
+    margin-top: 5px;
+}        
+.SuccessMessage {
+    color: green;
+}
+.ErrorMessage {
+    color: red;
+}
