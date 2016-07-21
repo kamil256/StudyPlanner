@@ -23,9 +23,9 @@
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav navbar-right">
                     <li class='@(ViewBag.Title == "Home" ? "active" : "")'>@Html.ActionLink("HOME", "Index", "Home")</li>
-                    <li class='@(ViewBag.Title == "Books" ? "active" : "")'>@Html.ActionLink("BOOKS", "Books", "Home")</li>
-                    <li class='@(ViewBag.Title == "Sections" ? "active" : "")'>@Html.ActionLink("SECTIONS", "Sections", "Home")</li>
-                    <li class='@(ViewBag.Title == "Trainings" ? "active" : "")'>@Html.ActionLink("TRAININGS", "Trainings", "Home")</li>
+                    <li class='@(ViewBag.Title == "Books" ? "active" : "")'>@Html.ActionLink("BOOKS", "List", "Books")</li>
+                    <li class='@(ViewBag.Title == "Sections" ? "active" : "")'>@Html.ActionLink("SECTIONS", "List", "Sections")</li>
+                    <li class='@(ViewBag.Title == "Trainings" ? "active" : "")'>@Html.ActionLink("TRAININGS", "List", "Trainings")</li>
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li><a href="@Url.Action("LogOut")"><span class="glyphicon glyphicon-user"></span> LOG OUT (@User.Identity.Name)</a></li>
