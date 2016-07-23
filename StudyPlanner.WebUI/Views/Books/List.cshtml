@@ -8,6 +8,7 @@
 }
 
 <link href="~/Content/CSS/Site.css" rel="stylesheet" />
+<link href="~/Content/CSS/Pagination.css" rel="stylesheet" />
 
 <h1 class="heading">Books @Html.ActionLink("Add new", "AddBook", null, new { @class = "btn btn-default btn-xs" })</h1>
 
@@ -59,81 +60,75 @@
         }
     </div>
 
-    <div class="col-sm-9">
-        @*@if (Model.TotalBooksInDatabase == 0)
+    <div class="col-sm-9">        
+        @if (Model.Books.Count() == 0)
         {
-            <div class="alert alert-danger">No books were added!</div>
+            <div class="alert alert-danger">No books were found!</div>
         }
-        else*@
-        @*{*@
-            @if (Model.Books.Count() == 0)
-            {
-                <div class="alert alert-danger">No books were found!</div>
-            }
-            else
-            {
-                <div class="form-group sorting-group">
-                    <b>Sort by: </b>
-                    @Html.DropDownListFor(x => x.SelectedSorting, new SelectList(Enum.GetNames(typeof(BooksListViewModel.Sorting)), Model.SelectedSorting), new { @class = "form-control", form = "FilteringForm" })
-                    @Html.DropDownListFor(x => x.SelectedSortingOrder, new SelectList(Enum.GetNames(typeof(BooksListViewModel.SortingOrder)), Model.SelectedSortingOrder), new { @class = "form-control", form = "FilteringForm" })
-                </div>
+        else
+        {
+            <div class="form-group sorting-group">
+                <b>Sort by: </b>
+                @Html.DropDownListFor(x => x.SelectedSorting, new SelectList(Enum.GetNames(typeof(BooksListViewModel.Sorting)), Model.SelectedSorting), new { @class = "form-control", form = "FilteringForm" })
+                @Html.DropDownListFor(x => x.SelectedSortingOrder, new SelectList(Enum.GetNames(typeof(BooksListViewModel.SortingOrder)), Model.SelectedSortingOrder), new { @class = "form-control", form = "FilteringForm" })
+            </div>
 
-                foreach (var x in Model.Books)
-                {
-                    <div class="well book-details">
-                        @Html.ActionLink(HttpUtility.HtmlDecode("&times;"), "RemoveBook", new { BookId = x.BookId })
-                        <img src="@*/Covers/@x.Cover*@" width="120" />
-                        <div>
-                            <b>@Html.MarkSearchedString(x.Title, Model.SearchString)</b>
-                            @{ 
-                                var authors = (from a in x.AuthorOfBooks orderby a.Priority select a.Author).ToArray();
-                            }
-                            @switch (authors.Count() @*.Authors.Count*@)
+            foreach (var x in Model.Books)
+            {
+                <div class="well book-details">
+                    @Html.ActionLink(HttpUtility.HtmlDecode("&times;"), "RemoveBook", new { BookId = x.BookId })
+                    <img src="@*/Covers/@x.Cover*@" width="120" />
+                    <div>
+                        <b>@Html.MarkSearchedString(x.Title, Model.SearchString)</b>
+                        @{ 
+                            var authors = (from a in x.AuthorOfBooks orderby a.Priority select a.Author).ToArray();
+                        }
+                        @switch (authors.Count() @*.Authors.Count*@)
+                        {
+                            case 0:
+                                @:Author: unknown
+                                break;
+                            case 1:
+                                @:Author:
+                                break;
+                            default:
+                                @:Authors:
+                                break;
+                        }
+                        @for (int i = 0; i < authors.Count(); i++)
+                        {
+                            if (i < authors.Count() - 1)
                             {
-                                case 0:
-                                    @:Author: unknown
-                                    break;
-                                case 1:
-                                    @:Author:
-                                    break;
-                                default:
-                                    @:Authors:
-                                    break;
+                                <a href="@Url.Action("List", new { selectedAuthor = authors[i].Name })">@Html.MarkSearchedString(authors[i].Name, Model.SearchString)</a><span>,</span>
                             }
-                            @for (int i = 0; i < authors.Count(); i++)
+                            else
                             {
-                                if (i < authors.Count() - 1)
-                                {
-                                    <a href="@Url.Action("List", new { selectedAuthor = authors[i].Name })">@Html.MarkSearchedString(authors[i].Name, Model.SearchString)</a><span>,</span>
-                                }
-                                else
-                                {
-                                    <a href="@Url.Action("List", new { selectedAuthor = authors[i].Name })">@Html.MarkSearchedString(authors[i].Name, Model.SearchString)</a>
-                                }
+                                <a href="@Url.Action("List", new { selectedAuthor = authors[i].Name })">@Html.MarkSearchedString(authors[i].Name, Model.SearchString)</a>
                             }
-                            <br />
-                            Publisher: @Html.ActionLink(x.Publisher.Name, "List", new { selectedPublisher = x.Publisher.Name })<br />
-                            Released: @x.Released.ToLongDateString()<br />
-                            Pages: @x.Pages
-                            <div class="btn-group">
-                                @Html.ActionLink("Sections", "Sections", "Home", new { BookId = x.BookId }, new { @class = "btn btn-sm btn-default" })
-                                @Html.ActionLink("Trainings", "Trainings", "Home", new { FilterBookId = x.BookId }, new { @class = "btn btn-sm btn-default" })
-                            </div>
+                        }
+                        <br />
+                        Publisher: @Html.ActionLink(x.Publisher.Name, "List", new { selectedPublisher = x.Publisher.Name })<br />
+                        Released: @x.Released.ToLongDateString()<br />
+                        Pages: @x.Pages
+                        <div class="btn-group">
+                            @Html.ActionLink("Sections", "Sections", "Home", new { BookId = x.BookId }, new { @class = "btn btn-sm btn-default" })
+                            @Html.ActionLink("Trainings", "Trainings", "Home", new { FilterBookId = x.BookId }, new { @class = "btn btn-sm btn-default" })
                         </div>
-                        
                     </div>
-                }
-                <input type="hidden" name="PageNumber" id="PageNumber" form="FilteringForm" />
-                @Html.Pagination(Model.PageNumber, Model.TotalPages)//(1, 21, 10)
+                        
+                </div>
             }
-        @*}*@
+            
+            @Html.HiddenFor(x => x.Page, new { form = "FilteringForm" })
+            @Html.Pagination(Model.Pagination.CurrentPage, Model.Pagination.TotalPages, x => $"GoToPage({x})")
+        }
     </div>
 </div>
 
 <script>
-    function ChangePage(x)
+    function GoToPage(x)
     {
-        document.getElementById("PageNumber").value = x;
+        document.getElementById("Page").value = x;
         $("#FilteringForm").submit();
     }
 

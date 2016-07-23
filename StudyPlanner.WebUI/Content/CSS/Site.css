@@ -101,33 +101,3 @@
 .sections-table > tbody > tr > td:nth-child(5) > input {
     max-width: 100%;
 }*/
-.pagination {
-    width: 100%;
-    text-align: center;
-}
-.pagination > ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-.pagination ul > li
-{
-    display: inline;
-    margin: 0 3px;
-}
-.pagination > ul > li > div
-{
-    text-decoration: none;
-    color: #444;
-    font-weight: bold;
-    width: 40px;
-    height: 40px;
-    display: table-cell;
-    background-color: #eee;
-    border-radius: 5px;
-    vertical-align: middle;
-    text-align: center;
-}
-.pagination > ul > li > div:hover, .pagination > ul > li > div[data-selected="selected"] {
-    background-color: #ccc;
-}

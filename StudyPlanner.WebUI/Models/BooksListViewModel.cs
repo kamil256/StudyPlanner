@@ -20,14 +20,12 @@ namespace StudyPlanner.WebUI.Models
         public Dictionary<string, bool> SelectedAuthors { get; set; }
         public Dictionary<string, bool> SelectedPublishers { get; set; }
 
-        public Sorting SelectedSorting { get; set; } = Sorting.Title;
         public enum Sorting { Title, Released, Pages };
-
-        public SortingOrder SelectedSortingOrder { get; set; } = SortingOrder.Ascending;
+        public Sorting SelectedSorting { get; set; } = Sorting.Title;
         public enum SortingOrder { Ascending, Descending };
+        public SortingOrder SelectedSortingOrder { get; set; } = SortingOrder.Ascending;
 
-        public int PageNumber { get; set; }
-        public int TotalPages { get; set; }
-        public int ItemsPerPage { get; set; }
+        public int Page { get; set; } = 1;
+        public Pagination Pagination { get; set; }
     }
 }

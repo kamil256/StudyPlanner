@@ -119,6 +119,7 @@
     <Content Include="Content\CSS\bootstrap.min.css" />
     <Content Include="Content\CSS\Home.css" />
     <Content Include="Content\CSS\Layout.css" />
+    <Content Include="Content\CSS\Pagination.css" />
     <Content Include="Content\CSS\Site.css" />
     <Content Include="Content\Images\Books.png" />
     <Content Include="Content\Images\Books2.png" />
@@ -151,6 +152,7 @@
     <Compile Include="Infrastructure\Utilities.cs" />
     <Compile Include="Models\AddBookModel.cs" />
     <Compile Include="Models\BooksListViewModel.cs" />
+    <Compile Include="Models\Pagination.cs" />
     <Compile Include="Models\SectionsModel.cs" />
     <Compile Include="Models\TrainingsModel.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />

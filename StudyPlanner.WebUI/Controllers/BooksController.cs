@@ -124,11 +124,19 @@ namespace StudyPlanner.WebUI.Controllers
                     break;
             }
 
-            model.ItemsPerPage = 5;
-            model.TotalPages = (int)Math.Ceiling((double)model.Books.Count() / model.ItemsPerPage);
-            if (model.PageNumber == 0)
-                model.PageNumber = 1;
-            model.Books = (from b in model.Books select b).Skip((model.PageNumber - 1) * model.ItemsPerPage).Take(model.ItemsPerPage).ToList();
+            model.Pagination = new Pagination()
+            {
+                ItemsPerPage = 1,
+                CurrentPage = model.Page,
+                TotalItems = model.Books.Count()
+            };
+            ModelState.Remove("Page");
+            model.Page = 1;
+
+            model.Books = model.Books
+                          .Skip((model.Pagination.CurrentPage - 1) * model.Pagination.ItemsPerPage)
+                          .Take(model.Pagination.ItemsPerPage)
+                          .ToList();
 
             return View(model);
         }
