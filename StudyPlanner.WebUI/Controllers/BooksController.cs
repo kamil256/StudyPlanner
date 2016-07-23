@@ -19,106 +19,112 @@ namespace StudyPlanner.WebUI.Controllers
             this.repository = repository;
         }
 
-        public ActionResult List(int selectAuthor = 0, int selectPublisher = 0)
+        [HttpGet]
+        public ActionResult List(int? selectedAuthor, int? selectedPublisher)
         {
-            BooksModel model = new BooksModel();
-            model.FilterAuthors = new List<string>();
-            foreach (var x in repository.Authors.OrderBy(x => x.Name))
-            {
-                if (selectAuthor != 0)
-                {
-                    if (selectAuthor == x.AuthorId)
-                        model.FilterAuthors.Add("true");
-                    else
-                        model.FilterAuthors.Add("false");
-                }
-                else
-                    model.FilterAuthors.Add("true");
-            }
+            BooksListViewModel model = new BooksListViewModel();
 
-            model.FilterPublishers = new List<string>();
-            foreach (var x in repository.Publishers.OrderBy(x => x.Name))
-            {
-                if (selectPublisher != 0)
-                {
-                    if (selectPublisher == x.PublisherId)
-                        model.FilterPublishers.Add("true");
-                    else
-                        model.FilterPublishers.Add("false");
-                }
-                else
-                    model.FilterPublishers.Add("true");
-            }
+            if (selectedAuthor == null)
+                model.SelectedAuthors = (from a in repository.Authors
+                                         orderby a.Name
+                                         select new { Id = a.AuthorId.ToString(), Value = true })
+                                       .ToDictionary(a => a.Id, a => a.Value);
+            else
+                model.SelectedAuthors = (from a in repository.Authors
+                                         orderby a.Name
+                                         select new { Id = a.AuthorId.ToString(), Value = selectedAuthor == a.AuthorId ? true : false })
+                                       .ToDictionary(a => a.Id, a => a.Value);
+
+            if (selectedPublisher == null)
+                model.SelectedPublishers = (from p in repository.Publishers
+                                            orderby p.Name
+                                            select new { Id = p.PublisherId.ToString(), Value = true })
+                                          .ToDictionary(p => p.Id, p => p.Value);
+            else
+                model.SelectedPublishers = (from p in repository.Publishers
+                                            orderby p.PublisherId
+                                            select new { Id = p.PublisherId.ToString(), Value = selectedPublisher == p.PublisherId ? true : false })
+                                          .ToDictionary(p => p.Id, p => p.Value);
+
             return List(model);
         }
 
         [HttpPost]
-        public ActionResult List(BooksModel model)
+        public ActionResult List(BooksListViewModel model)
         {
-            ViewBag.Title = "Books";
-            model.TotalBooksInDatabase = repository.Books.Count();
-            model.Authors = (from a in repository.Authors orderby a.Name select a).ToList();
-            // Create list of authors depending selected checkboxes
-            List<Author> filteredAuthors = new List<Author>();
-            for (int i = 0; i < model.Authors.Count; i++)
-                if (model.FilterAuthors[i].ToLower() == bool.TrueString.ToLower())
-                    filteredAuthors.Add(model.Authors[i]);
-
-            model.Publishers = (from p in repository.Publishers orderby p.Name select p).ToList();
-            // Create list of publishers depending selected checkboxes
-            List<Publisher> filteredPublishers = new List<Publisher>();
-            for (int i = 0; i < model.Publishers.Count; i++)
-                if (model.FilterPublishers[i].ToLower() == bool.TrueString.ToLower())
-                    filteredPublishers.Add(model.Publishers[i]);
-
-            // Create list of books depending on filter values
+            model.Authors = repository.Authors.OrderBy(a => a.Name);
+            model.Publishers = repository.Publishers.OrderBy(p => p.Name);
             model.Books = repository.Books;
-            //foreach (var x in repository.Books.ToList())
-            //{
-            //    var book = (BooksModel.Book)x;
-            //    if ((from a in book.Authors join fa in filteredAuthors on a.AuthorId equals fa.AuthorId select a).Count() == 0)
-            //        if ((from ab in repository.AuthorsOfBooks where ab.Book.BookId == book.BookId select ab).Count() != 0) // Jeśli książka nie ma autorów, to jej nie odrzucaj w tym kroku
-            //            continue;
 
-            //    if ((from fb in filteredPublishers where book.PublisherId == fb.PublisherId select fb).Count() == 0)
-            //        continue;
+            List<Author> selectedAuthorsList = (from sa in model.SelectedAuthors
+                                                where sa.Value
+                                                select repository.Authors.First(a => a.AuthorId.ToString() == sa.Key))
+                                                .ToList();
 
-            //    if (!String.IsNullOrEmpty(model.FilterSearchString))
-            //        if (!book.Title.ToLower().Contains(model.FilterSearchString.ToLower()) && (from a in book.Authors where a.Name.ToLower().Contains(model.FilterSearchString.ToLower()) select a).Count() == 0)
-            //            continue;
+            List<Publisher> selectedPublishersList = (from sp in model.SelectedPublishers
+                                                      where sp.Value
+                                                      select repository.Publishers.First(p => p.PublisherId.ToString() == sp.Key))
+                                                      .ToList();
 
-            //    if (book.Released < model.FilterReleasedFrom || book.Released > model.FilterReleasedTo)
-            //        continue;
+            if (!String.IsNullOrEmpty(model.SearchString))
+                model.Books = from b in model.Books
+                              where b.Title.ToLower().Contains(model.SearchString.ToLower()) ||
+                                    (from a in repository.GetAuthorsOfBook(b)
+                                     where a.Name.ToLower().Contains(model.SearchString.ToLower())
+                                     select a)
+                                     .Count() != 0
+                              select b;
 
-            //    if (book.Pages < model.FilterPagesFrom || book.Pages > model.FilterPagesTo)
-            //        continue;
+            if (model.ReleasedFrom != null)
+                model.Books = from b in model.Books where b.Released >= model.ReleasedFrom select b;
 
-            //    model.Books.Add(book);
-            //}
+            if (model.ReleasedTo != null)
+                model.Books = from b in model.Books where b.Released <= model.ReleasedTo select b;
 
-            //switch (model.SortBy)
-            //{
-            //    case "Title":
-            //        if (model.SortingOrder == "Ascending")
-            //            model.Books = (from b in model.Books orderby b.Title select b).ToList();
-            //        if (model.SortingOrder == "Descending")
-            //            model.Books = (from b in model.Books orderby b.Title descending select b).ToList();
-            //        break;
-            //    case "Released":
-            //        if (model.SortingOrder == "Ascending")
-            //            model.Books = (from b in model.Books orderby b.Released select b).ToList();
-            //        if (model.SortingOrder == "Descending")
-            //            model.Books = (from b in model.Books orderby b.Released descending select b).ToList();
-            //        break;
-            //    case "Pages":
-            //        if (model.SortingOrder == "Ascending")
-            //            model.Books = (from b in model.Books orderby b.Pages select b).ToList();
-            //        if (model.SortingOrder == "Descending")
-            //            model.Books = (from b in model.Books orderby b.Pages descending select b).ToList();
-            //        break;
-            //}
+            if (model.PagesFrom != null)
+                model.Books = from b in model.Books where b.Pages >= model.PagesFrom select b;
 
-            model.ItemsPerPage = 1;
+            if (model.PagesTo != null)
+                model.Books = from b in model.Books where b.Pages <= model.PagesTo select b;
+
+            model.Books = from b in model.Books
+                          where (from a in repository.GetAuthorsOfBook(b)
+                                 join sa in selectedAuthorsList on a.AuthorId equals sa.AuthorId
+                                 select a)
+                                 .Count() != 0 ||
+                                 repository.GetAuthorsOfBook(b).Count() == 0
+                          select b;
+
+            model.Books = from b in model.Books
+                          where (from p in selectedPublishersList
+                                 where p.PublisherId == b.PublisherId
+                                 select p)
+                                 .Count() != 0
+                          select b;
+
+            switch (model.SelectedSorting)
+            {
+                case BooksListViewModel.Sorting.Title:
+                    if (model.SelectedSortingOrder == BooksListViewModel.SortingOrder.Ascending)
+                        model.Books = from b in model.Books orderby b.Title ascending select b;
+                    else
+                        model.Books = from b in model.Books orderby b.Title descending select b;
+                    break;
+                case BooksListViewModel.Sorting.Released:
+                    if (model.SelectedSortingOrder == BooksListViewModel.SortingOrder.Ascending)
+                        model.Books = from b in model.Books orderby b.Released ascending select b;
+                    else
+                        model.Books = from b in model.Books orderby b.Released descending select b;
+                    break;
+                case BooksListViewModel.Sorting.Pages:
+                    if (model.SelectedSortingOrder == BooksListViewModel.SortingOrder.Ascending)
+                        model.Books = from b in model.Books orderby b.Pages ascending select b;
+                    else
+                        model.Books = from b in model.Books orderby b.Pages descending select b;
+                    break;
+            }
+
+            model.ItemsPerPage = 5;
             model.TotalPages = (int)Math.Ceiling((double)model.Books.Count() / model.ItemsPerPage);
             if (model.PageNumber == 0)
                 model.PageNumber = 1;

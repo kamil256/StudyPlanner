@@ -52,5 +52,10 @@ namespace StudyPlanner.Domain.Concrete
             dbContext.Users.Add(user);
             dbContext.SaveChanges();
         }
+
+        public IEnumerable<Author> GetAuthorsOfBook(Book book)
+        {
+            return from aob in dbContext.AuthorOfBooks where aob.BookId == book.BookId select aob.Author;
+        }
     }
 }

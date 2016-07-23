@@ -1,4 +1,7 @@
-﻿@model StudyPlanner.WebUI.Models.BooksModel
+﻿@using StudyPlanner.WebUI.Models;
+
+@model BooksListViewModel
+
 
 @{ 
     ViewBag.Title = "Books";
@@ -13,42 +16,42 @@
         @using (Html.BeginForm("List", "Books", FormMethod.Post, new { id = "FilteringForm", autocomplete = "off" }))
         {
             <div class="form-group">
-                @Html.LabelFor(x => x.FilterSearchString, "Search titles and authors:")
-                @Html.TextBoxFor(x => x.FilterSearchString, new { @class = "form-control" })
+                @Html.LabelFor(x => x.SearchString, "Search titles and authors:")
+                @Html.TextBoxFor(x => x.SearchString, new { @class = "form-control" })
             </div>
             <div class="form-group">
-                @Html.LabelFor(x => x.FilterReleasedFrom, "Released from:")
-                @Html.TextBoxFor(x => x.FilterReleasedFrom, new { @class = "form-control", type = "date" })
+                @Html.LabelFor(x => x.ReleasedFrom, "Released from:")
+                @Html.TextBoxFor(x => x.ReleasedFrom, new { @class = "form-control", type = "date" })
             </div>
             <div class="form-group">
-                    @Html.LabelFor(x => x.FilterReleasedTo, "Released to:")
-                    @Html.TextBoxFor(x => x.FilterReleasedTo, new { @class = "form-control", type = "date" })
+                    @Html.LabelFor(x => x.ReleasedTo, "Released to:")
+                    @Html.TextBoxFor(x => x.ReleasedTo, new { @class = "form-control", type = "date" })
             </div>
             <div class="form-group">
                 @Html.Label("Pages:")
                 <div class="form-control-range">
-                    @Html.TextBoxFor(x => x.FilterPagesFrom, new { @class = "form-control", type = "number" })
+                    @Html.TextBoxFor(x => x.PagesFrom, new { @class = "form-control", type = "number" })
                     <div>-</div>
-                    @Html.TextBoxFor(x => x.FilterPagesTo, new { @class = "form-control", type = "number" })
+                    @Html.TextBoxFor(x => x.PagesTo, new { @class = "form-control", type = "number" })
                 </div>
             </div>
             <div class="form-group">
                 <b>Authors:</b>
-                @for (int i = 0; i < Model.Authors.Count; i++)
+                @foreach (var a in Model.Authors)
                 {
                     <div class="checkbox">
-                        @Html.Label(Model.Authors[i].Name)
-                        @Html.CheckBox($"FilterAuthors[{i}]", bool.Parse(Model.FilterAuthors[i]))
+                        @Html.LabelFor(x => x.SelectedAuthors[a.AuthorId.ToString()], a.Name)
+                        @Html.CheckBoxFor(x => x.SelectedAuthors[a.AuthorId.ToString()])
                     </div>
                 }
             </div>
             <div class="form-group">
                 <b>Publishers:</b>
-                @for (int i = 0; i < Model.Publishers.Count; i++)
+                @foreach (var p in Model.Publishers)
                 {
                     <div class="checkbox">
-                        @Html.Label(Model.Publishers[i].Name)                        
-                        @Html.CheckBox($"FilterPublishers[{i}]", bool.Parse(Model.FilterPublishers[i]))
+                        @Html.LabelFor(x => x.SelectedPublishers[p.PublisherId.ToString()], p.Name)
+                        @Html.CheckBoxFor(x => x.SelectedPublishers[p.PublisherId.ToString()])
                     </div>
                 }
             </div>
@@ -57,13 +60,13 @@
     </div>
 
     <div class="col-sm-9">
-        @if (Model.TotalBooksInDatabase == 0)
+        @*@if (Model.TotalBooksInDatabase == 0)
         {
             <div class="alert alert-danger">No books were added!</div>
         }
-        else
-        {
-            if (Model.Books.Count() == 0)
+        else*@
+        @*{*@
+            @if (Model.Books.Count() == 0)
             {
                 <div class="alert alert-danger">No books were found!</div>
             }
@@ -71,8 +74,8 @@
             {
                 <div class="form-group sorting-group">
                     <b>Sort by: </b>
-                    @Html.DropDownListFor(x => x.SortBy, new SelectList(Model.SortByItems, Model.SortBy), new { @class = "form-control", form = "FilteringForm" })
-                    @Html.DropDownListFor(x => x.SortingOrder, new SelectList(Model.SortingOrderItems, Model.SortingOrder), new { @class = "form-control", form = "FilteringForm" })
+                    @Html.DropDownListFor(x => x.SelectedSorting, new SelectList(Enum.GetNames(typeof(BooksListViewModel.Sorting)), Model.SelectedSorting), new { @class = "form-control", form = "FilteringForm" })
+                    @Html.DropDownListFor(x => x.SelectedSortingOrder, new SelectList(Enum.GetNames(typeof(BooksListViewModel.SortingOrder)), Model.SelectedSortingOrder), new { @class = "form-control", form = "FilteringForm" })
                 </div>
 
                 foreach (var x in Model.Books)
@@ -81,7 +84,7 @@
                         @Html.ActionLink(HttpUtility.HtmlDecode("&times;"), "RemoveBook", new { BookId = x.BookId })
                         <img src="@*/Covers/@x.Cover*@" width="120" />
                         <div>
-                            <b>@Html.MarkSearchedString(x.Title, Model.FilterSearchString)</b>
+                            <b>@Html.MarkSearchedString(x.Title, Model.SearchString)</b>
                             @{ 
                                 var authors = (from a in x.AuthorOfBooks orderby a.Priority select a.Author).ToArray();
                             }
@@ -101,15 +104,15 @@
                             {
                                 if (i < authors.Count() - 1)
                                 {
-                                    <a href="@Url.Action("Books", new { selectAuthor = authors[i].AuthorId })">@Html.MarkSearchedString(authors[i].Name, Model.FilterSearchString)</a><span>,</span>
+                                    <a href="@Url.Action("List", new { selectedAuthor = authors[i].Name })">@Html.MarkSearchedString(authors[i].Name, Model.SearchString)</a><span>,</span>
                                 }
                                 else
                                 {
-                                    <a href="@Url.Action("Books", new { selectAuthor = authors[i].AuthorId })">@Html.MarkSearchedString(authors[i].Name, Model.FilterSearchString)</a>
+                                    <a href="@Url.Action("List", new { selectedAuthor = authors[i].Name })">@Html.MarkSearchedString(authors[i].Name, Model.SearchString)</a>
                                 }
                             }
                             <br />
-                            Publisher: @Html.ActionLink(x.Publisher.Name, "Books", new { selectPublisher = x.PublisherId })<br />
+                            Publisher: @Html.ActionLink(x.Publisher.Name, "List", new { selectedPublisher = x.Publisher.Name })<br />
                             Released: @x.Released.ToLongDateString()<br />
                             Pages: @x.Pages
                             <div class="btn-group">
@@ -123,7 +126,7 @@
                 <input type="hidden" name="PageNumber" id="PageNumber" form="FilteringForm" />
                 @Html.Pagination(Model.PageNumber, Model.TotalPages)//(1, 21, 10)
             }
-        }
+        @*}*@
     </div>
 </div>
 

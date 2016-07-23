@@ -150,7 +150,7 @@
     <Compile Include="Infrastructure\Concrete\FormsAuthProvider.cs" />
     <Compile Include="Infrastructure\Utilities.cs" />
     <Compile Include="Models\AddBookModel.cs" />
-    <Compile Include="Models\BooksModel.cs" />
+    <Compile Include="Models\BooksListViewModel.cs" />
     <Compile Include="Models\SectionsModel.cs" />
     <Compile Include="Models\TrainingsModel.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
