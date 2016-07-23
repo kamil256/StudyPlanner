@@ -144,103 +144,31 @@ namespace StudyPlanner.WebUI.Controllers
         [HttpGet]
         public ActionResult AddBook()
         {
-            ViewBag.Title = "Add new book";
-            AddBookModel model = new AddBookModel();
-            model.AuthorsList = (from a in repository.Authors orderby a.Name select a.Name).ToArray();
-            model.PublishersList = (from p in repository.Publishers orderby p.Name select p.Name).ToArray();
-            //model.Authors = new List<string>();
-            //model.Authors.Add("empty");
+            BooksAddBookViewModel model = new BooksAddBookViewModel();
+            model.Authors = repository.Authors.OrderBy(a => a.Name);
+            model.Publishers = repository.Publishers.OrderBy(p => p.Name);
             return View(model);
         }
 
-        //[HttpPost]
-        //public ActionResult AddBook(AddBookModel model)
-        //{
-        //    if (model.AddCover)
-        //    {
-        //        string extension = Path.GetExtension(model.cover.FileName);
-        //        if (extension == "")
-        //            extension = ".jpg";
-        //        string filename = Path.GetFileNameWithoutExtension(Path.GetRandomFileName()) + extension;
+        [HttpPost]
+        public ActionResult AddBook(BooksAddBookViewModel model)
+        {
+            var v = Request.Form.ToString();
+            model.Authors = repository.Authors.OrderBy(a => a.Name);
+            model.Publishers = repository.Publishers.OrderBy(p => p.Name);
 
-        //        model.cover.SaveAs(Path.Combine(Server.MapPath("~"), @"Covers\Temp", filename));
-        //        model.CoverName = filename;
-        //    }
-        //    //ViewBag.cover = Path.GetExtension(model.cover.FileName) == "" ? "pusty" : ":(";
-        //    //model.cover.SaveAs(@"D:\pliczunio.rtf");
-
-        //    //using (FileStream fs = new FileStream(@"D:\pliczek.rtf", FileMode.Create))
-        //    //{
-        //    //    model.cover.InputStream.CopyTo(fs);
-        //    //}
-        //    model.AuthorsList = (from a in repository.Authors orderby a.Name select a.Name).ToArray();
-        //    model.PublishersList = (from p in repository.Publishers orderby p.Name select p.Name).ToArray();
-
-        //    if (model.AddAuthor && model.Author.Trim().Length != 0)
-        //    {
-        //        if (model.Authors == null)
-        //            model.Authors = new List<string>();
-        //        if (!model.Authors.Contains(model.Author))
-        //            model.Authors.Add(model.Author);
-        //    }
-        //    if (!String.IsNullOrEmpty(model.RemoveAuthor))
-        //    {
-        //        if (model.Authors != null)
-        //        {
-
-        //            model.Authors.Remove(model.RemoveAuthor);                    
-        //        }
-        //    }
-
-        //    if (!model.AddAuthor && !model.AddCover && String.IsNullOrEmpty(model.RemoveAuthor) && model.Authors != null && model.Authors.Count > 0 && !String.IsNullOrEmpty(model.CoverName) && ModelState.IsValid)
-        //    {
-        //        //string extension = Path.GetExtension(model.cover.FileName);
-        //        //if (extension == "")
-        //        //    extension = ".jpg";
-        //        //string filename = Path.GetFileNameWithoutExtension(Path.GetRandomFileName()) + extension;
-
-        //        //model.cover.SaveAs(Path.Combine(Server.MapPath("~"), "Covers", filename));
-        //        System.IO.File.Move(Path.Combine(Server.MapPath("~"), @"Covers\Temp", model.CoverName), Path.Combine(Server.MapPath("~"), "Covers", model.CoverName));
-
-        //        Publisher publisher = new Publisher { Name = model.Publisher };
-        //        if ((from p in repository.Publishers where publisher.Name == p.Name select p).Count() == 0)
-        //            publisher = repository.Publishers.Add(publisher);
-        //        else
-        //            publisher = (from p in repository.Publishers where publisher.Name == p.Name select p).First();
-
-        //        Book book = new Book
-        //        {
-        //            Title = model.Title,
-        //            Publisher = publisher,
-        //            Released = model.Released ?? new DateTime(1, 1, 1),
-        //            Pages = model.Pages ?? 0,
-        //            Cover = model.CoverName
-        //        };
-        //        if ((from b in repository.Books where b.Title == book.Title && b.Publisher.PublisherId == book.Publisher.PublisherId && b.Released == book.Released && b.Pages == book.Pages select b).Count() != 0)
-        //            throw new Exception("Taka książka już istnieje w bazie danych");
-        //        else
-        //            book = repository.Books.Add(book);
-
-        //        for (int i = 0; i < model.Authors.Count; i++)
-        //        {
-        //            Author author = new Author { Name = model.Authors[i] };
-        //            if ((from a in repository.Authors where a.Name == author.Name select a).Count() == 0)
-        //                author = repository.Authors.Add(author);
-        //            else
-        //                author = (from a in repository.Authors where a.Name == author.Name select a).First();
-
-        //            repository.AuthorOfBooks.Add(new AuthorOfBook { Author = author, Book = book, Priority = i });
-        //        }
-
-        //        repository.SaveChanges();
-        //        return RedirectToAction("Books");
-        //    }
-        //    else
-        //    {
-        //        ViewBag.Title = "Add new book";
-        //        return View(model);
-        //    }
-        //}
+            if (ModelState.IsValid && false)
+            {
+                byte[] coverFile = new byte[model.Cover.ContentLength];
+                model.Cover.InputStream.Read(coverFile, 0, coverFile.Length);
+                repository.AddBook(model.Title, model.Author, model.Publisher, model.Released ?? default(DateTime), model.Pages ?? 0, coverFile, model.Cover.ContentType, User.Identity.Name);
+                return RedirectToAction("List", "Books");
+            }
+            else
+            {
+                return View(model);
+            }
+        }
 
         //public ActionResult RemoveBook(int BookId)
         //{

@@ -19,7 +19,7 @@ namespace StudyPlanner.Domain.Concrete
 
         public IEnumerable<AuthorOfBook> AuthorsOfBooks
         {
-            get { return dbContext.AuthorOfBooks; } 
+            get { return dbContext.AuthorsOfBooks; } 
         }
 
         public IEnumerable<Book> Books
@@ -47,15 +47,75 @@ namespace StudyPlanner.Domain.Concrete
             get { return dbContext.Users; }
         }
 
-        public void AddUser(User user)
+        public void AddBook(string title, string[] authorsNames, string publisherName, DateTime released, int pages, byte[] coverFile, string coverFileType, string userEmail)
         {
-            dbContext.Users.Add(user);
+            User user = dbContext.Users.First(u => u.Email == userEmail);
+
+            List<Author> authors = new List<Author>();
+            foreach (string authorName in authorsNames)
+            {
+                Author author = dbContext.Authors.FirstOrDefault(a => a.Name == authorName);
+                if (author == null)
+                {
+                    author = new Author() { Name = authorName, User = user };
+                    dbContext.Authors.Add(author);
+                }
+                authors.Add(author);
+            }
+
+            Publisher publisher = dbContext.Publishers.FirstOrDefault(p => p.Name == publisherName);
+            if (publisher == null)
+            {
+                publisher = new Publisher() { Name = publisherName, User = user };
+                dbContext.Publishers.Add(publisher);
+            }
+
+            Book book = new Book()
+            {
+                Title = title,
+                Publisher = publisher,
+                Released = released,
+                Pages = pages,
+                CoverImageData = coverFile,
+                CoverImageMimeType = coverFileType,
+                User = user
+            };
+
+            for (int priority = 0; priority < authors.Count; priority++)
+            {
+                dbContext.AuthorsOfBooks.Add(new AuthorOfBook()
+                {
+                    Book = book,
+                    Author = authors[priority],
+                    Priority = priority,
+                    User = user
+                });
+            }
+
             dbContext.SaveChanges();
         }
 
         public IEnumerable<Author> GetAuthorsOfBook(Book book)
         {
-            return from aob in dbContext.AuthorOfBooks where aob.BookId == book.BookId select aob.Author;
+            return from aob in dbContext.AuthorsOfBooks where aob.BookId == book.BookId select aob.Author;
+        }
+
+        public void AddAuthor(Author author)
+        {
+            dbContext.Authors.Add(author);
+            dbContext.SaveChanges();
+        }
+
+        public void AddPublisher(Publisher publisher)
+        {
+            dbContext.Publishers.Add(publisher);
+            dbContext.SaveChanges();
+        }
+
+        public void AddUser(User user)
+        {
+            dbContext.Users.Add(user);
+            dbContext.SaveChanges();
         }
     }
 }

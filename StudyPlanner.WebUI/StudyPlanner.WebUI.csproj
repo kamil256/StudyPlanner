@@ -135,7 +135,7 @@
     <Content Include="Web.config" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Books\List.cshtml" />
-    <Content Include="Views\Other\AddBook.cshtml" />
+    <Content Include="Views\Books\AddBook.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\NinjectWebCommon.cs" />
@@ -150,7 +150,7 @@
     <Compile Include="Infrastructure\Abstract\IAuthProvider.cs" />
     <Compile Include="Infrastructure\Concrete\FormsAuthProvider.cs" />
     <Compile Include="Infrastructure\Utilities.cs" />
-    <Compile Include="Models\AddBookModel.cs" />
+    <Compile Include="Models\BooksAddBookViewModel.cs" />
     <Compile Include="Models\BooksListViewModel.cs" />
     <Compile Include="Models\Pagination.cs" />
     <Compile Include="Models\SectionsModel.cs" />

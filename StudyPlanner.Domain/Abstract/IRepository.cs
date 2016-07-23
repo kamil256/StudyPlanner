@@ -16,7 +16,12 @@ namespace StudyPlanner.Domain.Abstract
         IEnumerable<Training> Trainings { get; }
         IEnumerable<AuthorOfBook> AuthorsOfBooks { get; }
         IEnumerable<User> Users { get; }
-        void AddUser(User user);
+
+        void AddBook(string title, string[] authorNames, string publisherName, DateTime released, int pages, byte[] coverFile, string coverFileType, string userEmail);
         IEnumerable<Author> GetAuthorsOfBook(Book book);
+        void AddAuthor(Author author);
+        void AddPublisher(Publisher publisher);
+        void AddUser(User user);
+        
     }
 }

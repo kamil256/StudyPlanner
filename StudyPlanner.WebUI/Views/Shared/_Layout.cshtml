@@ -28,7 +28,7 @@
                     <li class='@(ViewBag.Title == "Trainings" ? "active" : "")'>@Html.ActionLink("TRAININGS", "List", "Trainings")</li>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li><a href="@Url.Action("LogOut")"><span class="glyphicon glyphicon-user"></span> LOG OUT (@User.Identity.Name)</a></li>
+                        <li><a href="@Url.Action("LogOut", "Home")"><span class="glyphicon glyphicon-user"></span> LOG OUT (@User.Identity.Name)</a></li>
                     }
                 </ul>
             </div>

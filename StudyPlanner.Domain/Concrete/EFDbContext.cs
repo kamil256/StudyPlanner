@@ -18,7 +18,7 @@ namespace StudyPlanner.Domain.Concrete
         public virtual DbSet<Section> Sections { get; set; }
         public virtual DbSet<Training> Trainings { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<AuthorOfBook> AuthorOfBooks { get; set; }
+        public virtual DbSet<AuthorOfBook> AuthorsOfBooks { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
