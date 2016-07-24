@@ -152,6 +152,7 @@
     <Compile Include="Infrastructure\Utilities.cs" />
     <Compile Include="Models\BooksAddBookViewModel.cs" />
     <Compile Include="Models\BooksListViewModel.cs" />
+    <Compile Include="Models\Cover.cs" />
     <Compile Include="Models\Pagination.cs" />
     <Compile Include="Models\SectionsModel.cs" />
     <Compile Include="Models\TrainingsModel.cs" />

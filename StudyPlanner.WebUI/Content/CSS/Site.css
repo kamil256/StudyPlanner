@@ -16,6 +16,7 @@
     margin-bottom: 20px;
 }
 .side-panel input.form-control {
+    width: 100%;
     max-width: 100%;
 }
 .form-control-range {

@@ -10,13 +10,14 @@ namespace StudyPlanner.WebUI.Models
 {
     public class BooksAddBookViewModel
     {
-        public IEnumerable<Author> Authors { get; set; }
-        public IEnumerable<Publisher> Publishers { get; set; }
+        public IEnumerable<Author> AuthorsList { get; set; }
+        public IEnumerable<Publisher> PublishersList { get; set; }
 
         [Required]
         public string Title { get; set; }
 
-        public string[] Author { get; set; }
+        [Required]
+        public string[] Authors { get; set; }
 
         [Required]
         public string Publisher { get; set; }

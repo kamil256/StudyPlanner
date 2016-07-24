@@ -144,30 +144,49 @@ namespace StudyPlanner.WebUI.Controllers
         [HttpGet]
         public ActionResult AddBook()
         {
+            Cover.Clear();
             BooksAddBookViewModel model = new BooksAddBookViewModel();
-            model.Authors = repository.Authors.OrderBy(a => a.Name);
-            model.Publishers = repository.Publishers.OrderBy(p => p.Name);
+            model.AuthorsList = repository.Authors.OrderBy(a => a.Name);
+            model.PublishersList = repository.Publishers.OrderBy(p => p.Name);
             return View(model);
         }
 
         [HttpPost]
         public ActionResult AddBook(BooksAddBookViewModel model)
         {
-            var v = Request.Form.ToString();
-            model.Authors = repository.Authors.OrderBy(a => a.Name);
-            model.Publishers = repository.Publishers.OrderBy(p => p.Name);
+            model.AuthorsList = repository.Authors.OrderBy(a => a.Name);
+            model.PublishersList = repository.Publishers.OrderBy(p => p.Name);
 
-            if (ModelState.IsValid && false)
+            if (model.Cover == null && Cover.IsSet())
             {
-                byte[] coverFile = new byte[model.Cover.ContentLength];
-                model.Cover.InputStream.Read(coverFile, 0, coverFile.Length);
-                repository.AddBook(model.Title, model.Author, model.Publisher, model.Released ?? default(DateTime), model.Pages ?? 0, coverFile, model.Cover.ContentType, User.Identity.Name);
+                ModelState.Remove("Cover");
+                model.Cover = Cover.GetHttpPostedFileBase();
+            }
+            
+            if (ModelState.IsValid)
+            {
+                Cover.Clear();
+                byte[] buffer = new byte[model.Cover.ContentLength];
+                model.Cover.InputStream.Read(buffer, 0, buffer.Length);
+                repository.AddBook(model.Title, model.Authors, model.Publisher, model.Released ?? default(DateTime), model.Pages ?? 0, buffer, model.Cover.ContentType, User.Identity.Name);
                 return RedirectToAction("List", "Books");
             }
             else
             {
+                if (model.Cover != null)
+                    Cover.Set(model.Cover);
                 return View(model);
             }
+        }
+
+        public FileContentResult GetCover(Book book)
+        {
+            return File(book.CoverImageData, book.CoverImageMimeType);
+        }
+
+        public FileContentResult GetTempCover()
+        {
+            return new FileContentResult(Cover.GetFile(), Cover.GetContentType());
         }
 
         //public ActionResult RemoveBook(int BookId)
