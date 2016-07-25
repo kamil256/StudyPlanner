@@ -22,7 +22,7 @@
 .form-control-range {
     font-size: 0;
 }
-.form-control-range > input {
+.form-control-range > input.form-control {
     width: calc(50% - 10px);
     display: inline-block;
 }
@@ -80,6 +80,7 @@
     display: block; 
     margin-top: 10px;
 }
+
 /*.sections-table > thead > tr > th, .sections-table > tbody > tr > td {
     text-align: center;
     vertical-align: middle;

@@ -10,7 +10,10 @@
 <link href="~/Content/CSS/Site.css" rel="stylesheet" />
 <link href="~/Content/CSS/Pagination.css" rel="stylesheet" />
 
-<h1 class="heading">Books @Html.ActionLink("Add new", "AddBook", null, new { @class = "btn btn-default btn-xs" })</h1>
+
+
+
+<h1 class="heading">Books <button class="btn btn-default btn-xs" onclick="document.getElementById('addBook').style.display = 'table'">Add new</button> @*@Html.ActionLink("Add new", "List", new { AddBook = true }, new { @class = "btn btn-default btn-xs" })*@</h1>
 
 <div class="row">
     <div class="col-sm-3 side-panel">
@@ -124,6 +127,16 @@
         }
     </div>
 </div>
+
+<table id="addBook" style="display: none; position: fixed; top: 0; left: 0; height: 100%; width: 100%; z-index: 1001; ">
+    <tr>
+        <td style="vertical-align: middle; background: rgba(255, 255, 255, 0.8)">
+            <div id="addBookPopUp">
+                @Html.Action("AddBook")
+            </div>
+        </td>
+    </tr>
+</table>
 
 <script>
     function GoToPage(x)

@@ -142,13 +142,13 @@ namespace StudyPlanner.WebUI.Controllers
         }
 
         [HttpGet]
-        public ActionResult AddBook()
+        public PartialViewResult AddBook()
         {
             Cover.Clear();
             BooksAddBookViewModel model = new BooksAddBookViewModel();
             model.AuthorsList = repository.Authors.OrderBy(a => a.Name);
             model.PublishersList = repository.Publishers.OrderBy(p => p.Name);
-            return View(model);
+            return PartialView(model);
         }
 
         [HttpPost]
@@ -169,13 +169,14 @@ namespace StudyPlanner.WebUI.Controllers
                 byte[] buffer = new byte[model.Cover.ContentLength];
                 model.Cover.InputStream.Read(buffer, 0, buffer.Length);
                 repository.AddBook(model.Title, model.Authors, model.Publisher, model.Released ?? default(DateTime), model.Pages ?? 0, buffer, model.Cover.ContentType, User.Identity.Name);
+                ViewBag.Close = true;
                 return RedirectToAction("List", "Books");
             }
             else
             {
                 if (model.Cover != null)
                     Cover.Set(model.Cover);
-                return View(model);
+                return PartialView(model);
             }
         }
 
@@ -186,7 +187,10 @@ namespace StudyPlanner.WebUI.Controllers
 
         public FileContentResult GetTempCover()
         {
-            return new FileContentResult(Cover.GetFile(), Cover.GetContentType());
+            if (Cover.IsSet())
+                return new FileContentResult(Cover.GetFile(), Cover.GetContentType());
+            else
+                return null;
         }
 
         //public ActionResult RemoveBook(int BookId)

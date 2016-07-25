@@ -1,0 +1,72 @@
+﻿.popUp {
+    width: 600px;
+    padding: 20px;
+    text-align: left;
+    background: white;
+    margin: 0 auto;
+    box-shadow: 0 0 5px #333;
+    border-radius: 3px;
+}
+.popUp > .heading {
+    margin: 0;
+}
+#authorsList {
+    padding: 0; margin : 0 0 2px 0; max-width: 100%; width: 100%;
+}
+#authorsList > li {
+    cursor: default;
+    display: inline-block;
+    background-color: #eee;
+    padding: 3px 5px;
+    margin: 2px;
+    border-radius: 5px;
+}
+#authorsList > li > b {
+    cursor: default;
+}
+#authorsList > li > b:hover {
+    color: #555;
+}
+.popUp table {
+    width: 100%;
+}
+.popUp table td {
+    width: 50%;
+}
+.popUp table td:first-child {
+    padding-right: 10px;
+}
+.popUp table td:last-child {
+    padding-left: 10px;
+}
+.popUp table td:last-child > div {
+    height: 182px;
+    margin-bottom: 15px;
+    display: block;
+    position: relative;
+    padding: 0;
+}
+.popUp table td:last-child > div > img {
+    max-width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    display: block;
+}
+.popUp table td:last-child > div > b {
+    position: absolute; 
+    width: 100%; 
+    top: 0; 
+    left: 0; 
+    line-height: 182px; 
+    text-align: center; 
+    display: inline;
+}
+.popUp table td:last-child > div > input[type=file] {
+    position: absolute; 
+    top: 0; 
+    bottom: 0; 
+    z-index: 1; 
+    width: 100%; 
+    opacity: 0; 
+    cursor: pointer;
+}
