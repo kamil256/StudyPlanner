@@ -9,11 +9,10 @@
 
 <link href="~/Content/CSS/Site.css" rel="stylesheet" />
 <link href="~/Content/CSS/Pagination.css" rel="stylesheet" />
+<link href="~/Content/CSS/popUp.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
 
-
-
-
-<h1 class="heading">Books <button class="btn btn-default btn-xs" onclick="document.getElementById('addBook').style.display = 'table'">Add new</button> @*@Html.ActionLink("Add new", "List", new { AddBook = true }, new { @class = "btn btn-default btn-xs" })*@</h1>
+<h1 class="heading">Books <button class="btn btn-default btn-xs" onclick="document.getElementById('addBook').className=''">Add new</button> @*@Html.ActionLink("Add new", "List", new { AddBook = true }, new { @class = "btn btn-default btn-xs" })*@</h1>
 
 <div class="row">
     <div class="col-sm-3 side-panel">
@@ -128,15 +127,10 @@
     </div>
 </div>
 
-<table id="addBook" style="display: none; position: fixed; top: 0; left: 0; height: 100%; width: 100%; z-index: 1001; ">
-    <tr>
-        <td style="vertical-align: middle; background: rgba(255, 255, 255, 0.8)">
-            <div id="addBookPopUp">
-                @Html.Action("AddBook")
-            </div>
-        </td>
-    </tr>
-</table>
+<div id="addBookPopUp">
+    
+    @Html.Action("AddBook")
+</div>
 
 <script>
     function GoToPage(x)
@@ -147,4 +141,136 @@
 
     $("#FilteringForm input").on("change", function () { $("#FilteringForm").submit(); });
     $("select[form='FilteringForm'").on("change", function () { $("#FilteringForm").submit(); });
+</script>
+
+<script>
+    window.onload = function start() {
+        $("#Author").on("keydown",
+            function (e) {
+                if ((e.keyCode | e.which) == 13) {
+                    e.preventDefault();
+                    AddAuthor($("#Author").val());
+                }
+            });
+
+        //$("#Author").on("change",
+        //    function () {
+        //        AddAuthor($("#Author").val());
+        //    });
+
+
+
+    }
+
+    function sendCoverImage() {
+        console.log("sent");
+        var data = new FormData();
+        //var inputs = document.getElementById("addBook").getElementsByTagName("input");
+        //for (var i = 0; i < inputs.length; i++) {
+        //    if (inputs[i].name) {
+        //        if (inputs[i].type == "file")
+        //            data.append(inputs[i].name, inputs[i].files[0]);
+        //        else
+        //            data.append(inputs[i].name, inputs[i].value);
+        //    }
+        //}
+
+
+        var cover = document.getElementById("Cover");
+        if (cover.files[0])
+        {
+            data.append("Cover", cover.files[0]);
+            $.ajax({
+                url: '@Url.Action("AddBook")',
+                //dataType: 'text',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: data,
+                type: 'POST',
+                success: function (response) {
+                    @*document.getElementById("image").src = "@Url.Action("GetTempCover")";*@
+                    @*alert("@Url.Action("GetTempCover")");*@
+                    //$("#Form").submit();
+                    readURL(document.getElementById("Cover"));
+                }
+            });
+        }
+    }
+
+    function readURL(input) {
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                document.getElementById("image").className = "";//document.getElementById("image").style.display = "block";
+                document.getElementById("chooseImageMsg").className = "hidden";
+                $('#image').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    //$("#Cover").change(function () {
+    //    readURL(this);
+    //});
+
+
+         function cancelCover()
+         {
+            var image = document.getElementById("image");
+            image.className = "hidden";
+            document.getElementById("chooseImageMsg").className = "";
+         };
+
+
+
+
+    var authors = [];
+
+    function getAuthorsFromHidden()
+    {
+        authors = [];
+        var inputAuthors = document.getElementById("hiddenAuthors").getElementsByTagName("input");
+        for (var i = 0; i < inputAuthors.length; i++)
+        {
+            authors.push(inputAuthors[i].value);
+        }
+    }
+
+    function createHiddenFromAuthors()
+    {
+        var authorsElement = document.getElementById("authorsList");
+        authorsElement.innerHTML = "";
+        for (var i = 0; i < authors.length; i++)
+            authorsElement.innerHTML += "<li>" + authors[i] + "<b onclick='RemoveAuthor(" + i + ")'> &times;</b></li> ";
+
+        var inputAuthors = document.getElementById("hiddenAuthors");
+        inputAuthors.innerHTML = "";
+        for (var i = 0; i < authors.length; i++)
+            inputAuthors.innerHTML += "<input type='hidden' id='Authors_" + i + "_' name='Authors[" + i + "]' value='" + authors[i] + "' />";
+    }
+
+    function AddAuthor(name)
+    {
+        if ($("#Author").val() != "")
+        {
+            getAuthorsFromHidden();
+            if (authors.indexOf(name) == -1)
+            {
+                authors.push(name);
+                createHiddenFromAuthors();
+            }
+            $("#Author").val("");
+        }
+    }
+
+    function RemoveAuthor(nr)
+    {
+        getAuthorsFromHidden();
+        authors.splice(nr, 1);
+        createHiddenFromAuthors();
+    }
 </script>

@@ -142,9 +142,10 @@ namespace StudyPlanner.WebUI.Controllers
         }
 
         [HttpGet]
-        public PartialViewResult AddBook()
+        public ActionResult AddBook()
         {
             Cover.Clear();
+            ViewBag.Hidden = true;
             BooksAddBookViewModel model = new BooksAddBookViewModel();
             model.AuthorsList = repository.Authors.OrderBy(a => a.Name);
             model.PublishersList = repository.Publishers.OrderBy(p => p.Name);
@@ -170,7 +171,7 @@ namespace StudyPlanner.WebUI.Controllers
                 model.Cover.InputStream.Read(buffer, 0, buffer.Length);
                 repository.AddBook(model.Title, model.Authors, model.Publisher, model.Released ?? default(DateTime), model.Pages ?? 0, buffer, model.Cover.ContentType, User.Identity.Name);
                 ViewBag.Close = true;
-                return RedirectToAction("List", "Books");
+                return RedirectToAction("List");
             }
             else
             {
