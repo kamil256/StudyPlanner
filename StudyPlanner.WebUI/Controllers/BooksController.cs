@@ -153,37 +153,65 @@ namespace StudyPlanner.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddBook(BooksAddBookViewModel model)
+        public JsonResult AddBook(BooksAddBookAjaxModel model)
         {
-            model.AuthorsList = repository.Authors.OrderBy(a => a.Name);
-            model.PublishersList = repository.Publishers.OrderBy(p => p.Name);
-
+            if (model.Cover != null)
+                Cover.Set(model.Cover);
             if (model.Cover == null && Cover.IsSet())
             {
-                ModelState.Remove("Cover");
-                model.Cover = Cover.GetHttpPostedFileBase();
+                //ModelState.Remove("Cover");
+                //model.Cover = Cover.GetHttpPostedFileBase();
             }
-            
-            if (ModelState.IsValid)
+
+            if (model.Title != null && model.Authors != null && model.Authors.Length != 0 && model.Publisher != null && model.Released != null && model.Pages != null && Cover.IsSet())
             {
+                repository.AddBook(model.Title, model.Authors, model.Publisher, model.Released ?? default(DateTime), model.Pages ?? 0, Cover.GetFile(), Cover.GetContentType(), User.Identity.Name);
                 Cover.Clear();
-                byte[] buffer = new byte[model.Cover.ContentLength];
-                model.Cover.InputStream.Read(buffer, 0, buffer.Length);
-                repository.AddBook(model.Title, model.Authors, model.Publisher, model.Released ?? default(DateTime), model.Pages ?? 0, buffer, model.Cover.ContentType, User.Identity.Name);
-                ViewBag.Close = true;
-                return RedirectToAction("List");
+                return Json(new { ResponseUrl = Url.Action("List") });
             }
             else
             {
-                if (model.Cover != null)
-                    Cover.Set(model.Cover);
-                return PartialView(model);
+                
+                return null;
             }
         }
 
-        public FileContentResult GetCover(Book book)
+        //[HttpPost]
+        //public ActionResult AddBook(BooksAddBookViewModel model)
+        //{
+        //    model.AuthorsList = repository.Authors.OrderBy(a => a.Name);
+        //    model.PublishersList = repository.Publishers.OrderBy(p => p.Name);
+
+        //    if (model.Cover == null && Cover.IsSet())
+        //    {
+        //        ModelState.Remove("Cover");
+        //        model.Cover = Cover.GetHttpPostedFileBase();
+        //    }
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        Cover.Clear();
+        //        byte[] buffer = new byte[model.Cover.ContentLength];
+        //        model.Cover.InputStream.Read(buffer, 0, buffer.Length);
+        //        repository.AddBook(model.Title, model.Authors, model.Publisher, model.Released ?? default(DateTime), model.Pages ?? 0, buffer, model.Cover.ContentType, User.Identity.Name);
+        //        ViewBag.Close = true;
+        //        return RedirectToAction("List");
+        //    }
+        //    else
+        //    {
+        //        if (model.Cover != null)
+        //            Cover.Set(model.Cover);
+        //        return PartialView(model);
+        //    }
+        //}
+
+        public FileContentResult GetCover(int bookId)
         {
-            return File(book.CoverImageData, book.CoverImageMimeType);
+            Book book = repository.Books.FirstOrDefault(b => b.BookId == bookId);
+            if (book != null && book.CoverImageData != null && book.CoverImageMimeType != null)
+                return File(book.CoverImageData, book.CoverImageMimeType);
+            else
+                return null;
         }
 
         public FileContentResult GetTempCover()

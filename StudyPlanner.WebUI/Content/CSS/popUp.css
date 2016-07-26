@@ -1,13 +1,20 @@
-﻿.popUp {
-    width: 600px;
+﻿.ui-widget-overlay {
+    background: black !important;
+    opacity: .60 !important;
+}
+.ui-dialog {
+    width: 500px !important;
     padding: 20px;
-    text-align: left;
+    /*text-align: left;*/
     background: white;
-    margin: 0 auto;
-    box-shadow: 0 0 5px #333;
+    /*margin: 0 auto;*/
+    box-shadow: 0 0 10px #777;
     border-radius: 3px;
 }
-.popUp > .heading {
+.ui-dialog-titlebar {
+    display: none !important;
+}
+#addBookDialog > .heading {
     margin: 0;
 }
 #authorsList {
@@ -27,32 +34,32 @@
 #authorsList > li > b:hover {
     color: #555;
 }
-.popUp table {
+#addBookDialog table {
     width: 100%;
 }
-.popUp table td {
+#addBookDialog table td {
     width: 50%;
 }
-.popUp table td:first-child {
+#addBookDialog table td:first-child {
     padding-right: 10px;
 }
-.popUp table td:last-child {
+#addBookDialog table td:last-child {
     padding-left: 10px;
 }
-.popUp table td:last-child > div {
+#addBookDialog table td:last-child > div {
     height: 182px;
     margin-bottom: 15px;
     display: block;
     position: relative;
     padding: 0;
 }
-.popUp table td:last-child > div > img {
+#addBookDialog table td:last-child > div > img {
     max-width: 100%;
     height: 100%;
     margin: 0 auto;
     display: block;
 }
-.popUp table td:last-child > div > b {
+#addBookDialog table td:last-child > div > b {
     position: absolute; 
     width: 100%; 
     top: 0; 
@@ -61,7 +68,7 @@
     text-align: center; 
     display: inline;
 }
-.popUp table td:last-child > div > input[type=file] {
+#addBookDialog table td:last-child > div > input[type=file] {
     position: absolute; 
     top: 0; 
     bottom: 0; 

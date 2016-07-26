@@ -1,83 +1,178 @@
 ﻿@model StudyPlanner.WebUI.Models.BooksAddBookViewModel
 
-<table id="addBook" class="@(ViewBag.Hidden == true ? "hidden" : null)" style="position: fixed; top: 0; left: 0; height: 100%; width: 100%; z-index: 1001; ">
+<h1 class="heading">Add new book</h1>
+<div class="form-group">
+    <label for="title">Title</label>
+    <input name="title" class="form-control" />
+</div>
+<div class="form-group">
+    <label for="Author">Authors</label>
+    <ul id="authorsList"></ul>
+    <input id="Author" class="form-control" list="authorsDataList" onchange="AddAuthor(this.value)" />
+    <datalist id="authorsDataList">
+        @foreach (var a in Model.AuthorsList)
+        {
+            <option value="@a.Name"></option>
+        }
+    </datalist>
+    <div id="hiddenAuthors"></div>
+</div>
+<table>
     <tr>
-        <td style="vertical-align: middle; background: rgba(255, 255, 255, 0.8)">
-            <div class="popUp">
-                <h1 class="heading">Add new book</h1>
-                <div @*id="addBookPopUp"*@>
-
-                    @using (Ajax.BeginForm("AddBook1", new { id = "Form" }, new AjaxOptions { UpdateTargetId = "addBookPopUp" }))
+        <td>
+            <div class="form-group">
+                <label for="publisher">Publisher</label>
+                <input name="publisher" class="form-control" list="publishersDataList" />
+                <datalist id="publishersDataList">
+                    @foreach (var p in Model.PublishersList)
                     {
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Title)
-                            @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Authors)
-                            <ul id="authorsList">
-                                @if (Model.Authors != null)
-                                {
-                                    for (int i = 0; i < Model.Authors.Length; i++)
-                                    {
-                                        <li>@Model.Authors[i] <b onclick="RemoveAuthor(@i)">&times;</b></li>
-                                    }
-                                }
-                            </ul>
-                            <input id="Author" class="form-control" list="authorsDataList" onchange="AddAuthor(this.value)" />
-                            <datalist id="authorsDataList">
-                                @foreach (var a in Model.AuthorsList)
-                                {
-                                    <option value="@a.Name"></option>
-                                }
-                            </datalist>
-                            <div id="hiddenAuthors">
-                                @if (Model.Authors != null)
-                                {
-                                    for (int i = 0; i < Model.Authors.Length; i++)
-                                    {
-                                        @Html.HiddenFor(x => x.Authors[i])
-                                    }
-                                }
-                            </div>
-                        </div>
-                        <table>
-                            <tr>
-                                <td>
-                                    <div class="form-group">
-                                        @Html.LabelFor(x => x.Publisher)
-                                        @Html.TextBoxFor(x => x.Publisher, new { @class = "form-control", list = "publishersDataList" })
-                                        <datalist id="publishersDataList">
-                                            @foreach (var p in Model.PublishersList)
-                                            {
-                                                <option value="@p.Name"></option>
-                                            }
-                                        </datalist>
-                                    </div>
-                                    <div class="form-group">
-                                        @Html.LabelFor(x => x.Released)
-                                        @Html.TextBoxFor(x => x.Released, new { type = "date", @class = "form-control" })
-                                    </div>
-                                    <div class="form-group">
-                                        @Html.LabelFor(x => x.Pages)
-                                        @Html.TextBoxFor(x => x.Pages, new { type = "number", @class = "form-control" })
-                                    </div>
-                                </td>
-                                <td>
-                                    @Html.LabelFor(x => x.Cover)
-                                    <div class="form-control">
-                                        <img id="image" src="@Url.Action("GetTempCover", new { dummy = DateTime.Now.ToShortTimeString() })" class="@(StudyPlanner.WebUI.Models.Cover.IsSet() ? null : "hidden")" />
-                                        <b id="chooseImageMsg" class="@(StudyPlanner.WebUI.Models.Cover.IsSet() ? "hidden" : null)">Choose image</b>
-                                        <input id="Cover" name="Cover" type="file" @*onchange="readURL(this)"*@ onchange="sendCoverImage()" />
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>                
-                        <input id="submit" type="submit" value="Add" class="btn btn-default" />
-                        @Html.ActionLink("Cancel", "List", null, new { @class = "btn btn-default" })
+                        <option value="@p.Name"></option>
                     }
-                </div>   
+                </datalist>
+            </div>
+            <div class="form-group">
+                <label for="released">Released</label>
+                <input name="released" type="date" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="pages">Pages</label>
+                <input name="pages" type="number" class="form-control" />
+            </div>
+        </td>
+        <td>
+            <label for="cover">Cover</label>
+            <div class="form-control">
+                <img id="image" src="" class="hidden" />
+                <b id="chooseImageMsg">Choose image</b>
+                <input id="Cover" name="Cover" type="file" accept="image/*" onclick="cancelCover()" onchange="readURL(this)" />
             </div>
         </td>
     </tr>
-</table>
+</table>                
+<button id="submit" type="submit" class="btn btn-default" onclick="sendData()">Add</button>
+<button class="btn btn-default" onclick="$('#addBookDialog').dialog('close')">Cancel</button>
+
+<script>
+    var imageSentToServer = false;
+
+    function sendData()
+    {
+        var data = new FormData();
+        var inputs = document.getElementById("addBookDialog").getElementsByTagName("input");
+        for (var i = 0; i < inputs.length; i++) {
+            if (inputs[i].name) {
+                if (inputs[i].type == "file")
+                {
+                    data.append(inputs[i].name, inputs[i].files[0]);
+                    imageSentToServer = true;
+                }
+                else
+                    data.append(inputs[i].name, inputs[i].value);
+            }
+        }
+        
+        $.ajax({
+            url: '@Url.Action("AddBook")',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: data,
+            dataType: "json",
+            type: 'POST',
+            success: function (response) 
+            {
+                console.log(response);
+                if (response.ResponseUrl != null)
+                    window.location.href = response.ResponseUrl;
+            }
+        });
+    }
+    
+    function readURL(input)
+    {
+        if (input.files && input.files[0])
+        {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById("image").className = "";
+                document.getElementById("chooseImageMsg").className = "hidden";
+                $('#image').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function cancelCover()
+    {
+        if (!imageSentToServer)
+        {
+            document.getElementById("image").className = "hidden";
+            document.getElementById("chooseImageMsg").className = "";
+        }
+    }
+
+    window.onload = function () {
+        $("#Author").on("keydown",
+            function (e) {
+                if ((e.keyCode | e.which) == 13) {
+                    e.preventDefault();
+                    AddAuthor($("#Author").val());
+                }
+            });
+
+
+
+        
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    var authors = [];
+
+    function getAuthorsFromHidden() {
+        authors = [];
+        var inputAuthors = document.getElementById("hiddenAuthors").getElementsByTagName("input");
+        for (var i = 0; i < inputAuthors.length; i++) {
+            authors.push(inputAuthors[i].value);
+        }
+    }
+
+    function createHiddenFromAuthors() {
+        var authorsElement = document.getElementById("authorsList");
+        authorsElement.innerHTML = "";
+        for (var i = 0; i < authors.length; i++)
+            authorsElement.innerHTML += "<li>" + authors[i] + "<b onclick='RemoveAuthor(" + i + ")'> &times;</b></li> ";
+
+        var inputAuthors = document.getElementById("hiddenAuthors");
+        inputAuthors.innerHTML = "";
+        for (var i = 0; i < authors.length; i++)
+            inputAuthors.innerHTML += "<input type='hidden' id='Authors_" + i + "_' name='Authors[" + i + "]' value='" + authors[i] + "' />";
+    }
+
+    function AddAuthor(name) {
+        if ($("#Author").val() != "") {
+            getAuthorsFromHidden();
+            if (authors.indexOf(name) == -1) {
+                authors.push(name);
+                createHiddenFromAuthors();
+            }
+            $("#Author").val("");
+        }
+    }
+
+    function RemoveAuthor(nr) {
+        getAuthorsFromHidden();
+        authors.splice(nr, 1);
+        createHiddenFromAuthors();
+    }
+</script>
