@@ -148,12 +148,34 @@ namespace StudyPlanner.WebUI.Controllers
                 Cover.Set(model.Cover);
             if (model.Title != null && model.Authors != null && model.Authors.Length != 0 && model.Publisher != null && model.Released != null && model.Pages != null && Cover.IsSet())
             {
-                repository.AddBook(model.Title, model.Authors, model.Publisher, model.Released ?? default(DateTime), model.Pages ?? 0, Cover.GetFile(), Cover.GetContentType(), User.Identity.Name);
+                if (model.BookId == null)
+                    repository.AddBook(model.Title, model.Authors, model.Publisher, model.Released ?? default(DateTime), model.Pages ?? 0, Cover.GetFile(), Cover.GetContentType(), User.Identity.Name);
+                else
+                    repository.UpdateBook(model.BookId ?? 0, model.Title, model.Authors, model.Publisher, model.Released ?? default(DateTime), model.Pages ?? 0, Cover.GetFile(), Cover.GetContentType());
                 Cover.Clear();
                 return Json(new { ResponseUrl = Url.Action("List") });
             }
             else
                 return null;
+        }
+
+        public JsonResult GetBook(int bookId)
+        {
+            Book book = repository.Books.FirstOrDefault(b => b.BookId == bookId);
+            if (book == null)
+                return null;
+            else
+                if (book.CoverImageData != null)
+                    Cover.Set(new MyHttpPostedFileBase(book.CoverImageData, book.CoverImageMimeType));
+                return Json(
+                    new {
+                        Title = book.Title,//,
+                        Authors = repository.GetAuthorsOfBook(book).Select(a => a.Name).ToArray(),
+                        Publisher = book.Publisher.Name,
+                        Released = book.Released.ToString("yyyy-MM-dd"),
+                        Pages = book.Pages,
+                        Cover = Url.Action("GetCover", new { BookId = bookId })
+                    });
         }
 
         public FileContentResult GetCover(int bookId)

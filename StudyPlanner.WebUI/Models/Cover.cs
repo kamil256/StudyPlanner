@@ -42,6 +42,13 @@ namespace StudyPlanner.WebUI.Models
 
     public class MyHttpPostedFileBase : HttpPostedFileBase
     {
+        public MyHttpPostedFileBase(byte[] fileContents, string contentType)
+        {
+            FileContents = fileContents;
+            ContentType = contentType;
+            FileName = "";
+        }
+
         public MyHttpPostedFileBase(HttpPostedFileBase cover)
         {
             FileContents = new byte[cover.ContentLength];

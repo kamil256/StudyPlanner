@@ -95,22 +95,79 @@ namespace StudyPlanner.Domain.Concrete
             dbContext.SaveChanges();
         }
 
+        public void UpdateBook(int bookId, string title, string[] authorsNames, string publisherName, DateTime released, int pages, byte[] coverFile, string coverFileType)
+        {
+            Book book = dbContext.Books.FirstOrDefault(b => b.BookId == bookId);
+            if (book != null)
+            {
+                book.Title = title;
+
+                dbContext.AuthorsOfBooks.RemoveRange(dbContext.AuthorsOfBooks.Where(aob => aob.BookId == bookId));
+                dbContext.Authors.RemoveRange(dbContext.Authors.Where(a => a.AuthorOfBooks.Count == 0));
+                List<Author> authors = new List<Author>();
+                foreach (string authorName in authorsNames)
+                {
+                    Author author = dbContext.Authors.FirstOrDefault(a => a.Name == authorName);
+                    if (author == null)
+                    {
+                        author = new Author() { Name = authorName, User = book.User };
+                        dbContext.Authors.Add(author);
+                    }
+                    authors.Add(author);
+                }
+
+                if (book.Publisher.Name != publisherName)
+                {
+                    Publisher publisher = dbContext.Publishers.FirstOrDefault(p => p.Name == publisherName);
+                    if (publisher == null)
+                    {
+                        publisher = new Publisher() { Name = publisherName, User = book.User };
+                        dbContext.Publishers.Add(publisher);
+                    }
+                    Publisher prevPublisher = book.Publisher;
+                    book.Publisher = publisher;
+                    dbContext.Publishers.Remove(prevPublisher);
+                }
+
+                book.Released = released;
+                book.Pages = pages;
+                book.CoverImageData = coverFile;
+                book.CoverImageMimeType = coverFileType;
+
+                for (int priority = 0; priority < authors.Count; priority++)
+                {
+                    dbContext.AuthorsOfBooks.Add(new AuthorOfBook()
+                    {
+                        Book = book,
+                        Author = authors[priority],
+                        Priority = priority,
+                        User = book.User
+                    });
+                }
+
+
+                dbContext.SaveChanges();
+            }
+
+            
+        }
+
         public IEnumerable<Author> GetAuthorsOfBook(Book book)
         {
             return from aob in dbContext.AuthorsOfBooks where aob.BookId == book.BookId select aob.Author;
         }
 
-        public void AddAuthor(Author author)
-        {
-            dbContext.Authors.Add(author);
-            dbContext.SaveChanges();
-        }
+        //public void AddAuthor(Author author)
+        //{
+        //    dbContext.Authors.Add(author);
+        //    dbContext.SaveChanges();
+        //}
 
-        public void AddPublisher(Publisher publisher)
-        {
-            dbContext.Publishers.Add(publisher);
-            dbContext.SaveChanges();
-        }
+        //public void AddPublisher(Publisher publisher)
+        //{
+        //    dbContext.Publishers.Add(publisher);
+        //    dbContext.SaveChanges();
+        //}
 
         public void AddUser(User user)
         {

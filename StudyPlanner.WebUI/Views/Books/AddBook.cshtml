@@ -1,9 +1,11 @@
 ﻿@model StudyPlanner.WebUI.Models.BooksAddBookViewModel
 
-<h1 class="heading">Add new book</h1>
+<h1 id="heading" class="heading"></h1>
+
+<input id="bookId" name="bookId" type="hidden" />
 <div class="form-group">
     <label for="title">Title</label>
-    <input name="title" class="form-control" />
+    <input id="title" name="title" class="form-control" />
 </div>
 <div class="form-group">
     <label for="Author">Authors</label>
@@ -22,7 +24,7 @@
         <td>
             <div class="form-group">
                 <label for="publisher">Publisher</label>
-                <input name="publisher" class="form-control" list="publishersDataList" />
+                <input id="publisher" name="publisher" class="form-control" list="publishersDataList" />
                 <datalist id="publishersDataList">
                     @foreach (var p in Model.PublishersList)
                     {
@@ -32,11 +34,11 @@
             </div>
             <div class="form-group">
                 <label for="released">Released</label>
-                <input name="released" type="date" class="form-control" />
+                <input id="released" name="released" type="date" class="form-control" />
             </div>
             <div class="form-group">
                 <label for="pages">Pages</label>
-                <input name="pages" type="number" class="form-control" />
+                <input id="pages" name="pages" type="number" class="form-control" />
             </div>
         </td>
         <td>
@@ -49,7 +51,7 @@
         </td>
     </tr>
 </table>                
-<button id="submit" type="submit" class="btn btn-default" onclick="sendData()">Add</button>
+<button id="submit" type="submit" class="btn btn-default" onclick="sendData()">Ok</button>
 <button class="btn btn-default" onclick="$('#addBookDialog').dialog('close')">Cancel</button>
 
 <script>

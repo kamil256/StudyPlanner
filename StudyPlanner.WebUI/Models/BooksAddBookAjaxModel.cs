@@ -10,6 +10,8 @@ namespace StudyPlanner.WebUI.Models
 {
     public class BooksAddBookAjaxModel
     {
+        public int? BookId { get; set; }
+
         [Required]
         public string Title { get; set; }
 

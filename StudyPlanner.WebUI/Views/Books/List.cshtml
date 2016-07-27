@@ -7,7 +7,7 @@
     ViewBag.Title = "Books";
 }
 
-<h1 class="heading">Books <button class="btn btn-default btn-xs" onclick="$('#addBookDialog').dialog('open');">Add new</button> @*@Html.ActionLink("Add new", "List", new { AddBook = true }, new { @class = "btn btn-default btn-xs" })*@</h1>
+<h1 class="heading">Books <button class="btn btn-default btn-xs" onclick="addBook()">Add new</button> @*@Html.ActionLink("Add new", "List", new { AddBook = true }, new { @class = "btn btn-default btn-xs" })*@</h1>
 
 <div class="row">
     <div class="col-sm-3 side-panel">
@@ -53,7 +53,7 @@
                     </div>
                 }
             </div>
-            @Html.ActionLink("Clear filtering and sorting", "Books", null, new { @class = "btn btn-default btn-sm" })
+            @Html.ActionLink("Clear filtering and sorting", "List", null, new { @class = "btn btn-default btn-sm" })
         }
     </div>
 
@@ -110,6 +110,7 @@
                         <div class="btn-group">
                             @Html.ActionLink("Sections", "Sections", "Home", new { BookId = x.BookId }, new { @class = "btn btn-sm btn-default" })
                             @Html.ActionLink("Trainings", "Trainings", "Home", new { FilterBookId = x.BookId }, new { @class = "btn btn-sm btn-default" })
+                            <button class="btn btn-sm btn-default" onclick="editBook(@x.BookId)">Edit</button>
                         </div>
                     </div>
                         
@@ -142,4 +143,60 @@
             modal: true,
             resizable: false
         });
+
+    function addBook(bookId)
+    {
+        $("#bookId").val("");
+        $("#title").val("");
+        $("#publisher").val("");
+        $("#released").val("");
+        $("#pages").val("");
+
+        document.getElementById("Cover").files = null;
+        document.getElementById("image").outerHTML = "<img id='image' src='' class='hidden' />";
+        imageSentToServer = false;
+        document.getElementById("chooseImageMsg").className = "true";
+
+        authors = [];
+        createHiddenFromAuthors();
+
+        $('#heading').html('Add new book');
+        $('#addBookDialog').dialog('open');
+    }
+    
+
+    function editBook(bookId)
+    {
+        var data = new FormData();
+        data.append("bookId", bookId);
+
+        $.ajax({
+            url: '@Url.Action("GetBook")',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: data,
+            dataType: "json",
+            type: 'POST',
+            success: function (response)
+            {
+                $("#bookId").val(bookId);
+                $("#title").val(response.Title);
+                $("#publisher").val(response.Publisher);
+                $("#released").val(response.Released);
+                $("#pages").val(response.Pages);
+
+                document.getElementById("Cover").files = null;
+                document.getElementById("image").outerHTML = "<img id='image' src='@Url.Action("GetTempCover")' />";
+                imageSentToServer = true;
+                document.getElementById("chooseImageMsg").className = "hidden";
+
+                authors = response.Authors;
+                createHiddenFromAuthors();
+
+                $('#heading').html('Edit book');
+                $("#addBookDialog").dialog("open");
+            }
+        });
+    }
 </script>
