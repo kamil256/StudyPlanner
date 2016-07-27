@@ -126,7 +126,7 @@ namespace StudyPlanner.WebUI.Controllers
 
             model.Pagination = new Pagination()
             {
-                ItemsPerPage = 1,
+                ItemsPerPage = 5,
                 CurrentPage = model.Page,
                 TotalItems = model.Books.Count()
             };
@@ -141,28 +141,11 @@ namespace StudyPlanner.WebUI.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        public ActionResult AddBook()
-        {
-            Cover.Clear();
-            ViewBag.Hidden = true;
-            BooksAddBookViewModel model = new BooksAddBookViewModel();
-            model.AuthorsList = repository.Authors.OrderBy(a => a.Name);
-            model.PublishersList = repository.Publishers.OrderBy(p => p.Name);
-            return PartialView(model);
-        }
-
         [HttpPost]
         public JsonResult AddBook(BooksAddBookAjaxModel model)
         {
             if (model.Cover != null)
                 Cover.Set(model.Cover);
-            if (model.Cover == null && Cover.IsSet())
-            {
-                //ModelState.Remove("Cover");
-                //model.Cover = Cover.GetHttpPostedFileBase();
-            }
-
             if (model.Title != null && model.Authors != null && model.Authors.Length != 0 && model.Publisher != null && model.Released != null && model.Pages != null && Cover.IsSet())
             {
                 repository.AddBook(model.Title, model.Authors, model.Publisher, model.Released ?? default(DateTime), model.Pages ?? 0, Cover.GetFile(), Cover.GetContentType(), User.Identity.Name);
@@ -170,40 +153,8 @@ namespace StudyPlanner.WebUI.Controllers
                 return Json(new { ResponseUrl = Url.Action("List") });
             }
             else
-            {
-                
                 return null;
-            }
         }
-
-        //[HttpPost]
-        //public ActionResult AddBook(BooksAddBookViewModel model)
-        //{
-        //    model.AuthorsList = repository.Authors.OrderBy(a => a.Name);
-        //    model.PublishersList = repository.Publishers.OrderBy(p => p.Name);
-
-        //    if (model.Cover == null && Cover.IsSet())
-        //    {
-        //        ModelState.Remove("Cover");
-        //        model.Cover = Cover.GetHttpPostedFileBase();
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        Cover.Clear();
-        //        byte[] buffer = new byte[model.Cover.ContentLength];
-        //        model.Cover.InputStream.Read(buffer, 0, buffer.Length);
-        //        repository.AddBook(model.Title, model.Authors, model.Publisher, model.Released ?? default(DateTime), model.Pages ?? 0, buffer, model.Cover.ContentType, User.Identity.Name);
-        //        ViewBag.Close = true;
-        //        return RedirectToAction("List");
-        //    }
-        //    else
-        //    {
-        //        if (model.Cover != null)
-        //            Cover.Set(model.Cover);
-        //        return PartialView(model);
-        //    }
-        //}
 
         public FileContentResult GetCover(int bookId)
         {
