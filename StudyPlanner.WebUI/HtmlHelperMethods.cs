@@ -43,18 +43,38 @@ namespace StudyPlanner.WebUI
 
         public static MvcHtmlString Pagination(this HtmlHelper helper, int PageNumber, int TotalPages, Func<int, string> onClickFunction)
         {
+            int left = PageNumber - 4;
+            while (left < 1) left++;
+            int right = PageNumber + 4;
+            while (right > TotalPages) right--;
             TagBuilder ul = new TagBuilder("ul");
-            for (int i = 1; i <= TotalPages; i++)
+
+            if (left > 1)
+                AddInnerDiv(ul, PageNumber, 1, onClickFunction);
+            if (left > 2)
             {
                 TagBuilder innerDiv = new TagBuilder("div");
-                innerDiv.Attributes["onclick"] = onClickFunction(i);
-                if (i == PageNumber)
-                    innerDiv.Attributes["data-selected"] = "selected";
-                innerDiv.SetInnerText(i.ToString());
+                innerDiv.AddCssClass("disabled");
+                innerDiv.SetInnerText("...");
                 TagBuilder li = new TagBuilder("li");
                 li.InnerHtml = innerDiv.ToString();
                 ul.InnerHtml += li.ToString();
             }
+            for (int i = left; i <= right; i++)
+            {
+                AddInnerDiv(ul, PageNumber, i, onClickFunction);
+            }
+            if (right < TotalPages - 1)
+            {
+                TagBuilder innerDiv = new TagBuilder("div");
+                innerDiv.AddCssClass("disabled");
+                innerDiv.SetInnerText("...");
+                TagBuilder li = new TagBuilder("li");
+                li.InnerHtml = innerDiv.ToString();
+                ul.InnerHtml += li.ToString();
+            }
+            if (right < TotalPages)
+                AddInnerDiv(ul, PageNumber, TotalPages, onClickFunction);
 
             TagBuilder outerDiv = new TagBuilder("div");
             outerDiv.AddCssClass("pagination");
@@ -63,6 +83,19 @@ namespace StudyPlanner.WebUI
             outerDiv.InnerHtml = ul.ToString();
 
             return new MvcHtmlString(outerDiv.ToString());
+        }
+
+        private static void AddInnerDiv(TagBuilder ul, int PageNumber, int number, Func<int, string> onClickFunction)
+        {
+            // remove div and add line-height to li
+            TagBuilder innerDiv = new TagBuilder("div");
+            innerDiv.Attributes["onclick"] = onClickFunction(number);
+            if (number == PageNumber)
+                innerDiv.Attributes["data-selected"] = "selected";
+            innerDiv.SetInnerText(number.ToString());
+            TagBuilder li = new TagBuilder("li");
+            li.InnerHtml = innerDiv.ToString();
+            ul.InnerHtml += li.ToString();
         }
     }
 }

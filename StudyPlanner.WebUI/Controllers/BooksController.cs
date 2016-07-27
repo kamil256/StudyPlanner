@@ -126,7 +126,7 @@ namespace StudyPlanner.WebUI.Controllers
 
             model.Pagination = new Pagination()
             {
-                ItemsPerPage = 5,
+                ItemsPerPage = 2,
                 CurrentPage = model.Page,
                 TotalItems = model.Books.Count()
             };

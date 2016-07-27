@@ -26,7 +26,10 @@
     vertical-align: middle;
     text-align: center;
 }
-.pagination > ul > li > div:hover, .pagination > ul > li > div[data-selected="selected"] {
+.pagination > ul > li > div.disabled {
+    cursor: default;
+}
+.pagination > ul > li > div:not(.disabled):hover, .pagination > ul > li > div[data-selected="selected"] {
     background-color: #ccc;
     box-shadow: 0 0 3px #999;
     cursor: pointer;
