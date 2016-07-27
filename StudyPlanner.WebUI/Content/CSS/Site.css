@@ -33,10 +33,7 @@
     width: 20px;
     text-align: center;
 }
-/*#SelectBookForm > div > select {
-    max-width: 500px;
-    width: 100%;
-}*/
+
 .sorting-group {
     text-align: right;
     margin-bottom: 10px;
@@ -81,25 +78,3 @@
     margin-top: 10px;
 }
 
-/*.sections-table > thead > tr > th, .sections-table > tbody > tr > td {
-    text-align: center;
-    vertical-align: middle;
-}
-.sections-table > tbody > tr > td:nth-child(2) {
-    padding-left: 0;
-    padding-right: 0;
-}
-.sections-table > thead > tr > th:nth-child(3), .sections-table > tbody > tr > td:nth-child(5) {
-    text-align: left;
-    width: 60%;
-}
-.sections-table > tbody > tr > td:nth-child(7) > .btn {
-    width: 110px;
-}
-.sections-table > tbody > tr > td:nth-child(1) > input, .sections-table > tbody > tr > td:nth-child(3) > input {
-    width: 75px;
-    text-align: center;
-}
-.sections-table > tbody > tr > td:nth-child(5) > input {
-    max-width: 100%;
-}*/
