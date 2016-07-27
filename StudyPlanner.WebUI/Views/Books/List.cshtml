@@ -70,6 +70,8 @@
                 @Html.DropDownListFor(x => x.SelectedSortingOrder, new SelectList(Enum.GetNames(typeof(BooksListViewModel.SortingOrder)), Model.SelectedSortingOrder), new { @class = "form-control", form = "FilteringForm" })
             </div>
 
+            @Html.Pagination(Model.Pagination.CurrentPage, Model.Pagination.TotalPages, x => $"GoToPage({x})")
+
             foreach (var x in Model.Books)
             {
                 <div class="well book-details">
