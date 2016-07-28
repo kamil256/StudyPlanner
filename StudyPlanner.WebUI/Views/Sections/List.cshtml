@@ -1,13 +1,17 @@
-﻿@model StudyPlanner.WebUI.Models.SectionsModel
+﻿@model StudyPlanner.WebUI.Models.SectionsListViewModel
+
+@{ 
+    ViewBag.Title = "Sections";
+}
 
 <link href="~/Content/CSS/Sections.css" rel="stylesheet" />
 
 <h1 class="heading">Sections</h1>
 
 <div style="margin: 0 35px">
-    @if (Model.Books.Length == 0)
+    @if (Model.Books.Count() == 0)
     {
-        <div class="alert alert-danger">No books were added!</div>
+        <div class="alert alert-danger">No books were found!</div>
     }
     else
     {
@@ -15,15 +19,15 @@
         {
             <div class="form-group">
                 @Html.Label("BookId", "Select a book to see its sections: ")
-                @Html.DropDownList("BookId", new SelectList(Model.Books, "BookId", "Title", Model.SelectedBook.BookId), new { @class = "form-control" })
+                @Html.DropDownList("BookId", new SelectList(Model.Books, "BookId", "Title", Model.SelectedBookId), new { @class = "form-control" })
             </div>
         }
 
         <div class="well well book-details">
-            <img src="@Url.Action("GetCover", "Books", new { bookId = Model.SelectedBook.BookId })" width="120" />
+            <img src="@Url.Action("GetCover", "Books", new { bookId = Model.SelectedBookId })" width="120" />
             <div>
-                <b>@Model.SelectedBook.Title</b>
-                @switch (Model.SelectedBookAuthors.Length)
+                <b>@Model.Books.FirstOrDefault(b => b.BookId == Model.SelectedBookId).Title</b>
+                @switch (Model.SelectedBookAuthors.Count())
                 {
                     case 0:
                         @:Author: unknown
@@ -35,25 +39,25 @@
                         @:Authors:
                     break;
                 }
-                @for (int i = 0; i < Model.SelectedBookAuthors.Length; i++)
+                @for (int i = 0; i < Model.SelectedBookAuthors.Count(); i++)
                 {
-                    if (i < Model.SelectedBookAuthors.Length - 1)
+                    if (i < Model.SelectedBookAuthors.Count() - 1)
                     {
-                        @Model.SelectedBookAuthors[i]<span>,</span>
+                        @Model.SelectedBookAuthors.ToList()[i]<span>,</span>
                     }
                     else
                     {
-                        @Model.SelectedBookAuthors[i]
+                        @Model.SelectedBookAuthors.ToList()[i]
                     }
                 }
                 <br />
-                Publisher: @Model.SelectedBook.Publisher.Name<br />
-                Released: @Model.SelectedBook.Released.ToLongDateString()<br />
-                Pages: @Model.SelectedBook.Pages
+                Publisher: @Model.Books.FirstOrDefault(b => b.BookId == Model.SelectedBookId).Publisher.Name<br />
+                Released: @Model.Books.FirstOrDefault(b => b.BookId == Model.SelectedBookId).Released.ToLongDateString()<br />
+                Pages: @Model.Books.FirstOrDefault(b => b.BookId == Model.SelectedBookId).Pages
             </div>
         </div>
 
-        using (Html.BeginForm("Sections", "Home", FormMethod.Post, new { autocomplete = "off" }))
+        using (Html.BeginForm("List", "Sections", FormMethod.Post, new { autocomplete = "off" }))
         {
             <table class="table sections-table">
                 <thead>
@@ -72,17 +76,18 @@
                             <td>@x.StartPageNumber</td>
                             <td>-</td>
                             <td>@x.EndPageNumber</td>
-                            <td>@x.NumberOfPages</td>
+                            <td>@(x.EndPageNumber - x.StartPageNumber + 1)</td>
                             <td>@x.Name</td>
-                            <td>@x.NumberOfTrainingsCompleted</td>
+                            <td>@x.Trainings.Where(t => t.CompletedDate != null).Count()</td>
                             <td>
-                                @if (x.IsTrainingInProgress)
+                                @if (x.Trainings.Where(t => t.CompletedDate == null).Count() != 0)
                                 {
-                                    @Html.ActionLink("Go to training", "Trainings", new { FilterBookId = Model.SelectedBook.BookId, FilterSectionId = x.SectionId, FilterTrainingCompleted = false }, new { @class = "btn btn-default btn-xs" })
+                                    @Html.ActionLink("Go to training", "List", "Trainings", new { FilterBookId = Model.SelectedBookId, FilterSectionId = x.SectionId, FilterTrainingCompleted = false }, new { @class = "btn btn-default btn-xs" })
                                 }
                                 else
                                 {
-                                    @Html.ActionLink("Start new training", "AddTraining", new { BookId = Model.SelectedBook.BookId, SectionId = x.SectionId }, new { @class = "btn btn-default btn-xs" })
+                                    // Use POST request
+                                    @Html.ActionLink("Start new training", "AddTraining", new { SelectedBookId = Model.SelectedBookId, SectionId = x.SectionId }, new { @class = "btn btn-default btn-xs" })
                                 }
                             </td>
                         </tr>
@@ -95,7 +100,7 @@
                         <td>@Html.TextBoxFor(x => x.NewSectionName, new { @class = "form-control", required = "required" })</td>
                         <td>-</td>
                         <td>
-                            <input type="hidden" name="BookId" value="@Model.SelectedBook.BookId" />
+                            <input type="hidden" name="selectedBookId" value="@Model.SelectedBookId" />
                             <input type="submit" value="Add" class="btn btn-default btn-xs" />
                         </td>
                     </tr>
@@ -123,5 +128,5 @@
             newSectionTotalPages.innerHTML = newSectionEndPageNumber.value - newSectionStartPageNumber.value + 1;
         else
             newSectionTotalPages.innerHTML = "-";
-    };
+    }
 </script>

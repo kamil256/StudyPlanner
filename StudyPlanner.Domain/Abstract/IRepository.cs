@@ -24,6 +24,6 @@ namespace StudyPlanner.Domain.Abstract
         //void AddAuthor(Author author);
         //void AddPublisher(Publisher publisher);
         void AddUser(User user);
-        
+        void AddSection(int bookId, string name, int startPageNumber, int endPageNumber, string userEmail);
     }
 }

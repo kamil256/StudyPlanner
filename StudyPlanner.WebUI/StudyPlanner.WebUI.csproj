@@ -220,7 +220,7 @@
     <Compile Include="Models\BooksListViewModel.cs" />
     <Compile Include="Models\Cover.cs" />
     <Compile Include="Models\Pagination.cs" />
-    <Compile Include="Models\SectionsModel.cs" />
+    <Compile Include="Models\SectionsListViewModel.cs" />
     <Compile Include="Models\TrainingsModel.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

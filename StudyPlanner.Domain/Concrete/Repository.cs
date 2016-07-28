@@ -168,7 +168,7 @@ namespace StudyPlanner.Domain.Concrete
 
             
         }
-
+        // parameter should be bookId
         public IEnumerable<Author> GetAuthorsOfBook(Book book)
         {
             return from aob in dbContext.AuthorsOfBooks where aob.BookId == book.BookId select aob.Author;
@@ -189,6 +189,20 @@ namespace StudyPlanner.Domain.Concrete
         public void AddUser(User user)
         {
             dbContext.Users.Add(user);
+            dbContext.SaveChanges();
+        }
+
+        public void AddSection(int bookId, string name, int startPageNumber, int endPageNumber, string userEmail)
+        {
+            User user = dbContext.Users.First(u => u.Email == userEmail);
+            dbContext.Sections.Add(new Section()
+            {
+                BookId = bookId,
+                Name = name,
+                StartPageNumber = startPageNumber,
+                EndPageNumber = endPageNumber,
+                UserId = user.UserId
+            });
             dbContext.SaveChanges();
         }
     }
