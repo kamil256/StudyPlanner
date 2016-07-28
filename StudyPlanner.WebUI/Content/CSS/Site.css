@@ -65,13 +65,17 @@
     font-size: 1.4em;
     margin-bottom: 10px;
 }
-.book-details > a {
+.book-details > span {
     position: absolute; 
     right: 10px; 
     top: 8px; 
     text-decoration: none; 
     font: bold 1.6em Arial; 
     color: #808080;
+    cursor: pointer;
+}
+.book-details > span:hover {
+    color: #666;
 }
 .book-details > div > .btn-group {
     display: block; 

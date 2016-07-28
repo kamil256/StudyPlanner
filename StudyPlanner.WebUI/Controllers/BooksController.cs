@@ -159,6 +159,13 @@ namespace StudyPlanner.WebUI.Controllers
                 return null;
         }
 
+        [HttpPost]
+        public RedirectToRouteResult RemoveBook(int bookId)
+        {
+            repository.RemoveBook(bookId);
+            return RedirectToAction("List");
+        }
+
         public JsonResult GetBook(int bookId)
         {
             Book book = repository.Books.FirstOrDefault(b => b.BookId == bookId);

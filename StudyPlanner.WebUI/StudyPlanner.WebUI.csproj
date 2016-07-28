@@ -240,6 +240,7 @@
     <Content Include="Views\Home\LogInPartial.cshtml" />
     <Content Include="Views\Home\RegisterPartial.cshtml" />
     <Content Include="Scripts\jquery-1.12.4.min.map" />
+    <Content Include="Views\Books\RemoveBook.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

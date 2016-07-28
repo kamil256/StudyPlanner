@@ -1,0 +1,10 @@
+﻿<p><b>Are you sure you want to remove book <span id="removeBookTitle" style="color: cornflowerblue"></span>?</b></p>
+
+<p>This will remove book with all its sections and trainings.</p>
+
+@using (Html.BeginForm("RemoveBook", "Books"))
+{
+    <input type="hidden" name="bookId" id="removeBookId" />
+    <input type="submit" value="Yes" class="btn btn-default"/>
+    <input type="button" autofocus="autofocus" value="No" class="btn btn-default" onclick="$('#removeBookDialog').dialog('close')" />
+}

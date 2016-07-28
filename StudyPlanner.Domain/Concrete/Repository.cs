@@ -95,6 +95,23 @@ namespace StudyPlanner.Domain.Concrete
             dbContext.SaveChanges();
         }
 
+        public void RemoveBook(int bookId)
+        {
+            Book book = dbContext.Books.FirstOrDefault(b => b.BookId == bookId);
+            if (book != null)
+            {
+                foreach (Section section in book.Sections)
+                    dbContext.Trainings.RemoveRange(section.Trainings);
+                dbContext.Sections.RemoveRange(book.Sections);
+                dbContext.AuthorsOfBooks.RemoveRange(book.AuthorOfBooks);
+                dbContext.Books.Remove(book);
+                dbContext.SaveChanges();
+                dbContext.Authors.RemoveRange(dbContext.Authors.Where(a => a.AuthorOfBooks.Count == 0));
+                dbContext.Publishers.RemoveRange(dbContext.Publishers.Where(p => p.Books.Count == 0));
+                dbContext.SaveChanges();
+            }
+        }
+
         public void UpdateBook(int bookId, string title, string[] authorsNames, string publisherName, DateTime released, int pages, byte[] coverFile, string coverFileType)
         {
             Book book = dbContext.Books.FirstOrDefault(b => b.BookId == bookId);

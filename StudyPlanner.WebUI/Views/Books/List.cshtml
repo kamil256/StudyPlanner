@@ -75,14 +75,15 @@
             foreach (var x in Model.Books)
             {
                 <div class="well book-details">
-                    @Html.ActionLink(HttpUtility.HtmlDecode("&times;"), "RemoveBook", new { BookId = x.BookId })
+                    <span onclick="removeBook('@x.BookId', '@x.Title')">&times;</span>
+
                     <img src="@Url.Action("GetCover", new { bookId = x.BookId })" width="120" />
                     <div>
                         <b>@Html.MarkSearchedString(x.Title, Model.SearchString)</b>
-                        @{ 
-                            var authors = (from a in x.AuthorOfBooks orderby a.Priority select a.Author).ToArray();
-                        }
-                        @switch (authors.Count() @*.Authors.Count*@)
+                        @{
+                        var authors = (from a in x.AuthorOfBooks orderby a.Priority select a.Author).ToArray();
+                    }
+                    @switch (authors.Count() @*.Authors.Count*@)
                         {
                             case 0:
                                 @:Author: unknown
@@ -129,6 +130,10 @@
     @Html.Partial("AddBook", new BooksAddBookViewModel() { AuthorsList = Model.Authors, PublishersList = Model.Publishers })
 </div>
 
+<div id="removeBookDialog">
+    @Html.Partial("RemoveBook")
+</div>
+
 <script>
     function GoToPage(x)
     {
@@ -145,6 +150,20 @@
             modal: true,
             resizable: false
         });
+
+    $("#removeBookDialog").dialog(
+        {
+            autoOpen: false,
+            modal: true,
+            resizable: false
+        });
+
+    function removeBook(bookId, title)
+    {
+        $("#removeBookId").val(bookId);
+        $("#removeBookTitle").html(title);
+        $('#removeBookDialog').dialog('open');
+    }
 
     function addBook(bookId)
     {
