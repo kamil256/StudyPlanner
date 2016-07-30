@@ -1,0 +1,99 @@
+﻿@model StudyPlanner.WebUI.Models.BooksBookInfoViewModel
+
+<div class="well book-info">
+    <span id="remove-book">&times;</span>
+    <div>
+        <img src="@Url.Action("GetCoverImage", new { bookId = Model.Book.BookId })" />
+    </div>
+    <div>
+        <b>
+            @Html.MarkSearchedString(Model.Book.Title, Model.SearchString) 
+            <button id="edit-book" class="btn btn-default btn-xs">Edit</button>
+        </b>
+        <p>
+            @switch (Model.Authors.Count())
+            {
+                case 0:
+                    @:Author: unknown
+                break;
+                case 1:
+                    @:Author:
+                break;
+                default:
+                    @:Authors:
+                break;
+            }
+            @for (int i = 0; i < Model.Authors.Count(); i++)
+            {
+                <a href="@Url.Action("List", new { selectedAuthor = Model.Authors[i].Name })">
+                    @(Html.MarkSearchedString(Model.Authors[i].Name, Model.SearchString) + (i < Model.Authors.Count() - 1 ? "," : ""))
+                </a>
+            }
+        </p>
+        <p>Publisher: @Html.ActionLink(Model.Book.Publisher.Name, "List", new { selectedPublisher = Model.Book.Publisher.Name })</p>
+        <p>Released: @Model.Book.Released.ToLongDateString()</p>
+        <p>Pages: @Model.Book.Pages</p>
+
+        <div class="btn-group">
+            @Html.ActionLink("Sections", "Sections", "Home", new { BookId = Model.Book.BookId }, new { @class = "btn btn-sm btn-default" })
+            @Html.ActionLink("Trainings", "Trainings", "Home", new { FilterBookId = Model.Book.BookId }, new { @class = "btn btn-sm btn-default" })
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function()
+    {
+        $("#remove-book").on("click", function()
+        {
+            removeBook(@Model.Book.BookId, '@Model.Book.Title');
+        });
+
+        $("#edit-book").on("click", function()
+        {
+            editBook(@Model.Book.BookId);
+        });
+    });
+
+    function removeBook(bookId, title)
+    {
+        $("#remove-book-id").val(bookId);
+        $("#remove-book-title").html(title);
+        $('#remove-book-dialog').dialog('open');
+    }
+
+    function editBook(bookId, title, authors, publisher, released, pages)
+    {
+        var data = new FormData();
+        data.append("bookId", bookId);
+
+        $.ajax({
+            url: '@Url.Action("GetBook")',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: data,
+            dataType: "json",
+            type: 'POST',
+            success: function (response)
+            {
+                $("#bookId").val(bookId);
+                $("#title").val(response.Title);
+                $("#publisher").val(response.Publisher);
+                $("#released").val(response.Released);
+                $("#pages").val(response.Pages);
+
+                document.getElementById("Cover").files = null;
+                document.getElementById("image").outerHTML = "<img id='image' src='@Url.Action("GetTempCover")' />";
+                imageSentToServer = true;
+                document.getElementById("chooseImageMsg").className = "hidden";
+
+                authors = response.Authors;
+                createHiddenFromAuthors();
+
+                $('#heading').html('Edit book');
+                $("#addBookDialog").dialog("open");
+            }
+        });
+    }
+</script>

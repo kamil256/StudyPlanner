@@ -185,7 +185,7 @@ namespace StudyPlanner.WebUI.Controllers
                     });
         }
 
-        public FileContentResult GetCover(int bookId)
+        public FileContentResult GetCoverImage(int bookId)
         {
             Book book = repository.Books.FirstOrDefault(b => b.BookId == bookId);
             if (book != null && book.CoverImageData != null && book.CoverImageMimeType != null)

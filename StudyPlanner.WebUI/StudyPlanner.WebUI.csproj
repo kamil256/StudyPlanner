@@ -217,6 +217,7 @@
     <Compile Include="Infrastructure\Utilities.cs" />
     <Compile Include="Models\BooksAddBookViewModel.cs" />
     <Compile Include="Models\BooksAddBookAjaxModel.cs" />
+    <Compile Include="Models\BooksBookInfoViewModel.cs" />
     <Compile Include="Models\BooksListViewModel.cs" />
     <Compile Include="Models\Cover.cs" />
     <Compile Include="Models\Pagination.cs" />
@@ -241,6 +242,7 @@
     <Content Include="Views\Home\RegisterPartial.cshtml" />
     <Content Include="Scripts\jquery-1.12.4.min.map" />
     <Content Include="Views\Books\RemoveBook.cshtml" />
+    <Content Include="Views\Shared\BookInfo.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

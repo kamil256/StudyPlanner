@@ -52,7 +52,7 @@
     </tr>
 </table>                
 <button id="submit" type="submit" class="btn btn-default" onclick="sendData()">Ok</button>
-<button class="btn btn-default" onclick="$('#addBookDialog').dialog('close')">Cancel</button>
+<button class="btn btn-default" onclick="$('#add-book-dialog').dialog('close')">Cancel</button>
 
 <script>
     var imageSentToServer = false;
@@ -60,7 +60,7 @@
     function sendData()
     {
         var data = new FormData();
-        var inputs = document.getElementById("addBookDialog").getElementsByTagName("input");
+        var inputs = document.getElementById("add-book-dialog").getElementsByTagName("input");
         for (var i = 0; i < inputs.length; i++) {
             if (inputs[i].name) {
                 if (inputs[i].type == "file")

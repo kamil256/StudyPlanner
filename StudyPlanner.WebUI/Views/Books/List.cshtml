@@ -1,4 +1,4 @@
-﻿@using StudyPlanner.WebUI.Models;
+﻿@using StudyPlanner.WebUI.Models
 
 @model BooksListViewModel
 
@@ -74,50 +74,12 @@
 
             foreach (var x in Model.Books)
             {
-                <div class="well book-details">
-                    <span onclick="removeBook('@x.BookId', '@x.Title')">&times;</span>
-
-                    <img src="@Url.Action("GetCover", new { bookId = x.BookId })" width="120" />
-                    <div>
-                        <b>@Html.MarkSearchedString(x.Title, Model.SearchString)</b>
-                        @{
-                        var authors = (from a in x.AuthorOfBooks orderby a.Priority select a.Author).ToArray();
-                    }
-                    @switch (authors.Count() @*.Authors.Count*@)
-                        {
-                            case 0:
-                                @:Author: unknown
-                                break;
-                            case 1:
-                                @:Author:
-                                break;
-                            default:
-                                @:Authors:
-                                break;
-                        }
-                        @for (int i = 0; i < authors.Count(); i++)
-                        {
-                            if (i < authors.Count() - 1)
-                            {
-                                <a href="@Url.Action("List", new { selectedAuthor = authors[i].Name })">@Html.MarkSearchedString(authors[i].Name, Model.SearchString)</a><span>,</span>
-                            }
-                            else
-                            {
-                                <a href="@Url.Action("List", new { selectedAuthor = authors[i].Name })">@Html.MarkSearchedString(authors[i].Name, Model.SearchString)</a>
-                            }
-                        }
-                        <br />
-                        Publisher: @Html.ActionLink(x.Publisher.Name, "List", new { selectedPublisher = x.Publisher.Name })<br />
-                        Released: @x.Released.ToLongDateString()<br />
-                        Pages: @x.Pages
-                        <div class="btn-group">
-                            @Html.ActionLink("Sections", "Sections", "Home", new { BookId = x.BookId }, new { @class = "btn btn-sm btn-default" })
-                            @Html.ActionLink("Trainings", "Trainings", "Home", new { FilterBookId = x.BookId }, new { @class = "btn btn-sm btn-default" })
-                            <button class="btn btn-sm btn-default" onclick="editBook(@x.BookId)">Edit</button>
-                        </div>
-                    </div>
-                        
-                </div>
+                @Html.Partial("BookInfo", new BooksBookInfoViewModel()
+                   {
+                       Book = x,
+                       Authors = x.AuthorOfBooks.OrderBy(aob => aob.Priority).Select(aob => aob.Author).ToArray(),
+                       SearchString = Model.SearchString
+                   })
             }
             
             @Html.HiddenFor(x => x.Page, new { form = "FilteringForm" })
@@ -126,15 +88,32 @@
     </div>
 </div>
 
-<div id="addBookDialog">
+<div id="add-book-dialog">
     @Html.Partial("AddBook", new BooksAddBookViewModel() { AuthorsList = Model.Authors, PublishersList = Model.Publishers })
 </div>
 
-<div id="removeBookDialog">
+<div id="remove-book-dialog">
     @Html.Partial("RemoveBook")
 </div>
 
 <script>
+    $(document).ready(function()
+    {
+        $("#add-book-dialog").dialog(
+        {
+            autoOpen: false,
+            modal: true,
+            resizable: false
+        });
+
+        $("#remove-book-dialog").dialog(
+        {
+            autoOpen: false,
+            modal: true,
+            resizable: false
+        });
+    });
+
     function GoToPage(x)
     {
         document.getElementById("Page").value = x;
@@ -144,26 +123,11 @@
     $("#FilteringForm input").on("change", function () { $("#FilteringForm").submit(); });
     $("select[form='FilteringForm'").on("change", function () { $("#FilteringForm").submit(); });
 
-    $("#addBookDialog").dialog(
-        {
-            autoOpen: false,
-            modal: true,
-            resizable: false
-        });
+    
 
-    $("#removeBookDialog").dialog(
-        {
-            autoOpen: false,
-            modal: true,
-            resizable: false
-        });
+    
 
-    function removeBook(bookId, title)
-    {
-        $("#removeBookId").val(bookId);
-        $("#removeBookTitle").html(title);
-        $('#removeBookDialog').dialog('open');
-    }
+    
 
     function addBook(bookId)
     {
@@ -186,38 +150,5 @@
     }
     
 
-    function editBook(bookId)
-    {
-        var data = new FormData();
-        data.append("bookId", bookId);
-
-        $.ajax({
-            url: '@Url.Action("GetBook")',
-            cache: false,
-            contentType: false,
-            processData: false,
-            data: data,
-            dataType: "json",
-            type: 'POST',
-            success: function (response)
-            {
-                $("#bookId").val(bookId);
-                $("#title").val(response.Title);
-                $("#publisher").val(response.Publisher);
-                $("#released").val(response.Released);
-                $("#pages").val(response.Pages);
-
-                document.getElementById("Cover").files = null;
-                document.getElementById("image").outerHTML = "<img id='image' src='@Url.Action("GetTempCover")' />";
-                imageSentToServer = true;
-                document.getElementById("chooseImageMsg").className = "hidden";
-
-                authors = response.Authors;
-                createHiddenFromAuthors();
-
-                $('#heading').html('Edit book');
-                $("#addBookDialog").dialog("open");
-            }
-        });
-    }
+    
 </script>

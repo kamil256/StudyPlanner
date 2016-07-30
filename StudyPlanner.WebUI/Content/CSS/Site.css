@@ -46,39 +46,48 @@
     vertical-align: middle;
     width: 130px;
 }
-.book-details {
+.book-info {
     position: relative;
-    overflow: auto;
-    padding-bottom: 0;
+    padding-right: 25px;
     margin-bottom: 10px;
+    display: table;
+    width: 100%;
 }
-.book-details > img {
-    float: left; 
-    margin: 0 19px 19px 0
-}
-.book-details > img + div {
-    float: left;
-    margin-bottom: 19px;
-}
-.book-details > img + div > b {
-    display: block;
-    font-size: 1.4em;
-    margin-bottom: 10px;
-}
-.book-details > span {
+.book-info > span#remove-book {
     position: absolute; 
     right: 10px; 
     top: 8px; 
     text-decoration: none; 
     font: bold 1.6em Arial; 
-    color: #808080;
+    color: #888;
     cursor: pointer;
 }
-.book-details > span:hover {
-    color: #666;
+.book-info > span#remove-book:hover {
+    color: #555;
 }
-.book-details > div > .btn-group {
-    display: block; 
+.book-info > div {
+    display: table-cell;
+    vertical-align: top;
+}
+.book-info > div:last-child {
+    width: 100%;
+    padding-left: 19px;
+}
+.book-info > div > img {
+    width: 120px;
+}
+.book-info > div > b {
+    display: block;
+    font-size: 1.4em;
+    margin-bottom: 10px;
+}
+.book-info > div > b > button {
+    vertical-align: text-top;
+}
+.book-info > div > p {
+    margin: 0;
+} 
+.book-info > div > .btn-group {
     margin-top: 10px;
 }
 
