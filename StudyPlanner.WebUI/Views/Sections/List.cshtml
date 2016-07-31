@@ -62,7 +62,7 @@
                                 else
                                 {
                                     // Use POST request
-                                    @Html.ActionLink("Start new training", "AddTraining", new { BookId = Model.BookId, SectionId = x.SectionId }, new { @class = "btn btn-default btn-xs" })
+                                    @Html.ActionLink("Start new training", "AddTraining", "Trainings", new { BookId = Model.BookId, SectionId = x.SectionId }, new { @class = "btn btn-default btn-xs" })
                                 }
                             </td>
                         </tr>

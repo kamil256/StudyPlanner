@@ -207,5 +207,12 @@ namespace StudyPlanner.Domain.Concrete
             });
             dbContext.SaveChanges();
         }
+
+        public void AddTraining(int sectionId, string userEmail)
+        {
+            User user = dbContext.Users.First(u => u.Email == userEmail);
+            dbContext.Trainings.Add(new Training() { SectionId = sectionId, AddedDate = DateTime.Now, UserId = user.UserId });
+            dbContext.SaveChanges();
+        }
     }
 }

@@ -1,0 +1,175 @@
+﻿@using StudyPlanner.Domain.Entities
+@using StudyPlanner.WebUI.Models
+
+@model StudyPlanner.WebUI.Models.TrainingsModel
+
+@{
+    ViewBag.Title = "Trainings";
+}
+
+<h1 class="heading">Trainings</h1>
+
+<div class="row">
+    <div class="col-sm-3 side-panel">
+        @using (Html.BeginForm("List", "Trainings", FormMethod.Get, new { id = "FilteringForm", autocomplete = "off" }))
+        {
+            <div class="form-group">
+                @Html.LabelFor(x => x.FilterBookId, "Book:")
+                @Html.DropDownListFor(x => x.FilterBookId, new SelectList(Model.Books, "BookId", "Title", Model.FilterBookId), new { @class = "form-control", style = "max-width: 100%" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.FilterSectionId, "Section:")
+                @Html.DropDownListFor(x => x.FilterSectionId, new SelectList(Model.Sections, "SectionId", "Name", Model.FilterSectionId), new { @class = "form-control", style = "max-width: 100%" })
+            </div>
+            @*<div class="form-group">
+                @Html.Label("Days since last activity:")
+                <table style="width: 100%;">
+                    <tr>
+                        <td>@Html.TextBoxFor(x => x.FilterDaysSinceLastActivityFrom, new { @class = "form-control", type = "number", style = "max-width: 100%" })</td>
+                        <td style="width: 20px; text-align: center;">-</td>
+                        <td>@Html.TextBoxFor(x => x.FilterDaysSinceLastActivityTo, new { @class = "form-control", type = "number", style = "max-width: 100%" })</td>
+                    </tr>
+                </table>
+            </div>*@
+            <div class="form-group">
+                <b>Progress:</b>
+                <div class="checkbox">
+                    @Html.LabelFor(x => x.Pending, "Pending")
+                    @Html.CheckBoxFor(x => x.Pending)
+                </div>
+                <div class="checkbox">
+                    @Html.LabelFor(x => x.Complete, "Complete")
+                    @Html.CheckBoxFor(x => x.Complete)
+                </div>
+            </div>
+            <input type="reset" id="ResetFilteringFormBtn" value="Clear" />
+        }
+    </div>
+    <div class="col-sm-9">
+        @if (Model.Trainings.Count() == 0)
+        {
+            <div class="alert alert-danger">No trainings were found!</div>
+        }
+        else
+        {
+            <div class="form-group sorting-group">
+                <b>Sort by: </b>
+                @Html.DropDownListFor(x => x.SelectedSorting, new SelectList(Enum.GetNames(typeof(TrainingsModel.Sorting)).Select(x => new { value = x, name = x.Replace("_", " ") }), "value", "name", Model.SelectedSorting), new { @class = "form-control", form = "FilteringForm" })
+                @Html.DropDownListFor(x => x.SelectedSortingOrder, new SelectList(Enum.GetNames(typeof(TrainingsModel.SortingOrder)), Model.SelectedSortingOrder), new { @class = "form-control", form = "FilteringForm" })
+            </div>
+            <div class="panel-group">
+                @foreach (var x in @Model.Trainings)
+                {
+                    <div class="well well-sm" style="overflow: auto;">
+                        <table>
+                            <tr>
+                                <td style="width: 100%">
+                                    @if (x.CompletedDate == null)
+                                    {
+                                        <span class="label label-warning">Pending</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-success">Complete</span>
+                                    }
+                                    <div style="margin-top: 5px;"><b style="font-size: 1.4em; vertical-align: middle;">@x.Section.Book.Title</b> (@x.Section.Name @x.AddedDate.ToString("yyyy-MM-dd"))</div>
+                                </td>
+                                <td>
+                                    <span style="float: right; font-weight: bold;">
+                                        @if (x.CompletedDate == null)
+                                        {
+                                            <button class="btn btn-default btn-sm">Complete this lesson</button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-default btn-sm">Start again</button>
+                                        }
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                </div>
+            }
+        </div>
+        }
+</div>
+    </div>
+@*<script>
+    var TimeToDeadlineElements;
+    window.onload = function()
+    {
+        TimeToDeadlineElements = document.getElementsByClassName("TimeToDeadline");
+        setInterval(UpdateTime, 1000);
+    }
+
+    function GetTimeSpan(deadline)
+    {
+        return deadline.getTime() - new Date().getTime();
+    }
+
+    var h, m, s, pH;
+    function UpdateTime()
+    {
+        //var time = new Date();
+        //pH = h;
+        
+        //h = time.getHours();
+        //m = time.getMinutes();
+        //s = time.getSeconds();
+
+        //if (pH == 23 && h == 0)
+        //    for (var i = 0; i < TimeToDeadlineElements.length; i++) {
+        //        TimeToDeadlineElements[i].setAttribute("data-days", Number(TimeToDeadlineElements[i].getAttribute("data-days")) + 1);
+        //    }
+
+        for (var i = 0; i < TimeToDeadlineElements.length; i++)
+        {
+            
+            var deadline = GetTimeSpan(new Date(TimeToDeadlineElements[i].getAttribute("data-days")));
+            var tooLate = deadline < 0;
+            if (tooLate)
+                deadline = -1 * deadline;
+            deadline /= 1000;
+            var s = Math.floor(deadline % 60);
+            deadline = deadline / 60;
+            var m = Math.floor(deadline % 60);
+            deadline = deadline / 60;
+            var h = Math.floor(deadline % 24);
+            deadline = deadline / 24;
+            var daysLeft = Math.floor(deadline);
+            if (!tooLate)
+                TimeToDeadlineElements[i].innerHTML = "<span style='color: green'>" + daysLeft + " days " + h + " hours " + m + " minutes " + s + " seconds</span>";
+            else 
+                TimeToDeadlineElements[i].innerHTML = "<span style='color: red'>" + daysLeft + " days " + h + " hours " + m + " minutes " + s + " seconds</span>";
+        }
+    }
+
+    //function DisplayTimeToDeadline(DaysSinceLastActivity)
+    //{
+    //    var daysLeft = 1 - DaysSinceLastActivity;
+    //    if (daysLeft > 0)
+    //    {
+    //        return "<span style='color: green'>" + daysLeft + " days " + Pad(23 - h) + " hours " + Pad(59 - m) + " minutes " + Pad(59 - s) + " seconds</span>";
+    //    }
+    //    else
+    //    {
+    //        return "<span style='color: red'>" + (-daysLeft) + " days " + Pad(h) + " hours " + Pad(m) + " minutes " + Pad(s) + " seconds</span>";
+    //    }
+    //}
+</script>*@
+
+
+        <script>
+            $(document).ready(function()
+            {
+                $("input").on("change", function()
+                {
+                    $("#FilteringForm").trigger("submit");
+                });
+
+                $("select").on("change", function()
+                {
+                    $("#FilteringForm").trigger("submit");
+                });
+            });
+        </script>

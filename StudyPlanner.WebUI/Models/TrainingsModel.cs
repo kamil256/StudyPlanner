@@ -10,45 +10,19 @@ namespace StudyPlanner.WebUI.Models
     {
         public int FilterBookId { get; set; }
         public int FilterSectionId { get; set; }
-        public int? FilterDaysSinceLastActivityFrom { get; set; }
-        public int? FilterDaysSinceLastActivityTo { get; set; }
-        public bool FilterTrainingCompleted { get; set; } = true;
-        public bool Filter1LessonLeft { get; set; } = true;
-        public bool Filter2LessonsLeft { get; set; } = true;
-        public bool Filter3LessonsLeft { get; set; } = true;
+        public bool Pending { get; set; } = true;
+        public bool Complete { get; set; } = true;
+        
+        public IEnumerable<Book> Books { get; set; }
+        public IEnumerable<Section> Sections { get; set; }
+        public IEnumerable<Training> Trainings { get; set; }
 
-        public List<Book> Books { get; set; }
-        public List<Section> Sections { get; set; }
-        public List<TrainingsModel.Training> Trainings { get; set; }
+        public enum Sorting { Lesson_age, Book_title, Section_name };
+        public Sorting SelectedSorting { get; set; } = Sorting.Lesson_age;
+        public enum SortingOrder { Ascending, Descending };
+        public SortingOrder SelectedSortingOrder { get; set; } = SortingOrder.Descending;
 
-        public string SortBy { get; set; }
-        public string[] SortByItems { get; } = new[] { "Last activity", "Lessons left", "Authors", "Books" };
-        public string SortingOrder { get; set; }
-        public string[] SortingOrderItems { get; } = new[] { "Ascending", "Descending" };
-
-        public class Training
-        {
-            public int TrainingId { get; set; }
-            public int SectionId { get; set; }
-            public string BookTitle { get; set; }
-            public string SectionName { get; set; }
-            public List<Author> Authors { get; set; }
-            public DateTime Deadline { get; set; }
-            public int LessonsLeft { get; set; }
-            
-            public static explicit operator TrainingsModel.Training(StudyPlanner.Domain.Entities.Training t)
-            {
-                return new TrainingsModel.Training
-                {
-                    TrainingId = t.TrainingId,
-                    SectionId = t.SectionId,
-                    BookTitle = t.Section.Book.Title,
-                    SectionName = t.Section.Name,
-                    Authors = (from x in t.Section.Book.AuthorOfBooks orderby x.Priority select x.Author).ToList()//,
-                    //Deadline = t.CompletionDate.AddDays(14),
-                    //LessonsLeft = t.LessonsLeft
-                };
-            }
-        }
+        public int Page { get; set; } = 1;
+        public Pagination Pagination { get; set; }
     }
 }

@@ -207,7 +207,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\BooksController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\OtherController.cs" />
+    <Compile Include="Controllers\TrainingsController.cs" />
     <Compile Include="Controllers\SectionsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -237,7 +237,7 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Views\Sections\List.cshtml" />
-    <Content Include="Views\Other\Trainings.cshtml" />
+    <Content Include="Views\Trainings\List.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\LogInPartial.cshtml" />
     <Content Include="Views\Home\RegisterPartial.cshtml" />
