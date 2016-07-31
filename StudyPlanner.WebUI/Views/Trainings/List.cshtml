@@ -72,13 +72,13 @@
                                     {
                                         <span class="label label-success">Complete</span>
                                     }
-                                    <div style="margin-top: 5px;"><b style="font-size: 1.4em; vertical-align: middle;">@x.Section.Book.Title</b> (@x.Section.Name @x.AddedDate.ToString("yyyy-MM-dd"))</div>
+                                    <div style="margin-top: 5px;"><b style="font-size: 1.4em; vertical-align: middle;">@x.Section.Book.Title</b> (@x.Section.Name)</div>
                                 </td>
                                 <td>
                                     <span style="float: right; font-weight: bold;">
                                         @if (x.CompletedDate == null)
                                         {
-                                            <button class="btn btn-default btn-sm">Complete this lesson</button>
+                                            <button class="btn btn-default btn-sm" onclick="completeLesson(@x.TrainingId)">Complete this lesson</button>
                                         }
                                         else
                                         {
@@ -172,4 +172,12 @@
                     $("#FilteringForm").trigger("submit");
                 });
             });
+
+            function completeLesson(trainingId)
+            {
+                $.post("@Url.Action("CompleteLesson", "Trainings")", { trainingId: trainingId }, function(data)
+                {
+                    $("#FilteringForm").trigger("submit");
+                });
+            }
         </script>

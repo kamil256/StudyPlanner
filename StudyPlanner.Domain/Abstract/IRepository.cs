@@ -26,5 +26,6 @@ namespace StudyPlanner.Domain.Abstract
         void AddUser(User user);
         void AddSection(int bookId, string name, int startPageNumber, int endPageNumber, string userEmail);
         void AddTraining(int sectionId, string userEmail);
+        void CompleteLesson(int trainingId, string userEmail);
     }
 }

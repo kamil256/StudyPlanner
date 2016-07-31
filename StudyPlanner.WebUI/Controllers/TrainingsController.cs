@@ -83,11 +83,12 @@ namespace StudyPlanner.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult CompleteLesson(int trainingId)
+        public JsonResult CompleteLesson(int trainingId)
         {
+            repository.CompleteLesson(trainingId, User.Identity.Name);
             // Add completionDate to training
             // Should return to returnUrl argument
-            return RedirectToAction("List", "Trainings");
+            return Json(new { success = "success" });
         }
         //public ActionResult AddProgress(int TrainingId)
         //{
