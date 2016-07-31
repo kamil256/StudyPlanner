@@ -11,5 +11,6 @@ namespace StudyPlanner.WebUI.Models
         public Book Book { get; set; }
         public Author[] Authors { get; set; }
         public string SearchString { get; set; }
+        public bool ShowButtons { get; set; }
     }
 }

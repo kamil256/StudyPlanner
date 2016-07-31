@@ -79,7 +79,8 @@
                    {
                        Book = x,
                        Authors = x.AuthorOfBooks.OrderBy(aob => aob.Priority).Select(aob => aob.Author).ToArray(),
-                       SearchString = Model.SearchString
+                       SearchString = Model.SearchString,
+                       ShowButtons = true
                    })
             }
             

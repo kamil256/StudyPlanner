@@ -1,4 +1,6 @@
-﻿@model StudyPlanner.WebUI.Models.SectionsListViewModel
+﻿@using StudyPlanner.WebUI.Models
+
+@model StudyPlanner.WebUI.Models.SectionsListViewModel
 
 @{ 
     ViewBag.Title = "Sections";
@@ -23,39 +25,13 @@
             </div>
         }
 
-        <div class="well well book-details">
-            <img src="@Url.Action("GetCover", "Books", new { bookId = Model.SelectedBookId })" width="120" />
-            <div>
-                <b>@Model.Books.FirstOrDefault(b => b.BookId == Model.SelectedBookId).Title</b>
-                @switch (Model.SelectedBookAuthors.Count())
-                {
-                    case 0:
-                        @:Author: unknown
-                    break;
-                    case 1:
-                        @:Author:
-                    break;
-                    default:
-                        @:Authors:
-                    break;
-                }
-                @for (int i = 0; i < Model.SelectedBookAuthors.Count(); i++)
-                {
-                    if (i < Model.SelectedBookAuthors.Count() - 1)
-                    {
-                        @Model.SelectedBookAuthors.ToList()[i]<span>,</span>
-                    }
-                    else
-                    {
-                        @Model.SelectedBookAuthors.ToList()[i]
-                    }
-                }
-                <br />
-                Publisher: @Model.Books.FirstOrDefault(b => b.BookId == Model.SelectedBookId).Publisher.Name<br />
-                Released: @Model.Books.FirstOrDefault(b => b.BookId == Model.SelectedBookId).Released.ToLongDateString()<br />
-                Pages: @Model.Books.FirstOrDefault(b => b.BookId == Model.SelectedBookId).Pages
-            </div>
-        </div>
+        @Html.Partial("BookInfo", new BooksBookInfoViewModel()
+           {
+               Book = Model.Books.First(b => b.BookId == Model.SelectedBookId),
+               Authors = Model.Books.First(b => b.BookId == Model.SelectedBookId).AuthorOfBooks.OrderBy(aob => aob.Priority).Select(aob => aob.Author).ToArray(),
+               SearchString = "",
+               ShowButtons = false
+           })
 
         using (Html.BeginForm("List", "Sections", FormMethod.Post, new { autocomplete = "off" }))
         {

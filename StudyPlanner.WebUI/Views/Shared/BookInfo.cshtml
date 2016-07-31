@@ -1,22 +1,28 @@
 ﻿@model StudyPlanner.WebUI.Models.BooksBookInfoViewModel
 
 <div class="well book-info">
-    <span class="remove-book-btn" onclick="removeBook(@Model.Book.BookId, '@Model.Book.Title');">&times;</span>
+    @if (Model.ShowButtons)
+    {
+        <span class="remove-book-btn" onclick="removeBook(@Model.Book.BookId, '@Model.Book.Title');">&times;</span>
+    }
     <div>
-        <img src="@Url.Action("GetCoverImage", new { bookId = Model.Book.BookId })" />
+        <img src="@Url.Action("GetCoverImage", "Books", new { bookId = Model.Book.BookId })" />
     </div>
     <div>
         <b>
             @Html.MarkSearchedString(Model.Book.Title, Model.SearchString) 
-            <button class="btn btn-default btn-xs" onclick='editBook(
+            @if (Model.ShowButtons)
             {
-                bookId: @Model.Book.BookId, 
-                title: "@Model.Book.Title", 
-                authors: @Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.Authors.Select(a => a.Name))),
-                publisher: "@Model.Book.Publisher.Name", 
-                released: "@Model.Book.Released.ToString("yyyy-MM-dd")",
-                pages: @Model.Book.Pages
-            })'>Edit</button>
+                <button class="btn btn-default btn-xs" onclick='editBook(
+                {
+                    bookId: @Model.Book.BookId, 
+                    title: "@Model.Book.Title", 
+                    authors: @Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.Authors.Select(a => a.Name))),
+                    publisher: "@Model.Book.Publisher.Name", 
+                    released: "@Model.Book.Released.ToString("yyyy-MM-dd")",
+                    pages: @Model.Book.Pages
+                })'>Edit</button>
+            }
         </b>
         <p>
             @switch (Model.Authors.Count())
@@ -33,18 +39,23 @@
             }
             @for (int i = 0; i < Model.Authors.Count(); i++)
             {
-                <a href="@Url.Action("List", new { selectedAuthor = Model.Authors[i].Name })">
-                    @(Html.MarkSearchedString(Model.Authors[i].Name, Model.SearchString) + (i < Model.Authors.Count() - 1 ? "," : ""))
-                </a>
+                <a href="@Url.Action("List", "Books", new { selectedAuthor = Model.Authors[i].Name })">@(Html.MarkSearchedString(Model.Authors[i].Name, Model.SearchString))</a>
+                if (i < Model.Authors.Count() - 1)
+                {
+                    <span>,</span>
+                }
             }
         </p>
         <p>Publisher: @Html.ActionLink(Model.Book.Publisher.Name, "List", new { selectedPublisher = Model.Book.Publisher.Name })</p>
         <p>Released: @Model.Book.Released.ToLongDateString()</p>
         <p>Pages: @Model.Book.Pages</p>
 
-        <div class="btn-group">
-            @Html.ActionLink("Sections", "Sections", "Home", new { BookId = Model.Book.BookId }, new { @class = "btn btn-sm btn-default" })
-            @Html.ActionLink("Trainings", "Trainings", "Home", new { FilterBookId = Model.Book.BookId }, new { @class = "btn btn-sm btn-default" })
-        </div>
+        @if (Model.ShowButtons)
+        {
+            <div class="btn-group">
+                @Html.ActionLink("Sections", "Sections", "Home", new { BookId = Model.Book.BookId }, new { @class = "btn btn-sm btn-default" })
+                @Html.ActionLink("Trainings", "Trainings", "Home", new { FilterBookId = Model.Book.BookId }, new { @class = "btn btn-sm btn-default" })
+            </div>
+        }
     </div>
 </div>
