@@ -199,7 +199,7 @@
     <Content Include="Web.config" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Books\List.cshtml" />
-    <Content Include="Views\Books\AddBook.cshtml" />
+    <Content Include="Views\Books\AddEditBook.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\NinjectWebCommon.cs" />
