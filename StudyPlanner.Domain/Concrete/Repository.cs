@@ -148,8 +148,10 @@ namespace StudyPlanner.Domain.Concrete
 
                 book.Released = released;
                 book.Pages = pages;
-                book.CoverImageData = coverFile;
-                book.CoverImageMimeType = coverFileType;
+                if (coverFile != null)
+                    book.CoverImageData = coverFile;
+                if (coverFileType != null)
+                    book.CoverImageMimeType = coverFileType;
 
                 for (int priority = 0; priority < authors.Count; priority++)
                 {

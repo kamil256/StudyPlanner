@@ -1,14 +1,22 @@
 ﻿@model StudyPlanner.WebUI.Models.BooksBookInfoViewModel
 
 <div class="well book-info">
-    <span id="remove-book">&times;</span>
+    <span id="remove-book-btn-" class="remove-book-btn">&times;</span>
     <div>
         <img src="@Url.Action("GetCoverImage", new { bookId = Model.Book.BookId })" />
     </div>
     <div>
         <b>
             @Html.MarkSearchedString(Model.Book.Title, Model.SearchString) 
-            <button id="edit-book" class="btn btn-default btn-xs">Edit</button>
+            <button class="btn btn-default btn-xs" onclick='editBook(
+            {
+                bookId: @Model.Book.BookId, 
+                title: "@Model.Book.Title", 
+                authors: @Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model.Authors.Select(a => a.Name))),
+                publisher: "@Model.Book.Publisher.Name", 
+                released: "@Model.Book.Released.ToString("yyyy-MM-dd")",
+                pages: @Model.Book.Pages
+            })'>Edit</button>
         </b>
         <p>
             @switch (Model.Authors.Count())
@@ -44,14 +52,14 @@
 <script>
     $(document).ready(function()
     {
-        $("#remove-book").on("click", function()
+        $("#remove-book-btn").on("click", function()
         {
             removeBook(@Model.Book.BookId, '@Model.Book.Title');
         });
 
-        $("#edit-book").on("click", function()
+        $(".add-edit-book-btn").on("click", function(e)
         {
-            editBook(@Model.Book.BookId);
+            editBook(e.target.value);
         });
     });
 
@@ -62,38 +70,19 @@
         $('#remove-book-dialog').dialog('open');
     }
 
-    function editBook(bookId, title, authors, publisher, released, pages)
+    function editBook(book)
     {
-        var data = new FormData();
-        data.append("bookId", bookId);
-
-        $.ajax({
-            url: '@Url.Action("GetBook")',
-            cache: false,
-            contentType: false,
-            processData: false,
-            data: data,
-            dataType: "json",
-            type: 'POST',
-            success: function (response)
-            {
-                $("#bookId").val(bookId);
-                $("#title").val(response.Title);
-                $("#publisher").val(response.Publisher);
-                $("#released").val(response.Released);
-                $("#pages").val(response.Pages);
-
-                document.getElementById("Cover").files = null;
-                document.getElementById("image").outerHTML = "<img id='image' src='@Url.Action("GetTempCover")' />";
-                imageSentToServer = true;
-                document.getElementById("chooseImageMsg").className = "hidden";
-
-                authors = response.Authors;
-                createHiddenFromAuthors();
-
-                $('#heading').html('Edit book');
-                $("#addBookDialog").dialog("open");
-            }
-        });
+        $('#add-edit-book-heading').text('Edit book');
+        $("#add-edit-book-id").val(book.bookId);
+        $("#add-edit-book-title").val(book.title);
+        $("#add-edit-book-publisher").val(book.publisher);
+        $("#add-edit-book-released").val(book.released);
+        $("#add-edit-book-pages").val(book.pages);
+        $("#add-edit-book-cover").attr("files", null);
+        $("#image").prop("outerHTML", "<img id='image' src='/Books/GetCoverImage?bookId=" + book.bookId + "' />");
+        $("#chooseImageMsg").attr("class", "hidden");
+        createHiddenFromAuthors(book.authors);
+        $("#add-edit-book-dialog").dialog("open");
+        selectedFile = null;
     }
 </script>

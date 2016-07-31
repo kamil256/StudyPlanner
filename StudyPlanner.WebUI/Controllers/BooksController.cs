@@ -146,12 +146,12 @@ namespace StudyPlanner.WebUI.Controllers
         {
             if (model.Cover != null)
                 Cover.Set(model.Cover);
-            if (model.Title != null && model.Authors != null && model.Authors.Length != 0 && model.Publisher != null && model.Released != null && model.Pages != null && Cover.IsSet())
+            if (model.Title != null && model.Authors != null && model.Authors.Length != 0 && model.Publisher != null && model.Released != null && model.Pages != null && (Cover.IsSet() || model.BookId != null))
             {
                 if (model.BookId == null)
                     repository.AddBook(model.Title, model.Authors, model.Publisher, model.Released ?? default(DateTime), model.Pages ?? 0, Cover.GetFile(), Cover.GetContentType(), User.Identity.Name);
                 else
-                    repository.UpdateBook(model.BookId ?? 0, model.Title, model.Authors, model.Publisher, model.Released ?? default(DateTime), model.Pages ?? 0, Cover.GetFile(), Cover.GetContentType());
+                    repository.UpdateBook(model.BookId ?? 0, model.Title, model.Authors, model.Publisher, model.Released ?? default(DateTime), model.Pages ?? 0, Cover.IsSet() ? Cover.GetFile() : null, Cover.IsSet() ? Cover.GetContentType() : null);
                 Cover.Clear();
                 return Json(new { ResponseUrl = Url.Action("List") });
             }

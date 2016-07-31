@@ -1,31 +1,31 @@
 ﻿@model StudyPlanner.WebUI.Models.BooksAddBookViewModel
 
-<h1 id="heading" class="heading"></h1>
+<h1 id="add-edit-book-heading" class="heading"></h1>
 
-<input id="bookId" name="bookId" type="hidden" />
+<input id="add-edit-book-id" name="bookId" type="hidden" />
 <div class="form-group">
-    <label for="title">Title</label>
-    <input id="title" name="title" class="form-control" />
+    <label for="add-edit-book-title">Title</label>
+    <input id="add-edit-book-title" name="title" class="form-control" />
 </div>
 <div class="form-group">
-    <label for="Author">Authors</label>
-    <ul id="authorsList"></ul>
-    <input id="Author" class="form-control" list="authorsDataList" onchange="AddAuthor(this.value)" />
-    <datalist id="authorsDataList">
+    <label for="author">Authors</label>
+    <ul id="add-edit-book-authors-list"></ul>
+    <input id="add-edit-book-author" class="form-control" list="add-edit-book-authors-data-list" onchange="AddAuthor(this.value)" />
+    <datalist id="add-edit-book-authors-data-list">
         @foreach (var a in Model.AuthorsList)
         {
             <option value="@a.Name"></option>
         }
     </datalist>
-    <div id="hiddenAuthors"></div>
+    <div id="add-edit-book-hidden-authors-list"></div>
 </div>
 <table>
     <tr>
         <td>
             <div class="form-group">
-                <label for="publisher">Publisher</label>
-                <input id="publisher" name="publisher" class="form-control" list="publishersDataList" />
-                <datalist id="publishersDataList">
+                <label for="add-edit-book-publisher">Publisher</label>
+                <input id="add-edit-book-publisher" name="publisher" class="form-control" list="add-edit-book-publishers-data-list" />
+                <datalist id="add-edit-book-publishers-data-list">
                     @foreach (var p in Model.PublishersList)
                     {
                         <option value="@p.Name"></option>
@@ -33,45 +33,38 @@
                 </datalist>
             </div>
             <div class="form-group">
-                <label for="released">Released</label>
-                <input id="released" name="released" type="date" class="form-control" />
+                <label for="add-edit-book-released">Released</label>
+                <input id="add-edit-book-released" name="released" type="date" class="form-control" />
             </div>
             <div class="form-group">
-                <label for="pages">Pages</label>
-                <input id="pages" name="pages" type="number" class="form-control" />
+                <label for="add-edit-book-pages">Pages</label>
+                <input id="add-edit-book-pages" name="pages" type="number" class="form-control" />
             </div>
         </td>
         <td>
-            <label for="cover">Cover</label>
+            <label for="add-edit-book-cover">Cover</label>
             <div class="form-control">
                 <img id="image" src="" class="hidden" />
                 <b id="chooseImageMsg">Choose image</b>
-                <input id="Cover" name="Cover" type="file" accept="image/*" onclick="cancelCover()" onchange="readURL(this)" />
+                <input id="add-edit-book-cover" name="cover" type="file" accept="image/*" @*onclick="cancelCover()"*@ onchange="readURL(this)" />
             </div>
         </td>
     </tr>
 </table>                
-<button id="submit" type="submit" class="btn btn-default" onclick="sendData()">Ok</button>
-<button class="btn btn-default" onclick="$('#add-book-dialog').dialog('close')">Cancel</button>
+<button id="add-edit-book-submit" type="submit" class="btn btn-default" onclick="sendData()">Ok</button>
+<button class="btn btn-default" onclick="$('#add-edit-book-dialog').dialog('close')">Cancel</button>
 
 <script>
-    var imageSentToServer = false;
+    var selectedFile;
 
     function sendData()
     {
         var data = new FormData();
-        var inputs = document.getElementById("add-book-dialog").getElementsByTagName("input");
-        for (var i = 0; i < inputs.length; i++) {
-            if (inputs[i].name) {
-                if (inputs[i].type == "file")
-                {
-                    data.append(inputs[i].name, inputs[i].files[0]);
-                    imageSentToServer = true;
-                }
-                else
-                    data.append(inputs[i].name, inputs[i].value);
-            }
-        }
+        var inputs = document.getElementById("add-edit-book-dialog").getElementsByTagName("input");
+        for (var i = 0; i < inputs.length; i++)
+            if (inputs[i].type != "file" && inputs[i].name)
+                data.append(inputs[i].name, inputs[i].value);
+        data.append("cover", selectedFile);
         
         $.ajax({
             url: '@Url.Action("AddBook")',
@@ -81,11 +74,10 @@
             data: data,
             dataType: "json",
             type: 'POST',
-            success: function (response) 
+            success: function(response) 
             {
-                console.log(response);
                 if (response.ResponseUrl != null)
-                    window.location.href = response.ResponseUrl;
+                    window.location.href = response.ResponseUrl;                
             }
         });
     }
@@ -95,13 +87,17 @@
         if (input.files && input.files[0])
         {
             var reader = new FileReader();
-            reader.onload = function (e) {
+            reader.onload = function(e)
+            {
                 document.getElementById("image").className = "";
                 document.getElementById("chooseImageMsg").className = "hidden";
                 $('#image').attr('src', e.target.result);
-            }
+            };
             reader.readAsDataURL(input.files[0]);
+            selectedFile = input.files[0];
         }
+        else
+            console.log(input.files);
     }
 
     function cancelCover()
@@ -113,68 +109,56 @@
         }
     }
 
-    window.onload = function () {
-        $("#Author").on("keydown",
-            function (e) {
-                if ((e.keyCode | e.which) == 13) {
-                    e.preventDefault();
-                    AddAuthor($("#Author").val());
-                }
-            });
+    //window.onload = function () {
+    //    $("#add-edit-book-author").on("keydown",
+    //        function (e) {
+    //            if ((e.keyCode | e.which) == 13) {
+    //                e.preventDefault();
+    //                AddAuthor($("#add-edit-book-author").val());
+    //            }
+    //        });
 
 
 
         
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    var authors = [];
+    //}
 
     function getAuthorsFromHidden() {
-        authors = [];
-        var inputAuthors = document.getElementById("hiddenAuthors").getElementsByTagName("input");
+        var authors = [];
+        var inputAuthors = document.getElementById("add-edit-book-hidden-authors-list").getElementsByTagName("input");
         for (var i = 0; i < inputAuthors.length; i++) {
             authors.push(inputAuthors[i].value);
         }
+        return authors;
     }
 
-    function createHiddenFromAuthors() {
-        var authorsElement = document.getElementById("authorsList");
+    function createHiddenFromAuthors(authors) {
+        var authorsElement = document.getElementById("add-edit-book-authors-list");
         authorsElement.innerHTML = "";
         for (var i = 0; i < authors.length; i++)
             authorsElement.innerHTML += "<li>" + authors[i] + "<b onclick='RemoveAuthor(" + i + ")'> &times;</b></li> ";
 
-        var inputAuthors = document.getElementById("hiddenAuthors");
+        var inputAuthors = document.getElementById("add-edit-book-hidden-authors-list");
         inputAuthors.innerHTML = "";
         for (var i = 0; i < authors.length; i++)
             inputAuthors.innerHTML += "<input type='hidden' id='Authors_" + i + "_' name='Authors[" + i + "]' value='" + authors[i] + "' />";
     }
 
     function AddAuthor(name) {
-        if ($("#Author").val() != "") {
-            getAuthorsFromHidden();
+        if ($("#add-edit-book-author").val() != "")
+        {
+            var authors = getAuthorsFromHidden();
             if (authors.indexOf(name) == -1) {
                 authors.push(name);
-                createHiddenFromAuthors();
+                createHiddenFromAuthors(authors);
             }
-            $("#Author").val("");
+            $("#add-edit-book-author").val("");
         }
     }
 
     function RemoveAuthor(nr) {
-        getAuthorsFromHidden();
+        var authors = getAuthorsFromHidden();
         authors.splice(nr, 1);
-        createHiddenFromAuthors();
+        createHiddenFromAuthors(authors);
     }
 </script>

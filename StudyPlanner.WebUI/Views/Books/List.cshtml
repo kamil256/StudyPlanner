@@ -88,7 +88,7 @@
     </div>
 </div>
 
-<div id="add-book-dialog">
+<div id="add-edit-book-dialog">
     @Html.Partial("AddBook", new BooksAddBookViewModel() { AuthorsList = Model.Authors, PublishersList = Model.Publishers })
 </div>
 
@@ -99,7 +99,7 @@
 <script>
     $(document).ready(function()
     {
-        $("#add-book-dialog").dialog(
+        $("#add-edit-book-dialog").dialog(
         {
             autoOpen: false,
             modal: true,
@@ -131,24 +131,17 @@
 
     function addBook(bookId)
     {
-        $("#bookId").val("");
-        $("#title").val("");
-        $("#publisher").val("");
-        $("#released").val("");
-        $("#pages").val("");
-
-        document.getElementById("Cover").files = null;
-        document.getElementById("image").outerHTML = "<img id='image' src='' class='hidden' />";
-        imageSentToServer = false;
-        document.getElementById("chooseImageMsg").className = "true";
-
-        authors = [];
-        createHiddenFromAuthors();
-
-        $('#heading').html('Add new book');
-        $('#addBookDialog').dialog('open');
+        $('#add-edit-book-heading').text('Add new book');
+        $("#add-edit-book-id").val("");
+        $("#add-edit-book-title").val("");
+        $("#add-edit-book-publisher").val("");
+        $("#add-edit-book-released").val("");
+        $("#add-edit-book-pages").val("");
+        $("#add-edit-book-cover").attr("files", null);
+        $("#image").prop("outerHTML", "<img id='image' src='' class='hidden' />");
+        $("#chooseImageMsg").attr("class", "");
+        createHiddenFromAuthors([]);
+        $('#add-edit-book-dialog').dialog('open');
+        selectedFile = null;
     }
-    
-
-    
 </script>

@@ -53,7 +53,7 @@
     display: table;
     width: 100%;
 }
-.book-info > span#remove-book {
+.book-info > span.remove-book-btn {
     position: absolute; 
     right: 10px; 
     top: 8px; 
@@ -62,7 +62,7 @@
     color: #888;
     cursor: pointer;
 }
-.book-info > span#remove-book:hover {
+.book-info > span.remove-book-btn:hover {
     color: #555;
 }
 .book-info > div {
