@@ -10,10 +10,8 @@ namespace StudyPlanner.WebUI.Models
     public class SectionsListViewModel
     {
         public IEnumerable<Book> Books { get; set; }
-        public IEnumerable<Section> Sections { get; set; }
 
-        public int? SelectedBookId { get; set; }
-        public IEnumerable<string> SelectedBookAuthors { get; set; }
+        public int? BookId { get; set; }
 
         [Required]
         public int? NewSectionStartPageNumber { get; set; }

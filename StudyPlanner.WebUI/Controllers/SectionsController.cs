@@ -24,32 +24,25 @@ namespace StudyPlanner.WebUI.Controllers
             SectionsListViewModel model = new SectionsListViewModel();
             model.Books = repository.Books.OrderBy(b => b.Title);
             if (bookId == null)
-                model.SelectedBookId = repository.Books.FirstOrDefault().BookId;
+                model.BookId = repository.Books.FirstOrDefault().BookId;
             else
-                model.SelectedBookId = repository.Books.FirstOrDefault(b => b.BookId == bookId).BookId;
-            if (model.SelectedBookId != null)
-            {
-                model.SelectedBookAuthors = repository.GetAuthorsOfBook(repository.Books.FirstOrDefault(b => b.BookId == model.SelectedBookId)).Select(a => a.Name);
-                model.Sections = repository.Books.FirstOrDefault(b => b.BookId == model.SelectedBookId).Sections;
-                if (model.Sections != null)
-                    model.Sections = model.Sections.OrderBy(s => s.StartPageNumber);
-            }
+                model.BookId = repository.Books.FirstOrDefault(b => b.BookId == bookId).BookId;
             return View(model);
         }
 
         [HttpPost]
         public ActionResult List(SectionsListViewModel model)
         {
-            Book book = repository.Books.FirstOrDefault(b => b.BookId == model.SelectedBookId);
+            Book book = repository.Books.FirstOrDefault(b => b.BookId == model.BookId);
             if (book != null &&
                 model.NewSectionStartPageNumber >= 1 &&
                 model.NewSectionEndPageNumber <= book.Pages &&
                 model.NewSectionStartPageNumber <= model.NewSectionEndPageNumber &&
                 !String.IsNullOrWhiteSpace(model.NewSectionName))
             {
-                repository.AddSection(model.SelectedBookId ?? 0, model.NewSectionName, model.NewSectionStartPageNumber ?? 0, model.NewSectionEndPageNumber ?? 0, User.Identity.Name);
+                repository.AddSection(model.BookId ?? 0, model.NewSectionName, model.NewSectionStartPageNumber ?? 0, model.NewSectionEndPageNumber ?? 0, User.Identity.Name);
             }
-            return RedirectToAction("List", new { BookId = model.SelectedBookId });
+            return RedirectToAction("List", new { BookId = model.BookId });
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿@using StudyPlanner.WebUI.Models
+@using StudyPlanner.Domain.Entities
 
 @model StudyPlanner.WebUI.Models.SectionsListViewModel
 
 @{ 
     ViewBag.Title = "Sections";
+    Book book = Model.Books.First(b => b.BookId == Model.BookId);
 }
 
 <link href="~/Content/CSS/Sections.css" rel="stylesheet" />
@@ -21,17 +23,19 @@
         {
             <div class="form-group">
                 @Html.Label("BookId", "Select a book to see its sections: ")
-                @Html.DropDownList("BookId", new SelectList(Model.Books, "BookId", "Title", Model.SelectedBookId), new { @class = "form-control" })
+                @Html.DropDownList("BookId", new SelectList(Model.Books, "BookId", "Title", Model.BookId), new { @class = "form-control" })
             </div>
         }
 
         @Html.Partial("BookInfo", new BooksBookInfoViewModel()
            {
-               Book = Model.Books.First(b => b.BookId == Model.SelectedBookId),
-               Authors = Model.Books.First(b => b.BookId == Model.SelectedBookId).AuthorOfBooks.OrderBy(aob => aob.Priority).Select(aob => aob.Author).ToArray(),
+               Book = Model.Books.First(b => b.BookId == Model.BookId),
+               Authors = Model.Books.First(b => b.BookId == Model.BookId).AuthorOfBooks.OrderBy(aob => aob.Priority).Select(aob => aob.Author).ToArray(),
                SearchString = "",
                ShowButtons = false
            })
+
+
 
         using (Html.BeginForm("List", "Sections", FormMethod.Post, new { autocomplete = "off" }))
         {
@@ -46,7 +50,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var x in Model.Sections)
+                    @foreach (var x in book.Sections.OrderBy(s => s.StartPageNumber))
                     {
                         <tr>
                             <td>@x.StartPageNumber</td>
@@ -58,12 +62,12 @@
                             <td>
                                 @if (x.Trainings.Where(t => t.CompletedDate == null).Count() != 0)
                                 {
-                                    @Html.ActionLink("Go to training", "List", "Trainings", new { FilterBookId = Model.SelectedBookId, FilterSectionId = x.SectionId, FilterTrainingCompleted = false }, new { @class = "btn btn-default btn-xs" })
+                                    @Html.ActionLink("Go to training", "List", "Trainings", new { FilterBookId = Model.BookId, FilterSectionId = x.SectionId, FilterTrainingCompleted = false }, new { @class = "btn btn-default btn-xs" })
                                 }
                                 else
                                 {
                                     // Use POST request
-                                    @Html.ActionLink("Start new training", "AddTraining", new { SelectedBookId = Model.SelectedBookId, SectionId = x.SectionId }, new { @class = "btn btn-default btn-xs" })
+                                    @Html.ActionLink("Start new training", "AddTraining", new { BookId = Model.BookId, SectionId = x.SectionId }, new { @class = "btn btn-default btn-xs" })
                                 }
                             </td>
                         </tr>
@@ -76,7 +80,7 @@
                         <td>@Html.TextBoxFor(x => x.NewSectionName, new { @class = "form-control", required = "required" })</td>
                         <td>-</td>
                         <td>
-                            <input type="hidden" name="selectedBookId" value="@Model.SelectedBookId" />
+                            <input type="hidden" name="bookId" value="@Model.BookId" />
                             <input type="submit" value="Add" class="btn btn-default btn-xs" />
                         </td>
                     </tr>

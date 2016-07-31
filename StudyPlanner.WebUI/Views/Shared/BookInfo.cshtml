@@ -53,8 +53,8 @@
         @if (Model.ShowButtons)
         {
             <div class="btn-group">
-                @Html.ActionLink("Sections", "Sections", "Home", new { BookId = Model.Book.BookId }, new { @class = "btn btn-sm btn-default" })
-                @Html.ActionLink("Trainings", "Trainings", "Home", new { FilterBookId = Model.Book.BookId }, new { @class = "btn btn-sm btn-default" })
+                @Html.ActionLink("Sections", "List", "Sections", new { BookId = Model.Book.BookId }, new { @class = "btn btn-sm btn-default" })
+                @Html.ActionLink("Trainings", "List", "Trainings", new { FilterBookId = Model.Book.BookId }, new { @class = "btn btn-sm btn-default" })
             </div>
         }
     </div>
