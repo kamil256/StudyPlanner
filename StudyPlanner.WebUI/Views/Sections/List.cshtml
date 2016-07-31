@@ -92,8 +92,20 @@
 
 <script type="text/javascript">
     $(function () {
-        $("#BookId").on("change", function () { $("#SelectBookForm").submit() });
+        $("#BookId").on("change", function(e)
+        {
+            window.location = formatUrl("@Url.Action("List", "Sections", new { BookId = "{0}" })", e.target.value);
+        });
     });
+
+    function formatUrl(url)
+    {
+        var leftBrace = "@Url.Encode("{")";
+        var rightBrace = "@Url.Encode("}")";
+        for (var i = 0; i < arguments.length - 1; i++)
+            url = url.replace(new RegExp(leftBrace + i.toString() + rightBrace, "i"), arguments[i + 1]);
+        return url;
+    }
 
     var newSectionStartPageNumber = document.getElementById("NewSectionStartPageNumber");
     var newSectionEndPageNumber = document.getElementById("NewSectionEndPageNumber");
