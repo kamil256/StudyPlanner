@@ -2,10 +2,11 @@
 
 @model BooksListViewModel
 
-
 @{ 
     ViewBag.Title = "Books";
 }
+
+<script src="~/Scripts/books.js"></script>
 
 <h1 class="heading">Books <button class="btn btn-default btn-xs" onclick="addBook()">Add new</button> @*@Html.ActionLink("Add new", "List", new { AddBook = true }, new { @class = "btn btn-default btn-xs" })*@</h1>
 
@@ -70,7 +71,7 @@
                 @Html.DropDownListFor(x => x.SelectedSortingOrder, new SelectList(Enum.GetNames(typeof(BooksListViewModel.SortingOrder)), Model.SelectedSortingOrder), new { @class = "form-control", form = "FilteringForm" })
             </div>
 
-            @Html.Pagination(Model.Pagination.CurrentPage, Model.Pagination.TotalPages, x => $"GoToPage({x})")
+            @Html.Pagination(Model.Pagination.CurrentPage, Model.Pagination.TotalPages, x => $"goToPage({x})")
 
             foreach (var x in Model.Books)
             {
@@ -83,7 +84,7 @@
             }
             
             @Html.HiddenFor(x => x.Page, new { form = "FilteringForm" })
-            @Html.Pagination(Model.Pagination.CurrentPage, Model.Pagination.TotalPages, x => $"GoToPage({x})")
+            @Html.Pagination(Model.Pagination.CurrentPage, Model.Pagination.TotalPages, x => $"goToPage({x})")
         }
     </div>
 </div>
@@ -95,53 +96,3 @@
 <div id="remove-book-dialog">
     @Html.Partial("RemoveBook")
 </div>
-
-<script>
-    $(document).ready(function()
-    {
-        $("#add-edit-book-dialog").dialog(
-        {
-            autoOpen: false,
-            modal: true,
-            resizable: false
-        });
-
-        $("#remove-book-dialog").dialog(
-        {
-            autoOpen: false,
-            modal: true,
-            resizable: false
-        });
-    });
-
-    function GoToPage(x)
-    {
-        document.getElementById("Page").value = x;
-        $("#FilteringForm").submit();
-    }
-
-    $("#FilteringForm input").on("change", function () { $("#FilteringForm").submit(); });
-    $("select[form='FilteringForm'").on("change", function () { $("#FilteringForm").submit(); });
-
-    
-
-    
-
-    
-
-    function addBook(bookId)
-    {
-        $('#add-edit-book-heading').text('Add new book');
-        $("#add-edit-book-id").val("");
-        $("#add-edit-book-title").val("");
-        $("#add-edit-book-publisher").val("");
-        $("#add-edit-book-released").val("");
-        $("#add-edit-book-pages").val("");
-        $("#add-edit-book-cover").attr("files", null);
-        $("#image").prop("outerHTML", "<img id='image' src='' class='hidden' />");
-        $("#chooseImageMsg").attr("class", "");
-        createHiddenFromAuthors([]);
-        $('#add-edit-book-dialog').dialog('open');
-        selectedFile = null;
-    }
-</script>

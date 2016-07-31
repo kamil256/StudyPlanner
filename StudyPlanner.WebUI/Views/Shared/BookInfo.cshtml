@@ -1,7 +1,7 @@
 ﻿@model StudyPlanner.WebUI.Models.BooksBookInfoViewModel
 
 <div class="well book-info">
-    <span id="remove-book-btn-" class="remove-book-btn">&times;</span>
+    <span class="remove-book-btn" onclick="removeBook(@Model.Book.BookId, '@Model.Book.Title');">&times;</span>
     <div>
         <img src="@Url.Action("GetCoverImage", new { bookId = Model.Book.BookId })" />
     </div>
@@ -48,41 +48,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    $(document).ready(function()
-    {
-        $("#remove-book-btn").on("click", function()
-        {
-            removeBook(@Model.Book.BookId, '@Model.Book.Title');
-        });
-
-        $(".add-edit-book-btn").on("click", function(e)
-        {
-            editBook(e.target.value);
-        });
-    });
-
-    function removeBook(bookId, title)
-    {
-        $("#remove-book-id").val(bookId);
-        $("#remove-book-title").html(title);
-        $('#remove-book-dialog').dialog('open');
-    }
-
-    function editBook(book)
-    {
-        $('#add-edit-book-heading').text('Edit book');
-        $("#add-edit-book-id").val(book.bookId);
-        $("#add-edit-book-title").val(book.title);
-        $("#add-edit-book-publisher").val(book.publisher);
-        $("#add-edit-book-released").val(book.released);
-        $("#add-edit-book-pages").val(book.pages);
-        $("#add-edit-book-cover").attr("files", null);
-        $("#image").prop("outerHTML", "<img id='image' src='/Books/GetCoverImage?bookId=" + book.bookId + "' />");
-        $("#chooseImageMsg").attr("class", "hidden");
-        createHiddenFromAuthors(book.authors);
-        $("#add-edit-book-dialog").dialog("open");
-        selectedFile = null;
-    }
-</script>
