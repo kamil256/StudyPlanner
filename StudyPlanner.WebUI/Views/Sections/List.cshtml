@@ -19,23 +19,18 @@
     }
     else
     {
-        using (Html.BeginForm("List", "Sections", FormMethod.Get, new { id = "SelectBookForm" }))
-        {
-            <div class="form-group">
-                @Html.Label("BookId", "Select a book to see its sections: ")
-                @Html.DropDownList("BookId", new SelectList(Model.Books, "BookId", "Title", Model.BookId), new { @class = "form-control" })
-            </div>
-        }
+        <div class="form-group">
+            @Html.Label("BookId", "Select a book to see its sections: ")
+            @Html.DropDownList("BookId", new SelectList(Model.Books, "BookId", "Title", Model.BookId), new { @class = "form-control" })
+        </div>
 
         @Html.Partial("BookInfo", new BooksBookInfoViewModel()
-           {
-               Book = Model.Books.First(b => b.BookId == Model.BookId),
-               Authors = Model.Books.First(b => b.BookId == Model.BookId).AuthorOfBooks.OrderBy(aob => aob.Priority).Select(aob => aob.Author).ToArray(),
-               SearchString = "",
-               ShowButtons = false
-           })
-
-
+        {
+            Book = Model.Books.First(b => b.BookId == Model.BookId),
+            Authors = Model.Books.First(b => b.BookId == Model.BookId).AuthorOfBooks.OrderBy(aob => aob.Priority).Select(aob => aob.Author).ToArray(),
+            SearchString = "",
+            ShowButtons = false
+        })
 
         using (Html.BeginForm("List", "Sections", FormMethod.Post, new { autocomplete = "off" }))
         {
