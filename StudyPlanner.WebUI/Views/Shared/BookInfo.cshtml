@@ -39,14 +39,14 @@
             }
             @for (int i = 0; i < Model.Authors.Count(); i++)
             {
-                <a href="@Url.Action("List", "Books", new { selectedAuthor = Model.Authors[i].Name })">@(Html.MarkSearchedString(Model.Authors[i].Name, Model.SearchString))</a>
+                <a href="@Url.Action("List", "Books", new { selectedAuthor = Model.Authors[i].AuthorId })">@(Html.MarkSearchedString(Model.Authors[i].Name, Model.SearchString))</a>
                 if (i < Model.Authors.Count() - 1)
                 {
                     <span>,</span>
                 }
             }
         </p>
-        <p>Publisher: @Html.ActionLink(Model.Book.Publisher.Name, "List", new { selectedPublisher = Model.Book.Publisher.Name })</p>
+        <p>Publisher: @Html.ActionLink(Model.Book.Publisher.Name, "List", "Books", new { selectedPublisher = Model.Book.Publisher.PublisherId }, null)</p>
         <p>Released: @Model.Book.Released.ToLongDateString()</p>
         <p>Pages: @Model.Book.Pages</p>
 
