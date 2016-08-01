@@ -17,7 +17,7 @@ namespace StudyPlanner.WebUI.Models
         public IEnumerable<Section> Sections { get; set; }
         public IEnumerable<Training> Trainings { get; set; }
 
-        public enum Sorting { Lesson_age, Book_title, Section_name };
+        public enum Sorting { Lesson_age, Start_page, Total_pages };
         public Sorting SelectedSorting { get; set; } = Sorting.Lesson_age;
         public enum SortingOrder { Ascending, Descending };
         public SortingOrder SelectedSortingOrder { get; set; } = SortingOrder.Descending;

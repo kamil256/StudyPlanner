@@ -51,24 +51,24 @@ namespace StudyPlanner.WebUI.Controllers
                                           orderby (t.CompletedDate != null ? t.CompletedDate : t.AddedDate) ascending
                                           select t;
                     break;
-                case TrainingsModel.Sorting.Book_title:
+                case TrainingsModel.Sorting.Start_page:
                     if (model.SelectedSortingOrder == TrainingsModel.SortingOrder.Ascending)
                         model.Trainings = from t in model.Trainings
-                                          orderby t.Section.Book.Title ascending
+                                          orderby t.Section.StartPageNumber ascending
                                           select t;
                     else
                         model.Trainings = from t in model.Trainings
-                                          orderby t.Section.Book.Title descending
+                                          orderby t.Section.StartPageNumber descending
                                           select t;
                     break;
-                case TrainingsModel.Sorting.Section_name:
+                case TrainingsModel.Sorting.Total_pages:
                     if (model.SelectedSortingOrder == TrainingsModel.SortingOrder.Ascending)
                         model.Trainings = from t in model.Trainings
-                                          orderby t.Section.Name ascending
+                                          orderby t.Section.EndPageNumber - t.Section.StartPageNumber ascending
                                           select t;
                     else
                         model.Trainings = from t in model.Trainings
-                                          orderby t.Section.Name descending
+                                          orderby t.Section.EndPageNumber - t.Section.StartPageNumber descending
                                           select t;
                     break;
             }
