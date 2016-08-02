@@ -10,6 +10,7 @@ namespace StudyPlanner.Domain.Abstract
     public interface IRepository
     {
         IEnumerable<Book> GetBooks(string email);
+        IEnumerable<Author> GetAuthorsOfBook(int bookId);
 
         IEnumerable<Author> Authors { get; }
         IEnumerable<Publisher> Publishers { get; }
@@ -21,7 +22,7 @@ namespace StudyPlanner.Domain.Abstract
         void AddBook(string title, string[] authorsNames, string publisherName, DateTime released, int pages, byte[] coverFile, string coverFileType, string userEmail);
         void RemoveBook(int bookId);
         void UpdateBook(int bookId, string title, string[] authorsNames, string publisherName, DateTime released, int pages, byte[] coverFile, string coverFileType);
-        IEnumerable<Author> GetAuthorsOfBook(Book book);
+        
         //void AddAuthor(Author author);
         //void AddPublisher(Publisher publisher);
         void AddUser(User user);

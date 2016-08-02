@@ -69,7 +69,7 @@ namespace StudyPlanner.WebUI.Controllers
             if (!String.IsNullOrEmpty(model.SearchString))
                 model.Books = from b in model.Books
                               where b.Title.ToLower().Contains(model.SearchString.ToLower()) ||
-                                    (from a in repository.GetAuthorsOfBook(b)
+                                    (from a in repository.GetAuthorsOfBook(b.BookId)
                                      where a.Name.ToLower().Contains(model.SearchString.ToLower())
                                      select a)
                                      .Count() != 0
@@ -88,11 +88,11 @@ namespace StudyPlanner.WebUI.Controllers
                 model.Books = from b in model.Books where b.Pages <= model.PagesTo select b;
 
             model.Books = from b in model.Books
-                          where (from a in repository.GetAuthorsOfBook(b)
+                          where (from a in repository.GetAuthorsOfBook(b.BookId)
                                  join sa in selectedAuthorsList on a.AuthorId equals sa.AuthorId
                                  select a)
                                  .Count() != 0 ||
-                                 repository.GetAuthorsOfBook(b).Count() == 0
+                                 repository.GetAuthorsOfBook(b.BookId).Count() == 0
                           select b;
 
             model.Books = from b in model.Books
@@ -177,7 +177,7 @@ namespace StudyPlanner.WebUI.Controllers
                 return Json(
                     new {
                         Title = book.Title,//,
-                        Authors = repository.GetAuthorsOfBook(book).Select(a => a.Name).ToArray(),
+                        Authors = repository.GetAuthorsOfBook(book.BookId).Select(a => a.Name).ToArray(),
                         Publisher = book.Publisher.Name,
                         Released = book.Released.ToString("yyyy-MM-dd"),
                         Pages = book.Pages,

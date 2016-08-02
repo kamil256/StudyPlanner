@@ -26,6 +26,11 @@ namespace StudyPlanner.Domain.Concrete
                 throw new Exception($"User {email} doesn't exist");
         }
 
+        public IEnumerable<Author> GetAuthorsOfBook(int bookId)
+        {
+            return dbContext.AuthorsOfBooks.Where(a => a.BookId == bookId).OrderBy(a => a.Priority).Select(a => a.Author);
+        }
+
         public IEnumerable<Author> Authors
         {
             get { return dbContext.Authors; } 
@@ -181,11 +186,8 @@ namespace StudyPlanner.Domain.Concrete
 
             
         }
-        // parameter should be bookId
-        public IEnumerable<Author> GetAuthorsOfBook(Book book)
-        {
-            return from aob in dbContext.AuthorsOfBooks where aob.BookId == book.BookId select aob.Author;
-        }
+        
+        
 
         //public void AddAuthor(Author author)
         //{
