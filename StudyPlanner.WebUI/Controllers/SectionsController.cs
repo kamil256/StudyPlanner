@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace StudyPlanner.WebUI.Controllers
 {
+    [Authorize]
     public class SectionsController : Controller
     {
         private IRepository repository;

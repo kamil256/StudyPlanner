@@ -9,6 +9,7 @@ using StudyPlanner.Domain.Abstract;
 
 namespace StudyPlanner.WebUI.Controllers
 {
+    [Authorize]
     public class TrainingsController : Controller
     {
         private IRepository repository;
