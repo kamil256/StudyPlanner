@@ -12,6 +12,20 @@ namespace StudyPlanner.Domain.Concrete
     {
         private EFDbContext dbContext = new EFDbContext();
 
+        private User getUser(string email)
+        {
+            return dbContext.Users.FirstOrDefault(u => u.Email == email);
+        }
+
+        public IEnumerable<Book> GetBooks(string email)
+        {
+            User user = getUser(email);
+            if (user != null)
+                return dbContext.Books.Where(b => b.UserId == user.UserId);
+            else
+                throw new Exception($"User {email} doesn't exist");
+        }
+
         public IEnumerable<Author> Authors
         {
             get { return dbContext.Authors; } 
@@ -22,10 +36,7 @@ namespace StudyPlanner.Domain.Concrete
             get { return dbContext.AuthorsOfBooks; } 
         }
 
-        public IEnumerable<Book> Books
-        {
-            get { return dbContext.Books; }
-        }
+        
 
         public IEnumerable<Publisher> Publishers
         {

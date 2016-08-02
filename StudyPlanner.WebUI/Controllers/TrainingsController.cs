@@ -20,8 +20,8 @@ namespace StudyPlanner.WebUI.Controllers
 
         public ActionResult List(TrainingsModel model)
         {
-            Book book = repository.Books.FirstOrDefault(b => b.BookId == model.FilterBookId);
-            model.Books = new[] { new Book() { BookId = 0, Title = "All" } }.Concat(repository.Books.OrderBy(b => b.Title));
+            Book book = repository.GetBooks(User.Identity.Name).FirstOrDefault(b => b.BookId == model.FilterBookId);
+            model.Books = new[] { new Book() { BookId = 0, Title = "All" } }.Concat(repository.GetBooks(User.Identity.Name).OrderBy(b => b.Title));
             model.Sections = new[] { new Section() { SectionId = 0, Name = "All" } };
             if (book != null)
                 model.Sections = model.Sections.Concat(book.Sections.OrderBy(s => s.StartPageNumber));

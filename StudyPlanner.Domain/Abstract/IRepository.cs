@@ -9,7 +9,8 @@ namespace StudyPlanner.Domain.Abstract
 {
     public interface IRepository
     {
-        IEnumerable<Book> Books { get; }
+        IEnumerable<Book> GetBooks(string email);
+
         IEnumerable<Author> Authors { get; }
         IEnumerable<Publisher> Publishers { get; }
         IEnumerable<Section> Sections { get; }

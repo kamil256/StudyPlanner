@@ -54,7 +54,7 @@ namespace StudyPlanner.WebUI.Controllers
         {
             model.Authors = repository.Authors.OrderBy(a => a.Name);
             model.Publishers = repository.Publishers.OrderBy(p => p.Name);
-            model.Books = repository.Books;
+            model.Books = repository.GetBooks(User.Identity.Name);
 
             List<Author> selectedAuthorsList = (from sa in model.SelectedAuthors
                                                 where sa.Value
@@ -168,7 +168,7 @@ namespace StudyPlanner.WebUI.Controllers
 
         public JsonResult GetBook(int bookId)
         {
-            Book book = repository.Books.FirstOrDefault(b => b.BookId == bookId);
+            Book book = repository.GetBooks(User.Identity.Name).FirstOrDefault(b => b.BookId == bookId);
             if (book == null)
                 return null;
             else
@@ -187,7 +187,7 @@ namespace StudyPlanner.WebUI.Controllers
 
         public FileContentResult GetCoverImage(int bookId)
         {
-            Book book = repository.Books.FirstOrDefault(b => b.BookId == bookId);
+            Book book = repository.GetBooks(User.Identity.Name).FirstOrDefault(b => b.BookId == bookId);
             if (book != null && book.CoverImageData != null && book.CoverImageMimeType != null)
                 return File(book.CoverImageData, book.CoverImageMimeType);
             else

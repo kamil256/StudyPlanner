@@ -22,18 +22,16 @@ namespace StudyPlanner.WebUI.Controllers
         public ActionResult List(int? bookId)
         {
             SectionsListViewModel model = new SectionsListViewModel();
-            model.Books = repository.Books.OrderBy(b => b.Title);
+            model.Books = repository.GetBooks(User.Identity.Name).OrderBy(b => b.Title);
             if (bookId == null)
-                model.BookId = repository.Books.FirstOrDefault().BookId;
-            else
-                model.BookId = repository.Books.FirstOrDefault(b => b.BookId == bookId).BookId;
+                model.BookId = model.Books.FirstOrDefault().BookId;
             return View(model);
         }
 
         [HttpPost]
         public ActionResult List(SectionsListViewModel model)
         {
-            Book book = repository.Books.FirstOrDefault(b => b.BookId == model.BookId);
+            Book book = repository.GetBooks(User.Identity.Name).FirstOrDefault(b => b.BookId == model.BookId);
             if (book != null &&
                 model.NewSectionStartPageNumber >= 1 &&
                 model.NewSectionEndPageNumber <= book.Pages &&
